@@ -1,2 +1,2 @@
-# Visual_Computing
+# P3 project Gruppe 4 (Sexyboyz)
  
