@@ -8,8 +8,9 @@ public class FollowPathTest : MonoBehaviour
     public PathCreator pathCreator;
     public float speed;
     float distanceTravelled;
-
     private Rigidbody rb;
+    public bool move;
+    public bool forward;
 
     void Start()
     {
@@ -18,10 +19,24 @@ public class FollowPathTest : MonoBehaviour
 
     void Update()
     {
-        distanceTravelled += speed * Time.deltaTime;
+        if(move)
+            MoveCharacter();
+    }
+
+    private void MoveCharacter()
+    {
+        if(forward)
+        {
+            distanceTravelled += speed * Time.deltaTime;
+        }
+        else
+        {
+            distanceTravelled -= speed * Time.deltaTime;
+        }
 
         Vector3 currentPosition = rb.position;
         Vector3 pathPosition = pathCreator.path.GetPointAtDistance(distanceTravelled);
+
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));
     }
 }
