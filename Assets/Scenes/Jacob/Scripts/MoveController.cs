@@ -5,14 +5,9 @@ using Cinemachine;
 
 public class MoveController : MonoBehaviour
 {
-    public float movementSpeed = 5f;
-    public float jumpSpeed = 5f;
-    public float runMultiplier = 2f;
-    public float sneakMultiplier = 0.5f;
-    public float gravity = -9.81f;
 
-    public float cameraTransitionSpeed = 3f; // controls the fov zoom effect
-    public float cameraLookAtDamping = 1f;   // Controls the speed of LookAt transitions
+    public float cameraZoomSpeed = 3f; // controls the fov zoom effect
+    public float cameraLookAtSpeed = 1f;   // Controls the speed of LookAt transitions
 
     private Vector3 velocity;
     private CharacterController characterController;
@@ -23,6 +18,8 @@ public class MoveController : MonoBehaviour
     public Transform cameraTransform;
     public Transform enemyTransform;
 
+    private bool triggered = false;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -30,12 +27,12 @@ public class MoveController : MonoBehaviour
         enemyFocusCamera.Priority = 0;
 
         // Set initial damping for player camera
-        SetCameraLookAtDamping(playerFollowCamera, cameraLookAtDamping);
+        SetCameraLookAtDamping(playerFollowCamera, cameraLookAtSpeed);
     }
 
     private void Update()
     {
-        HandleMovement();
+       
 
         // Cinematic Event, use trigger colliders
         if(Input.GetKeyDown(KeyCode.E))
@@ -49,6 +46,23 @@ public class MoveController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("TriggerEnemyLookat") && triggered == false)
+        {
+            FocusOnEnemy();
+            
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("TriggerEnemyLookat") && triggered == false)
+        {
+            ResetToPlayerCamera();
+            triggered = true;
+        }
+    }
+
     void FocusOnEnemy()
     {
         enemyFocusCamera.Priority = 20;
@@ -56,81 +70,29 @@ public class MoveController : MonoBehaviour
 
         enemyFocusCamera.LookAt = enemyTransform; // Enter the cinemachine component and change the look at taget
 
-        SetCameraLookAtDamping(enemyFocusCamera, cameraLookAtDamping); // Apply damping
+        SetCameraLookAtDamping(enemyFocusCamera, cameraLookAtSpeed); // Apply damping
 
-        StartCoroutine(CinematicZoom(enemyFocusCamera, 40f, cameraTransitionSpeed)); // Slow zoom in on enemy/target
+        StartCoroutine(CinematicZoom(enemyFocusCamera, 40f, cameraZoomSpeed)); // Slow zoom in on enemy/target (40f is the target fov)
 
         
     }
 
     void ResetToPlayerCamera()
     {
-        playerFollowCamera.Priority = 10;
+        playerFollowCamera.Priority = 20;
         enemyFocusCamera.Priority = 0;
 
+        // Reset lookat back to player
+        playerFollowCamera.LookAt = cameraTransform;
+
+        SetCameraLookAtDamping(playerFollowCamera, cameraLookAtSpeed); // Apply damping
 
         // reset zoom back to player
-        StartCoroutine(CinematicZoom(playerFollowCamera, 60f, cameraTransitionSpeed));
+        StartCoroutine(CinematicZoom(playerFollowCamera, 60f, cameraZoomSpeed));
 
-        // Reset lookat and follow back to player
-        enemyFocusCamera.LookAt = cameraTransform;
-        enemyFocusCamera.Follow = cameraTransform;
 
-        SetCameraLookAtDamping(enemyFocusCamera, cameraLookAtDamping); // Apply damping
-    }
 
-    private void HandleMovement()
-    {
-        // Handle gravity
-        if (characterController.isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f; // Keeps the player grounded
-        }
-
-        // Get input for movement
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 forward = cameraTransform.forward;
-        Vector3 right = cameraTransform.right;
-
-        // Flatten the camera's forward and right vectors to avoid upward/downward movement
-        forward.y = 0f;
-        right.y = 0f;
-
-        // Normalize the vectors
-        forward.Normalize();
-        right.Normalize();
-
-        // Calculate the movement direction based on camera orientation
-        Vector3 movement = (forward * z + right * x).normalized;
-
-        // Determine movement speed (normal, running, or sneaking)
-        float currentSpeed = movementSpeed;
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            currentSpeed *= runMultiplier;
-        }
-        else if (Input.GetKey(KeyCode.LeftControl))
-        {
-            currentSpeed *= sneakMultiplier;
-        }
-
-        // Apply movement
-        characterController.Move(movement * currentSpeed * Time.deltaTime);
-
-        // Handle jumping
-        if (Input.GetButton("Jump") && characterController.isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpSpeed * -2f * gravity);
-        }
-
-        // Apply gravity
-        velocity.y += gravity * Time.deltaTime;
-
-        // Move character with gravity applied
-        characterController.Move(velocity * Time.deltaTime);
+       
     }
 
     // Coroutine for creating smooth zoom (if spamming the E and R buttons it glitches as it tries to player both zoom effects)
