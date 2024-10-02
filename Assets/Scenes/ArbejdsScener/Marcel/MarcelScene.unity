@@ -421,13 +421,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.039413463, y: -0.087111026, z: -0.01160046, w: -0.995351}
-  m_LocalPosition: {x: 49.21, y: 1.72, z: 41.39}
+  m_LocalRotation: {x: -0.015645426, y: -0.26049817, z: 0.010761084, w: -0.9652876}
+  m_LocalPosition: {x: -3.8899994, y: 3.0999994, z: -5.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -4.616, y: 369.966, z: 0.933}
+  m_Father: {fileID: 739523827}
+  m_LocalEulerAnglesHint: {x: 2.052, y: 390.192, z: -0.724}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,31 +602,15 @@ GameObject:
   - component: {fileID: 739523826}
   - component: {fileID: 739523825}
   - component: {fileID: 739523824}
-  - component: {fileID: 739523823}
   - component: {fileID: 739523828}
+  - component: {fileID: 739523829}
   m_Layer: 0
-  m_Name: Character
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &739523823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739523822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b44a95d803e2845cc94734d048750879, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathCreator: {fileID: 3125421}
-  speed: 1
-  move: 0
-  forward: 1
 --- !u!136 &739523824
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -709,10 +693,11 @@ Transform:
   m_GameObject: {fileID: 739523822}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.47, y: 6.84, z: 4.54}
+  m_LocalPosition: {x: 16.03, y: 8.03, z: 7.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 330585546}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &739523828
@@ -741,7 +726,31 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!114 &739523829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 739523822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ce82c18e45f40d8bf6f940282c6dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathCreator: {fileID: 3125421}
+  normalMoveSpeed: 3
+  sneakMoveSpeed: 1
+  speedUpAndSlowDownTime: 0.1
+  moveForward: 1
+  moveBackward: 0
+  forwardKey: 119
+  backwardKey: 115
+  sneakKey: 304
+  isSneaking: 0
+  isMoving: 0
+  isDead: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1523,7 +1532,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 185716029}
