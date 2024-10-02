@@ -547,7 +547,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 13800
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: 0, y: NaN, z: 1.02e-43, w: 3e-45}
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -904,7 +904,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 3000
   m_UseColorTemperature: 1
-  m_BoundingSphereOverride: {x: 1e-45, y: 6e-44, z: 1.5e-44, w: 1.1592e-41}
+  m_BoundingSphereOverride: {x: 0, y: 4.3920455e+21, z: 4e-45, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 1
@@ -1454,6 +1454,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1068247180033369551, guid: d97247604351e4d8cadf0abe46e66fe1,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2a81ccc5c9d2e484fa0be7228f152d02, type: 2}
     - target: {fileID: 6168514652161185429, guid: d97247604351e4d8cadf0abe46e66fe1,
         type: 3}
       propertyPath: m_LocalPosition.x
