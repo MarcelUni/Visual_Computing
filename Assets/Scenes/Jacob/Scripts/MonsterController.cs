@@ -6,19 +6,24 @@ using UnityEngine.AI;
 
 public class MonsterController : MonoBehaviour
 {
+    [Header("Monster Settings")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float detectionDistance = 20f;
+    [SerializeField] private float waitToResumeRoaming = 5f;
     [SerializeField] private GameObject killBox;
-    public float waitToStartRoaming = 5f;
-    public float killRadius = 5f;
+    [SerializeField] private float killBoxRadius = 5f;
+
     private Animator animator;
     private TestSneak testSneak;
+
+    [Header("Monster State settings")]
     public MonsterState currentState;
 
     public Transform[] patrolPoints;
 
     public bool detectedLumi = false;
     public bool gotLatestPosition = false;
+    public bool reached = false;
     public enum MonsterState
     {
         Idle,
@@ -40,12 +45,15 @@ public class MonsterController : MonoBehaviour
         switch(currentState)
         {
             case MonsterState.Investigate:
+                Debug.Log("playing walk animation");
                 //spil noget animation mens den går til destination fx. animator.Play("Walk");
                 break;
             case MonsterState.Idle:
+                Debug.Log("playing idle animation");
                 //spil noget animation fx. animator.Play("Idle") eller en kigge animation;
                 break;
             case MonsterState.Roaming:
+                Debug.Log("playing walk animation");
                 Roam();
                 //spil noget animation fx. animator.Play("walk");
                 break;
@@ -86,8 +94,7 @@ public class MonsterController : MonoBehaviour
     {
         if (other.CompareTag("Player") )
         {
-            GetComponent<NavMeshAgent>().stoppingDistance = 5;
-            Investigate(other.transform, false);
+            Investigate(other.transform, false, 5);
             StartCoroutine(PatrolWait());
 
         }
@@ -97,15 +104,13 @@ public class MonsterController : MonoBehaviour
     {
         if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isSneaking == false)
         {
-            GetComponent<NavMeshAgent>().stoppingDistance = 1;
-            Investigate(other.transform, true);
+            Investigate(other.transform, true, 1);
             detectedLumi = true;
 
         }
         if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isWalking == true)
         {
-            GetComponent<NavMeshAgent>().stoppingDistance = 1;
-            Investigate(other.transform, true);
+            Investigate(other.transform, true, 1);
         }
         else if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isSneaking == true)
         {
@@ -114,8 +119,10 @@ public class MonsterController : MonoBehaviour
 
     }
 
-    private void Investigate(Transform target, bool lumiDetected)
+    private void Investigate(Transform target, bool lumiDetected, int stoppingDistance)
     {
+        GetComponent<NavMeshAgent>().stoppingDistance = stoppingDistance;
+
         if (lumiDetected == true)
         {
             detectedLumi = true;
@@ -125,23 +132,33 @@ public class MonsterController : MonoBehaviour
         {
             detectedLumi = false;
         }
+
+        StartCoroutine(CheckReachedDestination(stoppingDistance));
         GetComponent<NavMeshAgent>().SetDestination(target.position);
         currentState = MonsterState.Investigate;
-        if (target.position == transform.position) // har arrrived at destination
-        {
-            // måske spille en look around animation
-            currentState = MonsterState.Idle;
-
-        }
-        if (Vector3.Distance(target.position, killBox.transform.position) <= killRadius && detectedLumi == true)
+        
+        if (Vector3.Distance(target.position, killBox.transform.position) <= killBoxRadius && detectedLumi == true)
         {
             Kill();
         }
     }
 
+    private IEnumerator CheckReachedDestination(int stoppingDistance)
+    {
+       
+        while (reached == false)
+        {
+            if (Vector3.Distance(GetComponent<NavMeshAgent>().destination, transform.position) <= stoppingDistance)
+            {
+                currentState = MonsterState.Idle;
+                reached = true;
+            } 
+        }
+        yield return true;
+    }
     private IEnumerator PatrolWait()
     {
-        yield return new WaitForSeconds(waitToStartRoaming);
+        yield return new WaitForSeconds(waitToResumeRoaming);
         GetComponent<NavMeshAgent>().stoppingDistance = 0;
         currentState = MonsterState.Roaming;
     }
