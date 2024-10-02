@@ -148,6 +148,8 @@ public class MonsterController : MonoBehaviour
 
     private void Kill()
     {
+        // add en hasKilled bool eller noget så vi ikke kommer til at
+        // kalde en method i playercontrolleren mega mange gange.
         Debug.Log("Lumi is dead");
         // call method from charactercontroller to kill lumi and maybe call game manager to restart level
     }
