@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
-using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
+
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private PathCreator pathCreator;
+    [Header("Move parameters")]
+    public PathCreator pathCreator;
     [SerializeField] private float normalMoveSpeed;
     [SerializeField] private float sneakMoveSpeed;
     [SerializeField] private float speedUpAndSlowDownTime;
     public bool moveForward;
     public bool moveBackward;
+    [SerializeField] private GameObject playerModelObject;
 
 
     [Header("Test inputs")]
@@ -26,7 +28,7 @@ public class PlayerController : MonoBehaviour
 
     private float currentVelocity;
     private float currentSpeed = 0;
-    private float distanceTravelled;
+    [HideInInspector] public float distanceTravelled;
     private Rigidbody rb;
 
 
@@ -41,14 +43,17 @@ public class PlayerController : MonoBehaviour
         {
             moveForward = true;
             moveBackward = false;
+            isMoving = true;
         }
         else if (Input.GetKey(backwardKey))
         {
             moveForward = false;
             moveBackward = true;
+            isMoving = true;
         }
         else
         {
+            isMoving = false;
             moveBackward = false;
             moveForward = false;
         }
@@ -102,8 +107,9 @@ public class PlayerController : MonoBehaviour
 
         Vector3 currentPosition = rb.position;
         Vector3 pathPosition = pathCreator.path.GetPointAtDistance(distanceTravelled);
-
-        rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));
+ 
+        rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));  
+        SmoothRotate();
     }
 
     private void MoveBackward(float speed)
@@ -116,6 +122,8 @@ public class PlayerController : MonoBehaviour
         Vector3 pathPosition = pathCreator.path.GetPointAtDistance(distanceTravelled);
 
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));
+
+        SmoothRotate();
     }
 
     private void Decelerate()
@@ -129,5 +137,28 @@ public class PlayerController : MonoBehaviour
 
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));
         
+    }
+
+    private void SmoothRotate()
+    {
+        Vector3 pathDirection = pathCreator.path.GetDirectionAtDistance(distanceTravelled);
+
+        Quaternion pathRotation;
+        Vector3 newDirection;
+
+        if(currentSpeed > 0)
+        {
+            // Create a new direction vector that only considers the y-axis rotation
+            newDirection = new Vector3(pathDirection.x, 0, pathDirection.z);
+            pathRotation = Quaternion.LookRotation(newDirection);
+        }
+        else
+        {
+            // Create a new direction vector that only considers the y-axis rotation
+            newDirection = new Vector3(-pathDirection.x, 0, -pathDirection.z);
+            pathRotation = Quaternion.LookRotation(newDirection);
+        }
+            
+        playerModelObject.transform.rotation = pathRotation;
     }
 }
