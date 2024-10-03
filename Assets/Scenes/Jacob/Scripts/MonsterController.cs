@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,6 +14,7 @@ public class MonsterController : MonoBehaviour
 
     private Animator animator;
     private TestSneak testSneak;
+    private NavMeshAgent agent;
 
     [Header("Monster State settings")]
     public MonsterState currentState;
@@ -24,45 +24,54 @@ public class MonsterController : MonoBehaviour
     public bool detectedLumi = false;
     public bool gotLatestPosition = false;
     public bool reached = false;
+
     public enum MonsterState
     {
         Idle,
         Roaming,
         Investigate
     }
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         testSneak = GetComponent<TestSneak>();
-        float sphereRadius = GetComponent<SphereCollider>().radius;   
+        agent = GetComponent<NavMeshAgent>(); // Cache the NavMeshAgent
+
+        float sphereRadius = GetComponent<SphereCollider>().radius;
         currentState = MonsterState.Roaming;
         sphereRadius = detectionDistance;
     }
 
     private void Update()
     {
-        
-        switch(currentState)
+        // Check if the monster has reached its destination, and transition to idle if so.
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+        {
+            // When the monster has reached the destination, set state to Idle
+            if (currentState == MonsterState.Investigate)
+            {
+                SwitchToIdle();
+            }
+        }
+
+        // Handle state behavior
+        switch (currentState)
         {
             case MonsterState.Investigate:
-                Debug.Log("playing walk animation");
-                //spil noget animation mens den går til destination fx. animator.Play("Walk");
+                Debug.Log("Investigating, playing walk animation");
+               // animator.Play("Walk"); // Play walk animation while investigating
                 break;
             case MonsterState.Idle:
-                Debug.Log("playing idle animation");
-                //spil noget animation fx. animator.Play("Idle") eller en kigge animation;
+                Debug.Log("Idle, playing idle animation");
+               // animator.Play("Idle"); // Play idle animation
                 break;
             case MonsterState.Roaming:
-                Debug.Log("playing walk animation");
+                Debug.Log("Roaming, playing walk animation");
                 Roam();
-                //spil noget animation fx. animator.Play("walk");
+               // animator.Play("Walk"); // Play walk animation while roaming
                 break;
-
         }
-       
-            
-
-
     }
 
     private int currentPatrolPointIndex = 0;
@@ -76,27 +85,24 @@ public class MonsterController : MonoBehaviour
         }
 
         Transform currentPatrolPoint = patrolPoints[currentPatrolPointIndex];
-        GetComponent<NavMeshAgent>().SetDestination(currentPatrolPoint.position);
+        agent.SetDestination(currentPatrolPoint.position);
 
-        if (Vector3.Distance(currentPatrolPoint.position, transform.position) <= 1)
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
+            // Switch to the next patrol point once reached
             currentPatrolPointIndex++;
             if (currentPatrolPointIndex >= patrolPoints.Length)
             {
                 currentPatrolPointIndex = 0;
             }
         }
-
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") )
+        if (other.CompareTag("Player"))
         {
             Investigate(other.transform, false, 5);
-            StartCoroutine(PatrolWait());
-
         }
     }
 
@@ -106,69 +112,59 @@ public class MonsterController : MonoBehaviour
         {
             Investigate(other.transform, true, 1);
             detectedLumi = true;
-
         }
-        if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isWalking == true)
+        else if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isWalking)
         {
             Investigate(other.transform, true, 1);
         }
-        else if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isSneaking == true)
+        else if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isSneaking)
         {
             detectedLumi = false;
         }
-
     }
 
     private void Investigate(Transform target, bool lumiDetected, int stoppingDistance)
     {
-        GetComponent<NavMeshAgent>().stoppingDistance = stoppingDistance;
+        agent.stoppingDistance = stoppingDistance;
 
-        if (lumiDetected == true)
+        if (lumiDetected)
         {
             detectedLumi = true;
-            // play sound for suspence
         }
-        else if (lumiDetected == false)
+        else
         {
             detectedLumi = false;
         }
 
-        StartCoroutine(CheckReachedDestination(stoppingDistance));
-        GetComponent<NavMeshAgent>().SetDestination(target.position);
+        agent.SetDestination(target.position);
         currentState = MonsterState.Investigate;
-        
-        if (Vector3.Distance(target.position, killBox.transform.position) <= killBoxRadius && detectedLumi == true)
+
+        // Check for proximity to kill the player
+        if (Vector3.Distance(target.position, killBox.transform.position) <= killBoxRadius && detectedLumi)
         {
             Kill();
         }
     }
 
-    private IEnumerator CheckReachedDestination(int stoppingDistance)
+    // Switch to idle state and handle logic for being idle
+    private void SwitchToIdle()
     {
-       
-        while (reached == false)
-        {
-            if (Vector3.Distance(GetComponent<NavMeshAgent>().destination, transform.position) <= stoppingDistance)
-            {
-                currentState = MonsterState.Idle;
-                reached = true;
-            } 
-        }
-        yield return true;
+        currentState = MonsterState.Idle;
+        animator.Play("Idle"); // Ensure Idle animation is triggered
+        Debug.Log("Monster switched to Idle state");
+        StartCoroutine(IdleWait()); // After waiting, resume patrol
     }
-    private IEnumerator PatrolWait()
+
+    private IEnumerator IdleWait()
     {
         yield return new WaitForSeconds(waitToResumeRoaming);
-        GetComponent<NavMeshAgent>().stoppingDistance = 0;
-        currentState = MonsterState.Roaming;
+        currentState = MonsterState.Roaming; // Resume patrol after waiting
+        Debug.Log("Resuming roaming after idle");
     }
 
     private void Kill()
     {
-        // add en hasKilled bool eller noget så vi ikke kommer til at
-        // kalde en method i playercontrolleren mega mange gange.
         Debug.Log("Lumi is dead");
-        // call method from charactercontroller to kill lumi and maybe call game manager to restart level
+        // Call method from charactercontroller to kill Lumi or restart the level
     }
 }
-
