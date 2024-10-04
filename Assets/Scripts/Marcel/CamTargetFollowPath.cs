@@ -24,13 +24,5 @@ public class CamTargetFollowPath : MonoBehaviour
         
         // Apply the combined rotation to the object's transform
         transform.rotation = newRotation;
-
-    //     Quaternion pathDirection = pathCreator.path.GetRotationAtDistance(pc.distanceTravelled);
-
-    //     Vector3 newDirection = new Vector3(0, 0, pathDirection.z);
-
-    //     Quaternion pathRotation = Quaternion.LookRotation(newDirection);
-        
-    //     transform.rotation = pathRotation;
     }
 }

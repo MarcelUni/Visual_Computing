@@ -11,15 +11,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float normalMoveSpeed;
     [SerializeField] private float sneakMoveSpeed;
     [SerializeField] private float speedUpAndSlowDownTime;
+    [SerializeField] private float rotateSpeed;
+    [SerializeField] private GameObject playerModelObject;
     public bool moveForward;
     public bool moveBackward;
-    [SerializeField] private GameObject playerModelObject;
-
-
-    [Header("Test inputs")]
-    public KeyCode forwardKey = KeyCode.W;
-    public KeyCode backwardKey = KeyCode.S;
-    public KeyCode sneakKey = KeyCode.LeftShift;
 
     [Header("Behavior bools")]
     public bool isSneaking;
@@ -35,33 +30,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();        
-    }
-
-    private void Update()
-    {
-        if (Input.GetKey(forwardKey))
-        {
-            moveForward = true;
-            moveBackward = false;
-            isMoving = true;
-        }
-        else if (Input.GetKey(backwardKey))
-        {
-            moveForward = false;
-            moveBackward = true;
-            isMoving = true;
-        }
-        else
-        {
-            isMoving = false;
-            moveBackward = false;
-            moveForward = false;
-        }
-
-        if(Input.GetKeyDown(sneakKey))
-        {
-            ToggleSneak();
-        }
     }
 
     public void ToggleSneak()
@@ -109,7 +77,7 @@ public class PlayerController : MonoBehaviour
         Vector3 pathPosition = pathCreator.path.GetPointAtDistance(distanceTravelled);
  
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));  
-        SmoothRotate();
+        Rotate();
     }
 
     private void MoveBackward(float speed)
@@ -123,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));
 
-        SmoothRotate();
+        Rotate();
     }
 
     private void Decelerate()
@@ -139,26 +107,28 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    private void SmoothRotate()
+    private void Rotate()   
     {
         Vector3 pathDirection = pathCreator.path.GetDirectionAtDistance(distanceTravelled);
 
-        Quaternion pathRotation;
+        Quaternion lookRotation;
         Vector3 newDirection;
 
         if(currentSpeed > 0)
         {
             // Create a new direction vector that only considers the y-axis rotation
             newDirection = new Vector3(pathDirection.x, 0, pathDirection.z);
-            pathRotation = Quaternion.LookRotation(newDirection);
+            lookRotation = Quaternion.LookRotation(newDirection);
         }
         else
         {
             // Create a new direction vector that only considers the y-axis rotation
             newDirection = new Vector3(-pathDirection.x, 0, -pathDirection.z);
-            pathRotation = Quaternion.LookRotation(newDirection);
-        }
-            
-        playerModelObject.transform.rotation = pathRotation;
+            lookRotation = Quaternion.LookRotation(newDirection);
+        }   
+
+        Quaternion currentRot = playerModelObject.transform.rotation;
+
+        playerModelObject.transform.rotation = Quaternion.Slerp(currentRot, lookRotation, rotateSpeed * Time.deltaTime);
     }
 }
