@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject mainMenuUI;
     public GameObject gameUI;
     public GameObject deathUI;
+    public GameObject settingsUI;
 
     // Main Character reference for dead check
     public GameObject mainCharacter;
@@ -21,11 +23,6 @@ public class GameManager : MonoBehaviour
     private const string PlayerPositionKey = "PlayerPosition";
     private const string SceneKey = "Scene";
 
-    // should be called when pressing "Esc"
-    private void Start()
-    {
-        StartGame();
-    }
     public void ShowMainMenu()
     {
         mainMenuUI.SetActive(true);
@@ -35,19 +32,32 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f; // Pause the game
     }
 
-    // should be called when pressing "Play" from the mainmenuUI
     public void StartGame()
+    {
+        SceneManager.LoadScene("MonsterTestScene");
+    }
+
+    // should be called when pressing "Play" from the mainmenuUI
+    public void ResumeGame()
     {
         mainMenuUI.SetActive(false);
         gameUI.SetActive(true);
         deathUI.SetActive(false);
+        settingsUI.SetActive(false);
         isGameActive = true;
         Time.timeScale = 1f; // Resume the game
     }
 
+    public void Settings()
+    {
+        settingsUI.SetActive(true);
+        mainMenuUI.SetActive(false);
+        deathUI.SetActive(false);
+    }
+
     public void OnCharacterDeath()
     {
-        if(isGameActive)
+        if (isGameActive)
         {
             ShowDeathScreen();
         }
@@ -55,6 +65,7 @@ public class GameManager : MonoBehaviour
 
     public void ShowDeathScreen()
     {
+        // play a sound effect
         deathUI.SetActive(true);
         gameUI.SetActive(false);
         isGameActive = false;
@@ -67,15 +78,15 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void QuitToMainMenu()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenuScene");
-    }
-
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void OnApplicationQuit()
+    {
+        SaveGame();
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void SaveGame()
@@ -87,7 +98,6 @@ public class GameManager : MonoBehaviour
 
         // Save the current scene
         PlayerPrefs.SetString(SceneKey, SceneManager.GetActiveScene().name);
-
         PlayerPrefs.Save();
         Debug.Log("Game Saved");
     }
@@ -97,8 +107,8 @@ public class GameManager : MonoBehaviour
         if (PlayerPrefs.HasKey(SceneKey))
         {
             string sceneName = PlayerPrefs.GetString(SceneKey);
+            SceneManager.sceneLoaded += OnSceneLoaded;
             SceneManager.LoadScene(sceneName);
-            StartCoroutine(LoadPlayerPosition());
         }
         else
         {
@@ -106,11 +116,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        StartCoroutine(LoadPlayerPosition());
+    }
+
     private IEnumerator LoadPlayerPosition()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitUntil(() => mainCharacter != null);
 
-        if(PlayerPrefs.HasKey(PlayerPositionKey + "_X"))
+        if (PlayerPrefs.HasKey(PlayerPositionKey + "_X"))
         {
             float x = PlayerPrefs.GetFloat(PlayerPositionKey + "_X");
             float y = PlayerPrefs.GetFloat(PlayerPositionKey + "_Y");
@@ -121,7 +137,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No saved game found");
+            Debug.Log("No saved player position found");
         }
     }
 
@@ -132,9 +148,15 @@ public class GameManager : MonoBehaviour
             OnCharacterDeath();
         }
 
-       if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             ShowMainMenu();
         }
+    }
+
+    public void SetVolume()
+    {
+        Slider volumeSlider = GameObject.Find("VolumeSlider").GetComponent<Slider>();
+        AudioListener.volume = volumeSlider.value;
     }
 }
