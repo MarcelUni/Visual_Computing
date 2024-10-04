@@ -1,0 +1,93 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InputManager : MonoBehaviour
+{
+    // Keycodes
+    public KeyCode moveForwardKey;
+    public KeyCode moveBackwardKey;
+    public KeyCode sneakKey;
+    public KeyCode interactKey;
+
+    private PlayerInteract playerInteract;
+    private PlayerController pc;
+
+    void Start()
+    {
+        pc = GetComponent<PlayerController>();
+        playerInteract = GetComponent<PlayerInteract>();   
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKey(moveForwardKey))
+        {
+            MoveForward();
+        }
+        else if (Input.GetKey(moveBackwardKey))
+        {
+            MoveBackward();
+        }
+        else
+        {
+            NoInput();
+        }
+        if(Input.GetKeyDown(sneakKey))
+        {
+            ToggleSneak();
+        }
+
+        if(Input.GetKeyDown(interactKey))
+        {
+            playerInteract.Interact();
+        }
+    }
+
+    /// <summary>
+    /// Has to be called for moving forward gesture
+    /// </summary>
+    public void MoveForward()
+    {
+        pc.moveForward = true;
+        pc.moveBackward = false;
+        pc.isMoving = true;
+    }
+
+    /// <summary>
+    /// Move backward gesture
+    /// </summary>
+    public void MoveBackward()
+    {
+        pc.moveForward = false;
+        pc.moveBackward = true;
+        pc.isMoving = true;
+    }
+
+    /// <summary>
+    /// When no gesture is true
+    /// </summary>
+    public void NoInput()
+    {
+        pc.isMoving = false;
+        pc.moveBackward = false;
+        pc.moveForward = false;
+    }
+
+    /// <summary>
+    /// Needs to be called once for toggling gesture. Will mess up if called every frame
+    /// </summary>
+    public void ToggleSneak()
+    {
+        pc.ToggleSneak();
+    }
+
+    /// <summary>
+    /// Call once for interacting with a puzzle
+    /// </summary>
+    public void Interact()
+    {
+        playerInteract.Interact();
+    }
+}
