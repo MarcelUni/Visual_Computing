@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
+using UnityEditor.Experimental.GraphView;
 
 
 public class PlayerController : MonoBehaviour
@@ -25,11 +26,18 @@ public class PlayerController : MonoBehaviour
     private float currentSpeed = 0;
     [HideInInspector] public float distanceTravelled = 8;
     private Rigidbody rb;
+    public Animator anim;
 
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();        
+        rb = GetComponent<Rigidbody>();   
+        // anim = GetComponentInChildren<Animator>();     
+    }
+
+    private void Update()
+    {
+        UpdateAnimations();   
     }
 
     public void ToggleSneak()
@@ -130,5 +138,11 @@ public class PlayerController : MonoBehaviour
         Quaternion currentRot = playerModelObject.transform.rotation;
 
         playerModelObject.transform.rotation = Quaternion.Slerp(currentRot, lookRotation, rotateSpeed * Time.deltaTime);
+    }
+
+    private void UpdateAnimations()
+    {
+        anim.SetBool("IsMoving", isMoving);
+        anim.SetBool("IsCrouching", isSneaking);
     }
 }

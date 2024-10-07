@@ -10,12 +10,19 @@ public class PlayerInteract : MonoBehaviour
 
     private GameObject puzzleObject;
 
+    private Animator anim;
+
+    private void Start()
+    {
+        anim = GetComponentInChildren<Animator>();
+    }
 
     public void Interact()
     {
         if(puzzleInRange != true)
             return;
 
+        anim.SetTrigger("Interact");
         puzzleObject.GetComponent<IInteractable>()?.Interact();
         Debug.Log("Solving puzzle wup wup");
     }
