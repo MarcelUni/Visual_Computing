@@ -108,16 +108,16 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isSneaking == false)
+        if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking == false)
         {
             Investigate(other.transform, true, 1);
             detectedLumi = true;
         }
-        else if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isWalking)
+        else if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isMoving)
         {
             Investigate(other.transform, true, 1);
         }
-        else if (other.CompareTag("Player") && other.GetComponent<TestSneak>().isSneaking)
+        else if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking)
         {
             detectedLumi = false;
         }

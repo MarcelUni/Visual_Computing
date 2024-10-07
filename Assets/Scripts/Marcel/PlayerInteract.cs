@@ -34,7 +34,12 @@ public class PlayerInteract : MonoBehaviour
             puzzleInRange = true;
             puzzleObject = other.gameObject;
         }
-    } 
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        
+    }
     private void OnTriggerExit(Collider other)
     {
         if(other.CompareTag("Puzzle"))
