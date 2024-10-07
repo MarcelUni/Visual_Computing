@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
     private float currentVelocity;
     private float currentSpeed = 0;
-    [HideInInspector] public float distanceTravelled;
+    [HideInInspector] public float distanceTravelled = 8;
     private Rigidbody rb;
 
 
