@@ -7,11 +7,8 @@ using UnityEngine;
 public class PlayerInteract : MonoBehaviour
 {
     public bool puzzleInRange;
-
     private GameObject puzzleObject;
-
     private Animator anim;
-
     private void Start()
     {
         anim = GetComponentInChildren<Animator>();

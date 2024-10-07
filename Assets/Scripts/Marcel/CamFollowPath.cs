@@ -12,6 +12,6 @@ public class CamFollowPath : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = pathCreator.path.GetPointAtDistance(player.distanceTravelled - offSet);
+        transform.position = pathCreator.path.GetPointAtDistance(player.distanceTravelled - offSet, EndOfPathInstruction.Stop);
     }
 }

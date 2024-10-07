@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
-using UnityEditor.Experimental.GraphView;
 
 
 public class PlayerController : MonoBehaviour
@@ -16,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject playerModelObject;
     public bool moveForward;
     public bool moveBackward;
+    private bool canMove;
 
     [Header("Behavior bools")]
     public bool isSneaking;
@@ -29,14 +29,20 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
 
 
+
     void Start()
     {
+        canMove = true;
         rb = GetComponent<Rigidbody>();   
-        // anim = GetComponentInChildren<Animator>();     
     }
 
     private void Update()
     {
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("Interact") || anim.GetCurrentAnimatorStateInfo(0).IsName("InteractOut"))
+            canMove = false;
+        else
+            canMove = true;
+
         UpdateAnimations();   
     }
 
@@ -77,6 +83,9 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward(float speed)
     {
+        if(canMove != true)
+            return;
+
         currentSpeed = Mathf.SmoothDamp(currentSpeed, speed, ref currentVelocity , speedUpAndSlowDownTime);
 
         distanceTravelled += currentSpeed * Time.fixedDeltaTime;
@@ -90,6 +99,9 @@ public class PlayerController : MonoBehaviour
 
     private void MoveBackward(float speed)
     {   
+        if(canMove != true)
+            return;
+        
         currentSpeed = Mathf.SmoothDamp(currentSpeed, -speed, ref currentVelocity , speedUpAndSlowDownTime);
 
         distanceTravelled += currentSpeed * Time.fixedDeltaTime;
