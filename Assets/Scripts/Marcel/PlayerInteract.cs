@@ -1,7 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Numerics;
 using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
@@ -9,6 +8,9 @@ public class PlayerInteract : MonoBehaviour
     public bool puzzleInRange;
     private GameObject puzzleObject;
     private Animator anim;
+
+    public float pickUpRadius;
+    public LayerMask interactLayer;
 
 
     private void Start()
@@ -48,9 +50,12 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    void PickUpObject(GameObject pickUpObj)
+    private void PickUpObject(GameObject pickUpObj)
     {
-        //Physics.BoxCast()
+    // RaycastHit[] = Physics.SphereCastAll(transform.position, pickUpRadius, )
+        
+
+        
     }
 
 }

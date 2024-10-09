@@ -192,8 +192,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveForwardKey: 119
   moveBackwardKey: 115
-  sneakKey: 304
-  interactKey: 101
+  sneakForwardKey: 101
+  sneakBackwardKey: 113
+  interactKey: 9
 --- !u!1 &3202879703508449158
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,8 +322,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -9103484930961366303, guid: 55d038954bfc84c8784685069cf7479e,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: 945e2f586a1a63a49a99d9080a8e9f24, type: 2}
     - target: {fileID: 5866666021909216657, guid: 81bb9eea30387e442899949a80011e55,
         type: 3}
       propertyPath: m_Controller
