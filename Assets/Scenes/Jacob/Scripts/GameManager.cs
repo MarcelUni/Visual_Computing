@@ -32,9 +32,9 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f; // Pause the game
     }
 
-    public void StartGame()
+    public void StartGame(string scene)
     {
-        SceneManager.LoadScene("MonsterTestScene");
+        SceneManager.LoadScene(scene);
     }
 
     // should be called when pressing "Play" from the mainmenuUI
