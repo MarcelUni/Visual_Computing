@@ -6,6 +6,7 @@ TagManager:
   tags:
   - TriggerEnemyLookat
   - Puzzle
+  - PathTrigger
   layers:
   - Default
   - TransparentFX

@@ -7,7 +7,8 @@ using PathCreation;
 public class PlayerController : MonoBehaviour
 {
     [Header("Move parameters")]
-    public PathCreator pathCreator;
+    public List<PathCreator> pathCreators;
+    private int currentPathIndex = 0;
     [SerializeField] private float normalMoveSpeed;
     [SerializeField] private float sneakMoveSpeed;
     [SerializeField] private float speedUpAndSlowDownTime;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool isSneaking;
     public bool isMoving;
     public bool isDead;
+    public bool canSwitchPath = false;
 
     private float currentVelocity;
     private float currentSpeed = 0;
@@ -28,8 +30,11 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public Animator anim;
 
+
+
     void Start()
     {
+        canSwitchPath = false;
         canMove = true;
         rb = GetComponent<Rigidbody>();   
     }
@@ -41,7 +46,28 @@ public class PlayerController : MonoBehaviour
         else
             canMove = true;
 
+        //check for path switching input
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            SwitchPath();
+        }
+
         UpdateAnimations();   
+    }
+
+    public void ToggleSneak()
+    {
+        isSneaking = !isSneaking;
+    }
+
+    private void SwitchPath()
+    {
+       if(pathCreators.Count > 1 && canSwitchPath == true)
+        {
+            currentPathIndex = (currentPathIndex + 1) % pathCreators.Count; // Cycle to the next path
+            distanceTravelled = 0; // Reset distance travelled
+
+        }
     }
 
     private void FixedUpdate()
@@ -76,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward(float speed)
     {
-        if(canMove != true)
+        if(canMove != true || pathCreators.Count == 0)
             return;
 
         currentSpeed = Mathf.SmoothDamp(currentSpeed, speed, ref currentVelocity , speedUpAndSlowDownTime);
@@ -84,7 +110,7 @@ public class PlayerController : MonoBehaviour
         distanceTravelled += currentSpeed * Time.fixedDeltaTime;
 
         Vector3 currentPosition = rb.position;
-        Vector3 pathPosition = pathCreator.path.GetPointAtDistance(distanceTravelled);
+        Vector3 pathPosition = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled);
  
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));  
         Rotate();
@@ -92,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveBackward(float speed)
     {   
-        if(canMove != true)
+        if(canMove != true || pathCreators.Count == 0)
             return;
         
         currentSpeed = Mathf.SmoothDamp(currentSpeed, -speed, ref currentVelocity , speedUpAndSlowDownTime);
@@ -100,7 +126,7 @@ public class PlayerController : MonoBehaviour
         distanceTravelled += currentSpeed * Time.fixedDeltaTime;
 
         Vector3 currentPosition = rb.position;
-        Vector3 pathPosition = pathCreator.path.GetPointAtDistance(distanceTravelled);
+        Vector3 pathPosition = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled);
 
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));
 
@@ -109,12 +135,14 @@ public class PlayerController : MonoBehaviour
 
     private void Decelerate()
     {
+        if (pathCreators.Count == 0) return;
+
         currentSpeed = Mathf.SmoothDamp(currentSpeed, 0, ref currentVelocity , speedUpAndSlowDownTime);
             
         distanceTravelled += currentSpeed * Time.fixedDeltaTime;
 
         Vector3 currentPosition = rb.position;
-        Vector3 pathPosition = pathCreator.path.GetPointAtDistance(distanceTravelled);
+        Vector3 pathPosition = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled);
 
         rb.MovePosition(new Vector3(pathPosition.x, currentPosition.y, pathPosition.z));
         
@@ -122,7 +150,8 @@ public class PlayerController : MonoBehaviour
 
     private void Rotate()   
     {
-        Vector3 pathDirection = pathCreator.path.GetDirectionAtDistance(distanceTravelled);
+        if (pathCreators.Count == 0) return;
+        Vector3 pathDirection = pathCreators[currentPathIndex].path.GetDirectionAtDistance(distanceTravelled);
 
         Quaternion lookRotation;
         Vector3 newDirection;
@@ -149,5 +178,23 @@ public class PlayerController : MonoBehaviour
     {
         anim.SetBool("IsMoving", isMoving);
         anim.SetBool("IsCrouching", isSneaking);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Logic for when the player enters a path trigger collider
+        if (other.CompareTag("PathTrigger"))
+        {
+            canSwitchPath = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        // Logic for when the player exits a path trigger collider
+        if (other.CompareTag("PathTrigger"))
+        {
+            canSwitchPath = false;
+        }
     }
 }
