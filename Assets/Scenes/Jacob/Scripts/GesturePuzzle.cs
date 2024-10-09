@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class GesturePuzzle : MonoBehaviour
 {
+    // der skal lige gøres sådan at cameraShake ikke bliver spillet hele tiden (skal stoppe når dørenen har åbnet helt)
     public GameObject leftDoor;
     public GameObject rightDoor;
 
@@ -66,10 +67,9 @@ public class GesturePuzzle : MonoBehaviour
             // All inputs are true
             StartCoroutine(MoveDoorSmoothly(true));
             StartCoroutine(MoveDoorSmoothly(false));
-            if (start == true)
-            {
-                StartCoroutine(CameraShake());
-            }
+
+            StartCoroutine(CameraShake());
+            
             
         }
         else if (input1 || input2 || input3)
@@ -114,7 +114,6 @@ public class GesturePuzzle : MonoBehaviour
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
-            start = false;
             leftDoor.transform.position = targetPosition;
         }
         else
