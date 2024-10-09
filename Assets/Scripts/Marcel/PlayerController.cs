@@ -28,8 +28,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public Animator anim;
 
-
-
     void Start()
     {
         canMove = true;
@@ -44,11 +42,6 @@ public class PlayerController : MonoBehaviour
             canMove = true;
 
         UpdateAnimations();   
-    }
-
-    public void ToggleSneak()
-    {
-        isSneaking = !isSneaking;
     }
 
     private void FixedUpdate()
