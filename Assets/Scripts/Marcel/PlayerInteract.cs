@@ -9,6 +9,8 @@ public class PlayerInteract : MonoBehaviour
     public bool puzzleInRange;
     private GameObject puzzleObject;
     private Animator anim;
+
+
     private void Start()
     {
         anim = GetComponentInChildren<Animator>();
@@ -45,4 +47,10 @@ public class PlayerInteract : MonoBehaviour
             puzzleObject = null;
         }
     }
+
+    void PickUpObject(GameObject pickUpObj)
+    {
+        //Physics.BoxCast()
+    }
+
 }

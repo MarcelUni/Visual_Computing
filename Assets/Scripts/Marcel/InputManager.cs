@@ -7,8 +7,10 @@ public class InputManager : MonoBehaviour
     // Keycodes
     public KeyCode moveForwardKey;
     public KeyCode moveBackwardKey;
-    public KeyCode sneakKey;
+    public KeyCode sneakForwardKey;
+    public KeyCode sneakBackwardKey;
     public KeyCode interactKey;
+    private KeyCode currentKey;
 
     private PlayerInteract playerInteract;
     private PlayerController pc;
@@ -30,13 +32,17 @@ public class InputManager : MonoBehaviour
         {
             MoveBackward();
         }
+        else if (Input.GetKey(sneakForwardKey))
+        {
+            ForwardSneak();
+        }
+        else if (Input.GetKey(sneakBackwardKey))
+        {
+            BackwardSneak();
+        }
         else
         {
             NoInput();
-        }
-        if(Input.GetKeyDown(sneakKey))
-        {
-            ToggleSneak();
         }
 
         if(Input.GetKeyDown(interactKey))
@@ -53,6 +59,7 @@ public class InputManager : MonoBehaviour
         pc.moveForward = true;
         pc.moveBackward = false;
         pc.isMoving = true;
+        pc.isSneaking = false;
     }
 
     /// <summary>
@@ -63,6 +70,7 @@ public class InputManager : MonoBehaviour
         pc.moveForward = false;
         pc.moveBackward = true;
         pc.isMoving = true;
+        pc.isSneaking = false;
     }
 
     /// <summary>
@@ -76,11 +84,25 @@ public class InputManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Needs to be called once for toggling gesture. Will mess up if called every frame
+    /// Moving forward while sneaking
     /// </summary>
-    public void ToggleSneak()
+    public void ForwardSneak()
     {
-        pc.ToggleSneak();
+        pc.moveForward = true;
+        pc.moveBackward = false;
+        pc.isMoving = true;
+        pc.isSneaking = true;
+    }
+
+    /// <summary>
+    /// Moving backwards while sneaking
+    /// </summary>
+    public void BackwardSneak()
+    {
+        pc.moveForward = false;
+        pc.moveBackward = true;
+        pc.isMoving = true;
+        pc.isSneaking = true;
     }
 
     /// <summary>
