@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import os
 import socket
-from collections import Counter
 
 
 #TODO: Vi skal teste gesture matching og se om alt det her er spildt arbejde
@@ -39,7 +38,7 @@ for gesture in gestures:
 # Adding no gesture to bufferDict
 bufferDict['No gesture'] = 0
 
-bufferThreshhold = 5
+bufferThreshhold = 8
 
 currentGesture = ''
 
@@ -141,14 +140,62 @@ def findBestMatch(contours_refs, contours_live):
         
     return best_match_index, best_match_value
 
-#TODO Remove noise funktion med små støvpartikler
 def removeNoise(frame):
-    no_noise_frame = frame
 
-    return no_noise_frame
-    
+    # Source: https://github.com/Gustav-skole/DDU/blob/master/AI/basic.py
 
-# QUALITY OF LIFE, SMALL IRRELEVANT FUNCTIONS
+    connectivity = 8
+
+    output = cv2.connectedComponentsWithStats(frame, connectivity, cv2.CV_32S)
+
+    num_stats = output[0]
+    labels = output[1]
+    stats = output[2]
+
+    new_image = frame.copy()
+
+    for label in range(num_stats):
+        if stats[label,cv2.CC_STAT_AREA] == 1:
+            new_image[labels == label] = 0
+
+    return new_image
+
+def removeNoise2(frame):
+    dilate_iterations = 2
+    erosion_iterations = 2
+
+    kernel = np.array([0,0,1,0,0],
+                       [0,1,1,1,0],
+                       [0,0,1,0,0],)
+
+    #3x3 disk dilate
+    frame = cv2.dilate(frame, kernel, iterations=dilate_iterations)
+
+    #Erosion to get back OG image
+    frame = cv2.erode(frame, kernel, iterations=erosion_iterations)
+
+    return frame
+
+#TODO Lav close shape function så sådan noget som Bonks tatoveringer forsvinder
+def closeShape(frame):
+    dilate_iterations = 5
+    erosion_iterations = 5
+
+    kernel = np.array([[0,0,1,0,0],
+                       [0,1,1,1,0],
+                       [1,1,1,1,1],
+                       [0,1,1,1,0],
+                       [0,0,1,0,0]])
+
+    #3x3 disk dilate
+    frame = cv2.dilate(frame, kernel, iterations=dilate_iterations)
+
+    #Erosion to get back OG image
+    frame = cv2.erode(frame, kernel, iterations=erosion_iterations)
+
+    return frame
+
+# QUALITY OF LIFE, SMALL FUNCTIONS
 
 def displayText(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -170,6 +217,7 @@ def get_key_from_buffer(val):
     return "key doesn't exist"
 
 # BOUNDING RECTANGLE RELATED
+# TODO Skal lowkey slettes?
 
 def cropToBrect(frame, contours): 
     x, y, width, height = cv2.boundingRect(contours)
@@ -190,11 +238,15 @@ def drawBrect(frame, contours):
 # CLOSING THE APPLICATION
 
 def close_application():
+    global cap
+
     print("Closing application")
     cap.release()
     cv2.destroyAllWindows()
 
 def full_close_application():
+    global cap
+
     cap.release()
     cv2.destroyAllWindows()
     # Delete all the files in the filenames array
@@ -276,7 +328,7 @@ def state_match_gestures(raw_frame):
         else:
             bufferDict['No gesture'] += 1   
         
-        print(bufferDict)
+        #print(bufferDict)
 
         maxBufferValue = max(bufferDict.values())
 
@@ -284,8 +336,9 @@ def state_match_gestures(raw_frame):
 
         # Send gesture best matched gesture name to Unity
         if best_match_index != -1 and maxBufferValue == bufferThreshhold:
-            gesture_name = bufferDict[get_key_from_buffer(maxBufferValue)]
+            gesture_name = get_key_from_buffer(maxBufferValue)
             frame = displayText(frame, f'Matched Gesture: {gesture_name}')
+            print(gesture_name)
 
             #Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
@@ -294,9 +347,11 @@ def state_match_gestures(raw_frame):
             sock.sendto(str.encode(gesture_name), serverAddressPort)
 
             currentGesture = gesture_name
-        elif currentGesture != '':
+
+            #NOTE Tror ikke den her giver mening?
+        elif currentGesture == '':
              # Send gesture_name to Unity via UDP
-            sock.sendto(str.encode(gesture_name), serverAddressPort)
+            sock.sendto(str.encode('No gesture'), serverAddressPort)
         else:
             print('No currentGesture')
 
@@ -338,12 +393,17 @@ while current_state:
 
     raw_frame = cv2.flip(frame, 1)  # Flip the frame horizontally (mirror effect)
     
-    #Cropping frame
-    y = 50
+    # Cropping frame
+    y = 0
     x = 50
-    h = 300
-    w = 300
-    raw_frame = raw_frame[y:y+h, x:x+w]
+    h = 480
+    w = 500
+    frame = raw_frame[y:y+h, x:x+w]
+
+    # Removing potential noise
+    frame = removeNoise2(frame)
+
+    # Closing - hopefully fixing Bonk tattoos
 
     #Define the key press
     key = cv2.waitKey(1) & 0xFF
@@ -351,6 +411,6 @@ while current_state:
         close_application()
         
     # Execute the current state function
-    current_state = states[current_state](raw_frame)
+    current_state = states[current_state](frame)
 
     

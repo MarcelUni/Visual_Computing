@@ -9,7 +9,7 @@ def close_application():
 
 
 # Open the camera
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 while True:
     # Capture frame-by-frame
@@ -21,12 +21,24 @@ while True:
 
     raw_frame = cv2.flip(frame, 1)  # Flip the frame horizontally (mirror effect)
     
+    cv2.imshow('Feed', raw_frame)
+
     #Cropping frame
-    y = 50
+    cam_x, cam_y, cam_w, cam_h = cv2.getWindowImageRect('Feed')
+
+    y = 0
     x = 50
     h = 300
-    w = 300
-    raw_frame = raw_frame[y:y+h, x:x+w]
+    w = 500
+    cropped = raw_frame[y:y+cam_h, x:x+w]
+
+    cv2.imshow('Cropped feed', cropped)
+
+
+    print(f'x = {cam_x}')
+    print(f'y = {cam_y}')
+    print(f'w = {cam_w}')
+    print(f'h = {cam_h}')
 
     #Define the key press
     key = cv2.waitKey(1) & 0xFF
