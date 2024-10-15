@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import socket
+from collections import Counter
 
 
 #TODO: Vi skal teste gesture matching og se om alt det her er spildt arbejde
@@ -28,6 +29,19 @@ contours_refs = []
 
 # All gestures to be captured
 gestures = ['Forward', 'Backward']
+
+# Buffer dict - used to count gesture matches
+bufferDict = {}
+
+# Adding all gestures to dict as keys
+for gesture in gestures:
+    bufferDict[gesture] = 0
+# Adding no gesture to bufferDict
+bufferDict['No gesture'] = 0
+
+bufferThreshhold = 5
+
+currentGesture = ''
 
 # Initializing gesture index
 gestureIndex = 0
@@ -111,7 +125,7 @@ def findBestMatch(contours_refs, contours_live):
     best_match_value = float('inf')
     best_match_index = -1
 
-        # Iterate through the contours array and compare with live contours
+    # Iterate through the contours array and compare with live contours
     for i, gesture_contours in enumerate(contours_refs):
         if len(gesture_contours) == 0:
             print(f"Warning: Empty contour encountered at index {i}. Skipping.")
@@ -124,8 +138,15 @@ def findBestMatch(contours_refs, contours_live):
         if match_value < best_match_value:
             best_match_value = match_value
             best_match_index = i
-    
+        
     return best_match_index, best_match_value
+
+#TODO Remove noise funktion med små støvpartikler
+def removeNoise(frame):
+    no_noise_frame = frame
+
+    return no_noise_frame
+    
 
 # QUALITY OF LIFE, SMALL IRRELEVANT FUNCTIONS
 
@@ -139,6 +160,14 @@ def displayMatchAccuracy(image, match):
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(image, f'Match: {match}', (10, image.shape[0] - 10), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
     return image
+
+def get_key_from_buffer(val):
+  
+    for key, value in bufferDict.items():
+        if val == value:
+            return key
+
+    return "key doesn't exist"
 
 # BOUNDING RECTANGLE RELATED
 
@@ -202,7 +231,7 @@ def state_capture_gestures(raw_frame):
             # Displaying the feeds
             cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
             cv2.imshow('Binary Feed', brect_binary_frame)  # Updates 'Binary Feed' window
-            cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
+            #cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
 
         # Handle keyboard events
         key = cv2.waitKey(1) & 0xFF
@@ -220,7 +249,7 @@ def state_capture_gestures(raw_frame):
 
 # State of matching the captured gesture with the live feed
 def state_match_gestures(raw_frame):
-    global contours_refs, match_threshold
+    global contours_refs, match_threshold, bufferDict, currentGesture
 
     # Display the frame with no text
     frame = displayText(raw_frame.copy(), '')
@@ -238,22 +267,44 @@ def state_match_gestures(raw_frame):
         # Display the match accuracy on the frame
         displayMatchAccuracy(frame, round(best_match_value, 2))
 
-        # Determine the gesture based on the best match index
-        if best_match_index != -1 and best_match_value < match_threshold:
+        #TODO Skal buffer være her?
+######################## BUFFER ############################
+        # Adding the best matched gesture to buffer
+        if best_match_value < match_threshold:
             gesture_name = gestures[best_match_index]
+            bufferDict[gesture_name] += 1
+        else:
+            bufferDict['No gesture'] += 1   
+        
+        print(bufferDict)
+
+        maxBufferValue = max(bufferDict.values())
+
+        # TODO Skal altid sende en gesture baseret på buffer, også no gesture
+
+        # Send gesture best matched gesture name to Unity
+        if best_match_index != -1 and maxBufferValue == bufferThreshhold:
+            gesture_name = bufferDict[get_key_from_buffer(maxBufferValue)]
             frame = displayText(frame, f'Matched Gesture: {gesture_name}')
+
+            #Reset buffer
+            bufferDict = dict.fromkeys(bufferDict, 0)
 
             # Send gesture_name to Unity via UDP
             sock.sendto(str.encode(gesture_name), serverAddressPort)
+
+            currentGesture = gesture_name
+        elif currentGesture != '':
+             # Send gesture_name to Unity via UDP
+            sock.sendto(str.encode(gesture_name), serverAddressPort)
         else:
-            frame = displayText(frame, 'No gesture')
-            # Send 'No gesture' to Unity via UDP
-            sock.sendto(str.encode('No gesture'), serverAddressPort)
+            print('No currentGesture')
+
 
         # Displaying the feeds
         cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
         cv2.imshow('Binary Feed', brect_binary_frame)  # Updates 'Binary Feed' window
-        cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
+        # cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
 
     else:
         frame = displayText(frame, 'No contours found in live feed')
@@ -272,7 +323,7 @@ states = {
 # MAIN #####################################################################################
 
 # Open the camera
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 # Initial state
 current_state = 'capture_gestures'
@@ -287,6 +338,12 @@ while current_state:
 
     raw_frame = cv2.flip(frame, 1)  # Flip the frame horizontally (mirror effect)
     
+    #Cropping frame
+    y = 50
+    x = 50
+    h = 300
+    w = 300
+    raw_frame = raw_frame[y:y+h, x:x+w]
 
     #Define the key press
     key = cv2.waitKey(1) & 0xFF
