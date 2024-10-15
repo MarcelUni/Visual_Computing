@@ -1,0 +1,24 @@
+TODO: Fortælle gutter om TODO
+
+TODO: Tjek for registrerede gestures ved startup, 
+og lade bruger vælge om man vil tage dem om eller fortsætte til main loop
+
+NOTE:
+Til fremvisning, hav alm display, binær display, og et tredje vindue 
+der viser den gesture den matcher med
+Sørg for at vinduerne har en fast pos, og at gesture 
+billedet lukker hver gang det vil åbne et nyt
+
+Overvej til indstilling af gestures, at bruger skal kunne tage billederne uden at bruge en hånd, 
+så like på en timer måske. Måske en enumerator
+
+Match shape function er jo lidt finurlig med 2 hænder på skærmen, 
+så evt prøv at find en måde vi kan dele skærmen op og køre recognition delen på begge hænder, med hver deres reference bib
+
+DISPLAY MATCH ACCURACY LIVE TIL TESTING
+
+LOWPRIO
+Og vi skal nok også bruge en måde at brugeren kan hente billederne frem igen, 
+hvis de glemmer hvad de har, så evt. kig på måde at sende billede til Unity? Low-prio tho
+HAR EN CHAT MED GPT DER SKAL TJEKKES OP PÅ MED TCP OG UDP - 
+evt sørg for billeder sender inden vi overhovedet begynder main loop
