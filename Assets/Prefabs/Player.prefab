@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0ce82c18e45f40d8bf6f940282c6dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathCreator: {fileID: 0}
+  pathCreators: []
   normalMoveSpeed: 3
   sneakMoveSpeed: 1
   speedUpAndSlowDownTime: 0.1
@@ -163,8 +163,11 @@ MonoBehaviour:
   isSneaking: 0
   isMoving: 0
   isDead: 0
+  canSwitchPath: 0
+  isAtPathChoice: 0
   distanceTravelled: 0
   anim: {fileID: 5750228077373857554}
+  camFollowPath: {fileID: 0}
 --- !u!114 &5490893551203294618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +181,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puzzleInRange: 0
+  pickUpRadius: 0
+  interactLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &7493263303222069855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,7 +246,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c56beab4e4b24ebeb72f3b0455ca585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathCreator: {fileID: 0}
+  pathCreators: []
+  currentPathIndex: 0
 --- !u!1001 &2208589357065446019
 PrefabInstance:
   m_ObjectHideFlags: 0
