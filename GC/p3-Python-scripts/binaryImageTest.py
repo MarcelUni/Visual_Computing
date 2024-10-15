@@ -24,6 +24,21 @@ def getBinaryImage(frame, gestureName, white_threshold):
             flattened_image[i] = 255
     binaryImg = np.reshape(flattened_image, grayImg.shape)
 
+    # Closing image holes
+    dilateIterations = 12
+    erodeIterations = 6
+
+    kernel = np.array([[0,1,1,1,0],
+                       [1,1,1,1,1],
+                       [1,1,1,1,1],
+                       [1,1,1,1,1],
+                       [0,1,1,1,0]],np.uint8)
+    
+    # Dilating
+    binaryImg = cv2.dilate(binaryImg, kernel, iterations = dilateIterations)
+    # Eroding
+    binaryImg = cv2.erode(binaryImg, kernel, iterations = erodeIterations)
+
     # Save the manipulated image
     binary_filename = (f'{gestureName}_binary.png')
     cv2.imwrite(binary_filename, binaryImg)
