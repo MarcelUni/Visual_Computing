@@ -1,4 +1,3 @@
-Bare til lidt roderi for lille mig c:
+GestureController - til AAU Medialogi, 3. semester (MED3)
 
-Hver mappe er et lille projekt, med sin egen readme, primært for at jeg selv kan huske det,
-men i guess det også er en gennemgang
+Formålet er at lave en controller, der virker ved at et webcam læser ens håndudtryk

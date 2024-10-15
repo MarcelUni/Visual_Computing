@@ -3,6 +3,7 @@ import numpy as np
 import os
 import socket
 
+
 #TODO: Vi skal teste gesture matching og se om alt det her er spildt arbejde
 
 #TODO v2 - Crop billedet til hænderne, og kun analyser hænderne for bedre data
