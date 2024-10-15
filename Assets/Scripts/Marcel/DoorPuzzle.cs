@@ -5,7 +5,7 @@ using UnityEngine;
 public class DoorPuzzle : MonoBehaviour, IInteractable
 {
     private Animator anim;
-    // Start is called before the first frame update
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -17,6 +17,17 @@ public class DoorPuzzle : MonoBehaviour, IInteractable
         this.enabled = false;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 public interface IInteractable
 {

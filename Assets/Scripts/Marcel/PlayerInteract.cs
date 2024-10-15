@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
+    // public variables
     public bool puzzleInRange;
-    private GameObject puzzleObject;
-    private Animator anim;
-
     public float pickUpRadius;
     public LayerMask interactLayer;
+    public string keyTag, LightorbTag;
+    public bool hasKey, hasLightOrb;
+    public GameObject lightorbPosition;
 
-
+    // Private variables
+    private GameObject lightOrbObject;
+    private GameObject puzzleObject;
+    private Animator anim;
+    
     private void Start()
     {
         anim = GetComponentInChildren<Animator>();
@@ -20,12 +24,45 @@ public class PlayerInteract : MonoBehaviour
 
     public void Interact()
     {
-        if(puzzleInRange != true)
-            return;
+        if(puzzleInRange == true)
+        {
+            InteractWithObject();
+            anim.SetTrigger("Interact");
+        }
 
-        anim.SetTrigger("Interact");
+        PickupObject();
+
+        if(hasLightOrb)
+        {
+            lightOrbObject.transform.SetParent(this.transform);
+            lightOrbObject.transform.SetPositionAndRotation(lightorbPosition.transform.position, lightorbPosition.transform.rotation);
+            lightOrbObject.GetComponent<LightOrbBehavior>().InitializeOrb();
+            lightOrbObject.GetComponent<LightOrbBehavior>().hasLightOrb = true;
+        }
+    }
+
+    private void PickupObject()
+    {
+        // Casting within a range to get objects we can pickup
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, pickUpRadius, transform.forward);
+
+        foreach (RaycastHit hit in hits)
+        {
+            if(hit.collider.CompareTag(keyTag))
+            {
+                hasKey = true;
+            }
+            if(hit.collider.CompareTag(LightorbTag))
+            {
+                hasLightOrb = true;
+                lightOrbObject = hit.transform.gameObject;
+            }
+        }
+    }
+
+    private void InteractWithObject()
+    {
         puzzleObject.GetComponent<IInteractable>()?.Interact();
-        Debug.Log("Solving puzzle wup wup");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,11 +73,6 @@ public class PlayerInteract : MonoBehaviour
             puzzleObject = other.gameObject;
         }
     }
-
-    private void OnTriggerStay(Collider other)
-    {
-        
-    }
     private void OnTriggerExit(Collider other)
     {
         if(other.CompareTag("Puzzle"))
@@ -49,13 +81,4 @@ public class PlayerInteract : MonoBehaviour
             puzzleObject = null;
         }
     }
-
-    private void PickUpObject(GameObject pickUpObj)
-    {
-    // RaycastHit[] = Physics.SphereCastAll(transform.position, pickUpRadius, )
-        
-
-        
-    }
-
 }
