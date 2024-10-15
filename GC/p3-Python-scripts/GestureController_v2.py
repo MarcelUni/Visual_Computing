@@ -404,6 +404,7 @@ while current_state:
     frame = removeNoise2(frame)
 
     # Closing - hopefully fixing Bonk tattoos
+    frame = closeShape(frame)
 
     #Define the key press
     key = cv2.waitKey(1) & 0xFF
