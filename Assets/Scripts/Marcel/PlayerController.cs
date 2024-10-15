@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float distanceTravelled = 8;
     private Rigidbody rb;
     public Animator anim;
+    [SerializeField] private CamFollowPath camFollowPath;
 
 
 
@@ -65,8 +66,7 @@ public class PlayerController : MonoBehaviour
        if(pathCreators.Count > 1 && canSwitchPath == true)
         {
             currentPathIndex = (currentPathIndex + 1) % pathCreators.Count; // Cycle to the next path
-            distanceTravelled = 0; // Reset distance travelled
-
+            camFollowPath.currentPathIndex = (camFollowPath.currentPathIndex + 1) % camFollowPath.pathCreators.Count; // Cycle to the next path
         }
     }
 

@@ -6,7 +6,8 @@ using PathCreation;
 public class CamTargetFollowPath : MonoBehaviour
 {
     private PlayerController pc;
-    public PathCreator pathCreator;
+    public List<PathCreator> pathCreators;
+    public int currentPathIndex = 0;
 
     private void Start()
     {
@@ -16,12 +17,12 @@ public class CamTargetFollowPath : MonoBehaviour
     private void Update()
     {
         // Get the rotation from the path at the current distance travelled by the player
-        Quaternion pathRotation = pathCreator.path.GetRotationAtDistance(pc.distanceTravelled);
+        Quaternion pathRotation = pathCreators[currentPathIndex].path.GetRotationAtDistance(pc.distanceTravelled);
 
         // Preserve the original z rotation
         Quaternion currentRotation = transform.rotation;
         Quaternion newRotation = Quaternion.Euler(pathRotation.eulerAngles.x, pathRotation.eulerAngles.y, currentRotation.eulerAngles.z);
-        
+
         // Apply the combined rotation to the object's transform
         transform.rotation = newRotation;
     }

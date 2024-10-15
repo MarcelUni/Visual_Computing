@@ -13,7 +13,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private float killBoxRadius = 5f;
 
     private Animator animator;
-    private TestSneak testSneak;
+    private PlayerController playerController;
     private NavMeshAgent agent;
 
     [Header("Monster State settings")]
@@ -35,7 +35,7 @@ public class MonsterController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        testSneak = GetComponent<TestSneak>();
+        playerController = GetComponent<PlayerController>();
         agent = GetComponent<NavMeshAgent>(); // Cache the NavMeshAgent
 
         float sphereRadius = GetComponent<SphereCollider>().radius;
@@ -98,26 +98,15 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            Investigate(other.transform, false, 5);
-        }
-    }
-
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking == false)
+        if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking == false && other.GetComponent<PlayerController>().isMoving)
         {
             Investigate(other.transform, true, 1);
             detectedLumi = true;
         }
-        else if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isMoving)
-        {
-            Investigate(other.transform, true, 1);
-        }
-        else if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking)
+  
+        if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking)
         {
             detectedLumi = false;
         }

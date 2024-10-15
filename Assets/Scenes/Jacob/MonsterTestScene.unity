@@ -956,6 +956,16 @@ PrefabInstance:
       propertyPath: pathCreator
       value: 
       objectReference: {fileID: 114462758506354742}
+    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: pathCreators.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: pathCreators.Array.data[0]
+      value: 
+      objectReference: {fileID: 114462758506354742}
     - target: {fileID: 8604917074561652703, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_LocalPosition.x
