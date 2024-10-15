@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
@@ -78,11 +79,11 @@ public class PlayerController : MonoBehaviour
         UpdateAnimations();
     }
 
-    public void ToggleSneak()
-    {
-        isSneaking = !isSneaking;
-    }
-
+    /// <summary>
+    /// Ik fuck med den her method eow
+    /// </summary>
+    /// <param name="switchToNext"></param>
+    /// <returns></returns>
     private IEnumerator SmoothSwitchPath(bool switchToNext)
     {
         isTransitioning = true;

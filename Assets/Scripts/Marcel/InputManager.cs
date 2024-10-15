@@ -14,11 +14,13 @@ public class InputManager : MonoBehaviour
 
     private PlayerInteract playerInteract;
     private PlayerController pc;
+    private PickupObjects pickupObjects;
 
     void Start()
     {
         pc = GetComponent<PlayerController>();
         playerInteract = GetComponent<PlayerInteract>();   
+        pickupObjects = GetComponent<PickupObjects>();
     }
 
     // Update is called once per frame
@@ -111,5 +113,6 @@ public class InputManager : MonoBehaviour
     public void Interact()
     {
         playerInteract.Interact();
+        // pickupObjects.PickupAndDrop();
     }
 }

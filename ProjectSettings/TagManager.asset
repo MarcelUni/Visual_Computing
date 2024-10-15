@@ -7,6 +7,9 @@ TagManager:
   - TriggerEnemyLookat
   - Puzzle
   - PathTrigger
+  - CanPickup
+  - Lightorb
+  - Key
   layers:
   - Default
   - TransparentFX
