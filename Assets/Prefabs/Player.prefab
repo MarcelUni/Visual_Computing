@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 7493263303222069855}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -38,6 +38,7 @@ Transform:
   m_Children:
   - {fileID: 1814041546654565736}
   - {fileID: 7225838844215004994}
+  - {fileID: 6318574066298128659}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -5.32, z: 0}
 --- !u!33 &8462547671931903832
@@ -152,7 +153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0ce82c18e45f40d8bf6f940282c6dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathCreators: []
+  pathCreators:
+  - {fileID: 0}
   normalMoveSpeed: 3
   sneakMoveSpeed: 1
   speedUpAndSlowDownTime: 0.1
@@ -160,6 +162,7 @@ MonoBehaviour:
   playerModelObject: {fileID: 1326052256773382098}
   moveForward: 1
   moveBackward: 0
+  canMoveForward: 1
   isSneaking: 0
   isMoving: 0
   isDead: 0
@@ -180,11 +183,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e18bff254143492b8cc79624c58dc4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puzzleInRange: 0
-  pickUpRadius: 0
+  DoorInRange: 0
+  pickUpRadius: 10
   interactLayer:
     serializedVersion: 2
     m_Bits: 0
+  keyTag: Key
+  LightorbTag: Lightorb
+  hasKey: 0
+  hasLightOrb: 0
+  lightorbPosition: {fileID: 4055074288913360748}
 --- !u!114 &7493263303222069855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7225838844215004994
 Transform:
   m_ObjectHideFlags: 0
@@ -248,6 +256,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathCreators: []
   currentPathIndex: 0
+--- !u!1 &4055074288913360748
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6318574066298128659}
+  m_Layer: 0
+  m_Name: Light orb pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6318574066298128659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4055074288913360748}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.88, z: -0.972}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8604917074561652703}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2208589357065446019
 PrefabInstance:
   m_ObjectHideFlags: 0

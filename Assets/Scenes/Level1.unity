@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.21215841, g: 0.21215841, b: 0.21215841, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -374,8 +374,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 148831982}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1308537, y: 0.107467756, z: -0.01427009, w: 0.98545647}
-  m_LocalPosition: {x: 16.00253, y: 3.4330025, z: -0.5188861}
+  m_LocalRotation: {x: 0.21154228, y: 0.123855285, z: -0.027035698, w: 0.9691124}
+  m_LocalPosition: {x: 15.839999, y: 4.5520015, z: -0.09000015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -401,6 +401,7 @@ MonoBehaviour:
   player: {fileID: 1896194990}
   offSet: 8
   maxCameraDistance: 5
+  cameraSpeed: 3
   distanceTravelled: 0
 --- !u!1 &185716026
 GameObject:
@@ -1069,7 +1070,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1118,8 +1119,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1195486765}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.1308537, y: 0.107467756, z: -0.01427009, w: 0.98545647}
-  m_LocalPosition: {x: 16.00253, y: 3.4330025, z: -0.5188861}
+  m_LocalRotation: {x: 0.21154228, y: 0.123855285, z: -0.027035698, w: 0.9691124}
+  m_LocalPosition: {x: 15.839999, y: 4.5520015, z: -0.09000015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2599,15 +2600,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TrackedObjectOffset: {x: 0.5, y: 1.62, z: 0}
-  m_LookaheadTime: 0.183
-  m_LookaheadSmoothing: 10.4
+  m_LookaheadTime: 1
+  m_LookaheadSmoothing: 30
   m_LookaheadIgnoreY: 0
   m_HorizontalDamping: 0.6
   m_VerticalDamping: 0.5
   m_ScreenX: 0.5
-  m_ScreenY: 0.5
-  m_DeadZoneWidth: 0.09
-  m_DeadZoneHeight: 0.15
+  m_ScreenY: 0.49399996
+  m_DeadZoneWidth: 0.177
+  m_DeadZoneHeight: 0.178
   m_SoftZoneWidth: 0.89
   m_SoftZoneHeight: 0.8
   m_BiasX: 0
@@ -3010,6 +3011,11 @@ PrefabInstance:
     - target: {fileID: 3202879703508449158, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3620531752082683508, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3620531752082683508, guid: 90f811dd02806434ba7c03e2d758d392,
@@ -3026,12 +3032,22 @@ PrefabInstance:
         type: 3}
       propertyPath: pathCreators.Array.data[0]
       value: 
-      objectReference: {fileID: 114462759026334986}
+      objectReference: {fileID: 103861869}
     - target: {fileID: 3620531752082683508, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: pathCreators.Array.data[1]
       value: 
-      objectReference: {fileID: 285438005}
+      objectReference: {fileID: 114462759100685856}
+    - target: {fileID: 3620531752082683508, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: pathCreators.Array.data[2]
+      value: 
+      objectReference: {fileID: 103861869}
+    - target: {fileID: 3620531752082683508, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: pathCreators.Array.data[3]
+      value: 
+      objectReference: {fileID: 114462759100685856}
     - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: pathCreator

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
+using Unity.VisualScripting;
 
 public class CamFollowPath : MonoBehaviour
 {
@@ -10,21 +11,28 @@ public class CamFollowPath : MonoBehaviour
     public PlayerController player;
     public float offSet;
     public float maxCameraDistance = 5f;
-
+    
+    public float cameraSpeed;
     public float distanceTravelled;
-    // Update is called once per frame
+
     void Update()
     {
-        if(Vector3.Distance(player.transform.position, transform.position) <= maxCameraDistance)
+        MoveCam();
+    }
+
+    private void MoveCam()
+    {   
+        // If the distance is farther than the max allowed distance
+        if (Vector3.Distance(player.transform.position, transform.position) >= maxCameraDistance)
         {
-            distanceTravelled += 0.5f;
+            distanceTravelled += cameraSpeed * Time.deltaTime;
         }
 
-        if (currentPathIndex >= pathCreators.Count)
+        else if(Vector3.Distance(player.transform.position, transform.position) < maxCameraDistance)
         {
-            return;
+            distanceTravelled -= cameraSpeed * Time.deltaTime;
         }
-        distanceTravelled = player.distanceTravelled;
+
         transform.position = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled - offSet, EndOfPathInstruction.Stop);
     }
 }
