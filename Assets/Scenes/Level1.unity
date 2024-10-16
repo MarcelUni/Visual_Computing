@@ -400,6 +400,8 @@ MonoBehaviour:
   currentPathIndex: 0
   player: {fileID: 1896194990}
   offSet: 8
+  maxCameraDistance: 5
+  distanceTravelled: 0
 --- !u!1 &185716026
 GameObject:
   m_ObjectHideFlags: 0
