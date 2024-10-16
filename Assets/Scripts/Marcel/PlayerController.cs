@@ -96,39 +96,9 @@ public class PlayerController : MonoBehaviour
         {
             currentPathIndex = (currentPathIndex + 1) % pathCreators.Count; // Switch to the next path
             camFollowPath.currentPathIndex = (camFollowPath.currentPathIndex + 1) % camFollowPath.pathCreators.Count; // Switch camera path
-        }
-
-        // Find the closest point on the new path to the player's current position
-        PathCreator newPath = pathCreators[currentPathIndex];
-        VertexPath path = newPath.path;
-
-        // Save the initial distance travelled
-        initialDistanceTravelled = distanceTravelled;
-
-        // Calculate the new distance travelled on the new path
-        targetDistanceTravelled = path.GetClosestDistanceAlongPath(transform.position);
-
-        transitionProgress = 0f;
-
-        while (transitionProgress < transitionDuration)
-        {
-            transitionProgress += Time.deltaTime;
-            float t = transitionProgress / transitionDuration;
-
-            // Smoothly interpolate the distanceTravelled
-            distanceTravelled = Mathf.Lerp(initialDistanceTravelled, targetDistanceTravelled, t);
-
-            // Smoothly interpolate the currentSpeed
-            currentSpeed = Mathf.Lerp(currentSpeed, currentSpeed, t);
-
-            // Update position and rotation during transition
-            UpdatePositionAndRotation();
-
             yield return null;
         }
 
-        // Ensure final values are set
-        distanceTravelled = targetDistanceTravelled;
         isTransitioning = false;
         canMove = true;
     }

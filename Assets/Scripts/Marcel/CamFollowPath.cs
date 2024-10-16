@@ -9,17 +9,22 @@ public class CamFollowPath : MonoBehaviour
     public int currentPathIndex = 0;
     public PlayerController player;
     public float offSet;
+    public float maxCameraDistance = 5f;
 
-    
-
+    public float distanceTravelled;
     // Update is called once per frame
     void Update()
     {
+        if(Vector3.Distance(player.transform.position, transform.position) <= maxCameraDistance)
+        {
+            distanceTravelled += 0.5f;
+        }
+
         if (currentPathIndex >= pathCreators.Count)
         {
             return;
         }
-
-        transform.position = pathCreators[currentPathIndex].path.GetPointAtDistance(player.distanceTravelled - offSet, EndOfPathInstruction.Stop);
+        distanceTravelled = player.distanceTravelled;
+        transform.position = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled - offSet, EndOfPathInstruction.Stop);
     }
 }
