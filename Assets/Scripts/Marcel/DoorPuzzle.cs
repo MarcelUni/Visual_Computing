@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DoorPuzzle : MonoBehaviour, IInteractable
 {
     private Animator anim;
+    
 
     void Start()
     {
@@ -16,17 +18,13 @@ public class DoorPuzzle : MonoBehaviour, IInteractable
         anim.SetTrigger("OpenDoors");
         this.enabled = false;
     }
+
+    void OnTriggerEnter()
+    {
+        
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
 
 
 public interface IInteractable

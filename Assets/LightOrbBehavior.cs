@@ -40,6 +40,7 @@ public class LightOrbBehavior : MonoBehaviour
 
     private void IncreaseLight()
     {
+
         Debug.Log("INCREASE LIGHT");
         hasBeenIncreased = true;
         hasBeenDimmed = false;

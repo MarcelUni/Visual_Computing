@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.0031114067, g: 0.00618714, b: 0.014234985, a: 1}
+  m_IndirectSpecularColor: {r: 0.009001417, g: 0.013093598, b: 0.020499706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -369,7 +369,7 @@ TerrainCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_TerrainData: {fileID: 15600000, guid: 95b5cd055757943c5bd40aaa7595573e, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 36752e9807e06434a859baf4dd84d4bd, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &198797319
 Terrain:
@@ -380,7 +380,7 @@ Terrain:
   m_GameObject: {fileID: 198797317}
   m_Enabled: 1
   serializedVersion: 6
-  m_TerrainData: {fileID: 15600000, guid: 95b5cd055757943c5bd40aaa7595573e, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 36752e9807e06434a859baf4dd84d4bd, type: 2}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
@@ -714,7 +714,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1916,10 +1916,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1366674527547402047, guid: 51b8a2e099f1d4628986a91689a45339,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1398218116808815028, guid: 51b8a2e099f1d4628986a91689a45339,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4388730929366604734, guid: 51b8a2e099f1d4628986a91689a45339,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5015669251755357879, guid: 51b8a2e099f1d4628986a91689a45339,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.08
+      value: 37.48
       objectReference: {fileID: 0}
     - target: {fileID: 5015669251755357879, guid: 51b8a2e099f1d4628986a91689a45339,
         type: 3}
@@ -1929,7 +1944,7 @@ PrefabInstance:
     - target: {fileID: 5015669251755357879, guid: 51b8a2e099f1d4628986a91689a45339,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.7
+      value: 20.75
       objectReference: {fileID: 0}
     - target: {fileID: 5015669251755357879, guid: 51b8a2e099f1d4628986a91689a45339,
         type: 3}
@@ -1971,7 +1986,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Simple Door
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1366674527547402047, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
+    - {fileID: 1398218116808815028, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
+    - {fileID: 2756179096510943918, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
+    - {fileID: 8277603557212749204, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
+    - {fileID: 6942399776144165824, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
+    - {fileID: 6836586969845331915, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
+    - {fileID: 8805992747046611039, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
+    - {fileID: 8853427832137332557, guid: 51b8a2e099f1d4628986a91689a45339, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2006,6 +2029,11 @@ PrefabInstance:
       objectReference: {fileID: 3125421}
     - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
+      propertyPath: hasKey
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
       propertyPath: keyTag
       value: Key
       objectReference: {fileID: 0}
@@ -2018,6 +2046,11 @@ PrefabInstance:
         type: 3}
       propertyPath: LightorbTag
       value: Lightorb
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: hasLightOrb
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}

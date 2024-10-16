@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInteract : MonoBehaviour
 {
     // public variables
-    public bool puzzleInRange;
+    public bool DoorInRange;
     public float pickUpRadius;
     public LayerMask interactLayer;
     public string keyTag, LightorbTag;
@@ -16,29 +16,24 @@ public class PlayerInteract : MonoBehaviour
     private GameObject lightOrbObject;
     private GameObject puzzleObject;
     private Animator anim;
+    private PlayerController pc;
     
     private void Start()
     {
         anim = GetComponentInChildren<Animator>();
+        pc = GetComponent<PlayerController>();
     }
 
     public void Interact()
     {
-        if(puzzleInRange == true)
+        if(DoorInRange == true && hasLightOrb)
         {
             InteractWithObject();
             anim.SetTrigger("Interact");
         }
 
-        PickupObject();
-
-        if(hasLightOrb)
-        {
-            lightOrbObject.transform.SetParent(this.transform);
-            lightOrbObject.transform.SetPositionAndRotation(lightorbPosition.transform.position, lightorbPosition.transform.rotation);
-            lightOrbObject.GetComponent<LightOrbBehavior>().InitializeOrb();
-            lightOrbObject.GetComponent<LightOrbBehavior>().hasLightOrb = true;
-        }
+        if(hasKey == false || hasLightOrb == false)
+            PickupObject();
     }
 
     private void PickupObject()
@@ -54,8 +49,17 @@ public class PlayerInteract : MonoBehaviour
             }
             if(hit.collider.CompareTag(LightorbTag))
             {
+                // Doing stuff to make light orb work and follow player
+
                 hasLightOrb = true;
                 lightOrbObject = hit.transform.gameObject;
+                lightOrbObject.tag = "Untagged";
+
+                lightOrbObject.transform.SetParent(this.transform);
+                lightOrbObject.transform.SetPositionAndRotation(lightorbPosition.transform.position, lightorbPosition.transform.rotation);
+                lightOrbObject.GetComponent<LightOrbBehavior>().hasLightOrb = true;
+
+                lightOrbObject.GetComponent<LightOrbBehavior>().InitializeOrb();
             }
         }
     }
@@ -63,13 +67,16 @@ public class PlayerInteract : MonoBehaviour
     private void InteractWithObject()
     {
         puzzleObject.GetComponent<IInteractable>()?.Interact();
+        puzzleObject.GetComponent<Collider>().enabled = false;
+        pc.canMoveForward = true;
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Puzzle"))
         {
-            puzzleInRange = true;
+            DoorInRange = true;
             puzzleObject = other.gameObject;
         }
     }
@@ -77,7 +84,7 @@ public class PlayerInteract : MonoBehaviour
     {
         if(other.CompareTag("Puzzle"))
         {
-            puzzleInRange = false;;
+            DoorInRange = false;;
             puzzleObject = null;
         }
     }

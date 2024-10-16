@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public bool moveForward;
     public bool moveBackward;
     private bool canMove;
+    [HideInInspector] public bool canMoveForward = true; // If player reaches a closed door.
 
     [Header("Behavior bools")]
     public bool isSneaking;
@@ -183,6 +184,9 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward(float speed)
     {
+        if(canMoveForward == false)
+            return;
+
         currentSpeed = Mathf.SmoothDamp(currentSpeed, speed, ref currentVelocity, speedUpAndSlowDownTime);
         distanceTravelled += currentSpeed * Time.fixedDeltaTime;
 
@@ -228,6 +232,9 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateAnimations()
     {
+        if(canMoveForward == false)
+            return; 
+            
         anim.SetBool("IsMoving", isMoving);
         anim.SetBool("IsCrouching", isSneaking);
     }
@@ -264,6 +271,10 @@ public class PlayerController : MonoBehaviour
                 canMove = true;
             }
         }
+        if(other.CompareTag("Puzzle"))
+        {
+            canMoveForward = false;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -273,6 +284,10 @@ public class PlayerController : MonoBehaviour
             // You can remove this if not needed
             // canSwitchPath = false;
             // isAtPathChoice = false;
+        }
+        if(other.CompareTag("Puzzle"))
+        {
+            canMoveForward = true;
         }
     }
 }
