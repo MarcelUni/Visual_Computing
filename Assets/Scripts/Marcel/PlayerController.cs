@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Move parameters")]
     public List<PathCreator> pathCreators;
-    private int currentPathIndex = 0;
+    public int currentPathIndex = 0;
     [SerializeField] private float normalMoveSpeed;
     [SerializeField] private float sneakMoveSpeed;
     [SerializeField] private float speedUpAndSlowDownTime;
