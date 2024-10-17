@@ -15,6 +15,8 @@ public class UDPReceive : MonoBehaviour
     public bool printToConsole = false;
     public string data;
 
+    public InputManager im;
+
 
     public void Start()
     {
@@ -29,11 +31,9 @@ public class UDPReceive : MonoBehaviour
     // receive thread
     private void ReceiveData()
     {
-
         client = new UdpClient(port);
         while (startRecieving)
         {
-
             try
             {
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
@@ -46,6 +46,40 @@ public class UDPReceive : MonoBehaviour
             {
                 print(err.ToString());
             }
+        }
+    }
+
+    private void Update()
+    {
+        SendData();
+    }
+
+    private void SendData()
+    {
+        switch (data)
+        {
+            case "Forward":
+                im.MoveForward();
+                break;
+            case "Backward":
+                im.MoveBackward();
+                break;
+            case "Forward Sneak":
+                im.ForwardSneak();
+                break;
+            case "Backward Sneak":
+                im.BackwardSneak();
+                break;
+            case "Interact":
+                im.Interact();
+                break;
+            case "Stop":
+                im.NoInput();
+                break;
+
+            default:
+                im.NoInput();
+                break;
         }
     }
 
