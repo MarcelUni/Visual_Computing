@@ -35,7 +35,7 @@ public class CamFollowPath : MonoBehaviour
         {
             distanceTravelled += cameraSpeed * Time.deltaTime;
         }
-        else if (distanceToPlayer < maxCameraDistance)
+        if (distanceToPlayer < maxCameraDistance)
         {
             distanceTravelled -= cameraSpeed * Time.deltaTime;
         }
