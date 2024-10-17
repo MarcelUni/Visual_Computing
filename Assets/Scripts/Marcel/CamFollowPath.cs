@@ -31,7 +31,7 @@ public class CamFollowPath : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
 
         // If the distance is farther than the max allowed distance
-        if (distanceToPlayer >= maxCameraDistance)
+        if (distanceToPlayer > maxCameraDistance)
         {
             distanceTravelled += cameraSpeed * Time.deltaTime;
         }
