@@ -558,7 +558,7 @@ GameObject:
   - component: {fileID: 798632086}
   - component: {fileID: 798632085}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Water cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2239,6 +2239,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: hasKey
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
