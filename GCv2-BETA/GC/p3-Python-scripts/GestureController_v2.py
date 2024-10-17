@@ -21,7 +21,7 @@ filenames = []
 contours_refs = []
 
 # All gestures to be captured
-gestures = ['Forward', 'Backward', 'Stop',]
+gestures = ['Forward', 'Backward', 'Stop']
 
 
 ######################## BUFFER RELATED #######################
