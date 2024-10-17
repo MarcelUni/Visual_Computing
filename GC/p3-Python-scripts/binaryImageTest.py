@@ -58,7 +58,7 @@ def on_trackbar(val): # Tager imod en integer værdi fra trackbaren
     global white_threshold
     white_threshold = val
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 # Create a window and a trackbar
 cv2.namedWindow('Binary Frame')

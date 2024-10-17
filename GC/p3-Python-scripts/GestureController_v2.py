@@ -392,7 +392,7 @@ states = {
 # MAIN #####################################################################################
 
 # Open the camera
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 # Initial state
 current_state = 'capture_gestures'
