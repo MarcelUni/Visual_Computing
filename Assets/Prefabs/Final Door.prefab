@@ -181,8 +181,8 @@ GameObject:
   - component: {fileID: 4388730929366604734}
   - component: {fileID: 3388010605698427842}
   m_Layer: 0
-  m_Name: Simple Door
-  m_TagString: Puzzle
+  m_Name: Final Door
+  m_TagString: Final Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

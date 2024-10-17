@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DoorPuzzle : MonoBehaviour, IInteractable
+public class FinalDoor : MonoBehaviour, IInteractable
 {
     private Animator anim;
     
-
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -17,13 +16,8 @@ public class DoorPuzzle : MonoBehaviour, IInteractable
     {
         anim.SetTrigger("OpenDoors");
         this.enabled = false;
+        GetComponent<Collider>().enabled = false;
     }
-
-    void OnTriggerEnter()
-    {
-        
-    }
-
 }
 
 
