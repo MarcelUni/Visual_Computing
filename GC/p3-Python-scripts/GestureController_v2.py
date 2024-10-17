@@ -41,7 +41,7 @@ bufferThreshhold = 6
 bufferTotalThreshold = 8
 ################################################################
 
-# Initilizing currentGesture
+# Initilizing gesture variables
 currentGesture = 'Bla'
 print(currentGesture)
 
@@ -60,9 +60,7 @@ folder = "images"
 if not os.path.exists(folder):
     os.makedirs(folder)
 
-# FUNCTIONS #################################################################################
-
-# FUNCTIONS UNDER TESTING - PROBABLY FROM CO-PILOT
+# FUNCTIONS ###########################################################################
 
 # RELEVANT, DIRECT IMAGE MANIPULATION
 def getBinaryImage(frame, gestureName):
@@ -182,7 +180,7 @@ def closingImage(img):
 
     return img
 
-# QUALITY OF LIFE, SMALL FUNCTIONS ############################
+# QUALITY OF LIFE, SMALL FUNCTIONS ####################################################
 
 def displayText(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -217,7 +215,7 @@ def get_buffer_total():
 
     return total
 
-# BOUNDING RECTANGLE RELATED ###################################
+# BOUNDING RECTANGLE RELATED ############################################################
 # TODO Skal lowkey slettes?
 
 def cropToBrect(frame, contours): 
@@ -416,7 +414,7 @@ while current_state:
     binary_frame = closingImage(binary_frame) # Closing image (should remove noise, and close potential holes in hands, like tattoos)
 
     #Define the key press
-    key = cv2.waitKey(1) & 0xFF
+    key = cv2.waitKey(2) & 0xFF
     if key == ord('q'):
         close_application()
         
