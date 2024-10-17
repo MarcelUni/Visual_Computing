@@ -6,13 +6,7 @@ import socket
 
 #TODO: Vi skal teste gesture matching og se om alt det her er spildt arbejde
 
-#TODO v2 - Crop billedet til hænderne, og kun analyser hænderne for bedre data
-
-#TODO Lav setup på bordet
-
 #TODO Dokumenter v1, og test, før vi går videre til v2 - evt test alles hænder 
-
-#TODO VILLE v1 VIRKER BEDRE VED AT FJERNE ARMENE ALENE?
 
 #Communication with Unity ####################################################################
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
@@ -29,6 +23,8 @@ contours_refs = []
 # All gestures to be captured
 gestures = ['Forward', 'Backward']
 
+
+######################## BUFFER RELATED #######################
 # Buffer dict - used to count gesture matches
 bufferDict = {}
 
@@ -38,9 +34,18 @@ for gesture in gestures:
 # Adding no gesture to bufferDict
 bufferDict['No gesture'] = 0
 
-bufferThreshhold = 8
+# Value that a gesture needs to meet, in order to send
+bufferThreshhold = 6
 
-currentGesture = ''
+# Buffer size before it sends gesture to Unity
+bufferTotalThreshold = 8
+################################################################
+
+# Initilizing currentGesture
+currentGesture = 'Bla'
+print(currentGesture)
+
+gesture_name = ''
 
 # Initializing gesture index
 gestureIndex = 0
@@ -59,7 +64,7 @@ if not os.path.exists(folder):
 
 # FUNCTIONS UNDER TESTING - PROBABLY FROM CO-PILOT
 
-# RELEVANT, DIRECT MANIPULATION
+# RELEVANT, DIRECT IMAGE MANIPULATION
 def getBinaryImage(frame, gestureName):
     global folder
 
@@ -140,62 +145,44 @@ def findBestMatch(contours_refs, contours_live):
         
     return best_match_index, best_match_value
 
-def removeNoise(frame):
-
-    # Source: https://github.com/Gustav-skole/DDU/blob/master/AI/basic.py
-
-    connectivity = 8
-
-    output = cv2.connectedComponentsWithStats(frame, connectivity, cv2.CV_32S)
-
-    num_stats = output[0]
-    labels = output[1]
-    stats = output[2]
-
-    new_image = frame.copy()
-
-    for label in range(num_stats):
-        if stats[label,cv2.CC_STAT_AREA] == 1:
-            new_image[labels == label] = 0
-
-    return new_image
-
 def removeNoise2(frame):
-    dilate_iterations = 2
+
     erosion_iterations = 2
+    dilate_iterations = 2
 
-    kernel = np.array([0,0,1,0,0],
+    kernel = np.array([[0,0,1,0,0],
                        [0,1,1,1,0],
-                       [0,0,1,0,0],)
+                       [0,0,1,0,0]], dtype=np.uint8)
 
-    #3x3 disk dilate
-    frame = cv2.dilate(frame, kernel, iterations=dilate_iterations)
-
-    #Erosion to get back OG image
+    # Erosion to remove bad pixels
     frame = cv2.erode(frame, kernel, iterations=erosion_iterations)
+
+    # Dilate to get back to OG image
+    frame = cv2.dilate(frame, kernel, iterations=dilate_iterations)
 
     return frame
 
-#TODO Lav close shape function så sådan noget som Bonks tatoveringer forsvinder
-def closeShape(frame):
-    dilate_iterations = 5
-    erosion_iterations = 5
+#NOTE Marcel funktion:
+def closingImage(img):
+
+    # Closing image holes
+    dilateIterations = 3
+    erodeIterations = 3
 
     kernel = np.array([[0,0,1,0,0],
                        [0,1,1,1,0],
                        [1,1,1,1,1],
                        [0,1,1,1,0],
-                       [0,0,1,0,0]])
+                       [0,0,1,0,0]],np.uint8)
+    
+    # Dilating
+    img = cv2.dilate(img, kernel, iterations = dilateIterations)
+    # Eroding
+    img = cv2.erode(img, kernel, iterations = erodeIterations)
 
-    #3x3 disk dilate
-    frame = cv2.dilate(frame, kernel, iterations=dilate_iterations)
+    return img
 
-    #Erosion to get back OG image
-    frame = cv2.erode(frame, kernel, iterations=erosion_iterations)
-
-    return frame
-
-# QUALITY OF LIFE, SMALL FUNCTIONS
+# QUALITY OF LIFE, SMALL FUNCTIONS ############################
 
 def displayText(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -208,6 +195,7 @@ def displayMatchAccuracy(image, match):
     cv2.putText(image, f'Match: {match}', (10, image.shape[0] - 10), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
     return image
 
+# source: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/
 def get_key_from_buffer(val):
   
     for key, value in bufferDict.items():
@@ -216,7 +204,20 @@ def get_key_from_buffer(val):
 
     return "key doesn't exist"
 
-# BOUNDING RECTANGLE RELATED
+def get_buffer_total():
+    global bufferDict
+
+    total = 0
+
+    for key, value in bufferDict.items():
+        if value == None:
+            print(f'No value found for {key}, skipping')
+            continue
+        total += value
+
+    return total
+
+# BOUNDING RECTANGLE RELATED ###################################
 # TODO Skal lowkey slettes?
 
 def cropToBrect(frame, contours): 
@@ -244,6 +245,7 @@ def close_application():
     cap.release()
     cv2.destroyAllWindows()
 
+# Use this if we want to delete images afterwards
 def full_close_application():
     global cap
 
@@ -266,13 +268,12 @@ def state_no_contours(raw_frame):
     cv2.imshow('Video Feed', frame)
     return 'no_contours'
 
-def state_capture_gestures(raw_frame):
+def state_capture_gestures(raw_frame, binary_frame):
     global gestures, gestureIndex
 
     if gestureIndex < len(gestures):
         gesture = gestures[gestureIndex]
         frame = displayText(raw_frame.copy(), f'Capturing {gesture}. Press "s" to save,')
-        binary_frame = getBinaryVideo(raw_frame.copy())
 
         contoursLive, _ = cv2.findContours(binary_frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -286,7 +287,7 @@ def state_capture_gestures(raw_frame):
             #cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
 
         # Handle keyboard events
-        key = cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(2) & 0xFF
         if key == ord('s'):
             binaryImg = getBinaryImage(cropped_frame, gesture) # Uses the cropped image for processing
             process_gesture(binaryImg)
@@ -300,44 +301,54 @@ def state_capture_gestures(raw_frame):
     
 
 # State of matching the captured gesture with the live feed
-def state_match_gestures(raw_frame):
-    global contours_refs, match_threshold, bufferDict, currentGesture
+def state_match_gestures(raw_frame, binary_frame):
+    global contours_refs, match_threshold, bufferDict, currentGesture, bufferTotalThreshold, gesture_name
 
     # Display the frame with no text
     frame = displayText(raw_frame.copy(), '')
-    binary_frame = getBinaryVideo(raw_frame)  # Convert the frame to binary
 
     # Find the contours in the binary frame
     contoursLive, _ = cv2.findContours(binary_frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    if len(contoursLive) > 0:
-        cropped_frame = cropToBrect(frame, contoursLive[0])
-        brect_binary_frame = drawBrect(binary_frame, contoursLive)
+    # Checking for contours
+    if len(contoursLive) == 0:
+        frame = displayText(frame, 'No contours found in live feed')
+        cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
+        return state_match_gestures
 
-        best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive)
+    best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive)
 
-        # Display the match accuracy on the frame
-        displayMatchAccuracy(frame, round(best_match_value, 2))
+    # Display the match accuracy on the frame
+    displayMatchAccuracy(frame, round(best_match_value, 2))
 
-        #TODO Skal buffer være her?
+    # TODO Skal buffer laves til en funktion?
 ######################## BUFFER ############################
-        # Adding the best matched gesture to buffer
-        if best_match_value < match_threshold:
-            gesture_name = gestures[best_match_index]
-            bufferDict[gesture_name] += 1
-        else:
-            bufferDict['No gesture'] += 1   
-        
-        #print(bufferDict)
+    # Adding the best matched gesture to buffer, if it meets the threshold
+    if best_match_value < match_threshold:
+        gesture_name = gestures[best_match_index]
+        bufferDict[gesture_name] += 1
+    else:
+        bufferDict['No gesture'] += 1   
+    
+    print(bufferDict)
 
-        maxBufferValue = max(bufferDict.values())
+    maxBufferValue = max(bufferDict.values())
 
-        # TODO Skal altid sende en gesture baseret på buffer, også no gesture
+    bufferTotal = get_buffer_total()
 
-        # Send gesture best matched gesture name to Unity
-        if best_match_index != -1 and maxBufferValue == bufferThreshhold:
+    # Print debug information
+    #print(f"maxBufferValue: {maxBufferValue}")
+    #print(f"bufferTotal: {bufferTotal}")
+    #print(f"currentGesture: {currentGesture}")
+    #print(f"best_match_index: {best_match_index}")
+
+
+    # Send gesture best matched gesture name to Unity
+    if bufferTotal == bufferTotalThreshold:
+        print('We made it thru!')
+
+        if best_match_index != -1 and maxBufferValue >= bufferThreshhold:
             gesture_name = get_key_from_buffer(maxBufferValue)
-            frame = displayText(frame, f'Matched Gesture: {gesture_name}')
             print(gesture_name)
 
             #Reset buffer
@@ -348,22 +359,25 @@ def state_match_gestures(raw_frame):
 
             currentGesture = gesture_name
 
-            #NOTE Tror ikke den her giver mening?
-        elif currentGesture == '':
-             # Send gesture_name to Unity via UDP
-            sock.sendto(str.encode('No gesture'), serverAddressPort)
+            print(f"currentGesture updated to: {currentGesture}")
         else:
-            print('No currentGesture')
+            print('Something went wrong')
+             #Reset buffer
+            bufferDict = dict.fromkeys(bufferDict, 0)
 
-
-        # Displaying the feeds
-        cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
-        cv2.imshow('Binary Feed', brect_binary_frame)  # Updates 'Binary Feed' window
-        # cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
-
+    # If there is no new gesture, keep the same gesture and send it
+    elif currentGesture == currentGesture:
+            # Send gesture_name to Unity via UDP
+            sock.sendto(str.encode(gesture_name), serverAddressPort)
     else:
-        frame = displayText(frame, 'No contours found in live feed')
-        cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
+        print('No currentGesture')
+                
+    frame = displayText(frame, f'Matched Gesture: {gesture_name}')
+
+    # Displaying the feeds
+    cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
+    cv2.imshow('Binary Feed', binary_frame)  # Updates 'Binary Feed' window
+    # cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
 
     return 'match_gestures'  # Remain in the current state
 
@@ -394,17 +408,12 @@ while current_state:
     raw_frame = cv2.flip(frame, 1)  # Flip the frame horizontally (mirror effect)
     
     # Cropping frame
-    y = 0
-    x = 50
-    h = 480
-    w = 500
+    y, x, h, w = 0, 50, 550, 650
     frame = raw_frame[y:y+h, x:x+w]
 
-    # Removing potential noise
-    frame = removeNoise2(frame)
-
-    # Closing - hopefully fixing Bonk tattoos
-    frame = closeShape(frame)
+    binary_frame = getBinaryVideo(raw_frame.copy()) # Getting binary frame
+    binary_frame = removeNoise2(binary_frame) # Remove noisee
+    binary_frame = closingImage(binary_frame) # Closing image (should remove noise, and close potential holes in hands, like tattoos)
 
     #Define the key press
     key = cv2.waitKey(1) & 0xFF
@@ -412,6 +421,6 @@ while current_state:
         close_application()
         
     # Execute the current state function
-    current_state = states[current_state](frame)
+    current_state = states[current_state](frame, binary_frame)
 
     

@@ -25,14 +25,14 @@ def getBinaryImage(frame, gestureName, white_threshold):
     binaryImg = np.reshape(flattened_image, grayImg.shape)
 
     # Closing image holes
-    dilateIterations = 12
-    erodeIterations = 6
+    dilateIterations = 3
+    erodeIterations = 3
 
-    kernel = np.array([[0,1,1,1,0],
+    kernel = np.array([[0,0,1,0,0],
+                       [0,1,1,1,0],
                        [1,1,1,1,1],
-                       [1,1,1,1,1],
-                       [1,1,1,1,1],
-                       [0,1,1,1,0]],np.uint8)
+                       [0,1,1,1,0],
+                       [0,0,1,0,0]],np.uint8)
     
     # Dilating
     binaryImg = cv2.dilate(binaryImg, kernel, iterations = dilateIterations)
@@ -58,7 +58,7 @@ def on_trackbar(val): # Tager imod en integer værdi fra trackbaren
     global white_threshold
     white_threshold = val
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 # Create a window and a trackbar
 cv2.namedWindow('Binary Frame')
