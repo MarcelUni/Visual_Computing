@@ -8,6 +8,10 @@ import socket
 
 #TODO Dokumenter v1, og test, før vi går videre til v2 - evt test alles hænder 
 
+#TODO - VÆR OBS - DER BLIVER LAVET NOGET BRECT SHIT, SOM IKKE SES NÅR PROGRAMMET KØRER UMIDDELBART
+
+#TODO - Convexity Defects
+
 #Communication with Unity ####################################################################
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
 serverAddressPort = ("127.0.0.1", 5052)
@@ -216,7 +220,7 @@ def get_buffer_total():
     return total
 
 # BOUNDING RECTANGLE RELATED ############################################################
-# TODO Skal lowkey slettes?
+# TODO Skal lowkey slettes? (NOK IKKE, DET LIGNER DEN BLIVER BRUGT I CAPTURE GESTURES)
 
 def cropToBrect(frame, contours): 
     x, y, width, height = cv2.boundingRect(contours)
@@ -334,13 +338,6 @@ def state_match_gestures(raw_frame, binary_frame):
 
     bufferTotal = get_buffer_total()
 
-    # Print debug information
-    #print(f"maxBufferValue: {maxBufferValue}")
-    #print(f"bufferTotal: {bufferTotal}")
-    #print(f"currentGesture: {currentGesture}")
-    #print(f"best_match_index: {best_match_index}")
-
-
     # Send gesture best matched gesture name to Unity
     if bufferTotal == bufferTotalThreshold:
         print('We made it thru!')
@@ -375,7 +372,6 @@ def state_match_gestures(raw_frame, binary_frame):
     # Displaying the feeds
     cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
     cv2.imshow('Binary Feed', binary_frame)  # Updates 'Binary Feed' window
-    # cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
 
     return 'match_gestures'  # Remain in the current state
 
@@ -420,5 +416,3 @@ while current_state:
         
     # Execute the current state function
     current_state = states[current_state](frame, binary_frame)
-
-    
