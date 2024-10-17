@@ -53,6 +53,30 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    public void ReceiveInput(string inputGesture)
+    {
+        switch (inputGesture)
+        {
+            case "MoveForward":
+                MoveForward();
+                break;
+            case "MoveBackward":
+                MoveBackward();
+                break;
+            case "SneakForward":
+                ForwardSneak();
+                break;
+            case "SneakBackward":
+                BackwardSneak();
+                break;
+            case "Interact":
+                Interact();
+                break;
+            default:
+                NoInput();
+                break;
+        }
+    }
     /// <summary>
     /// Has to be called for moving forward gesture
     /// </summary>
