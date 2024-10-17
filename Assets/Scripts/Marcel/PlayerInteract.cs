@@ -5,15 +5,15 @@ using UnityEngine;
 public class PlayerInteract : MonoBehaviour
 {
     // public variables
-    public bool DoorInRange;
+    public bool DoorInRange, puzzleInRange;
     public float pickUpRadius;
-    public LayerMask interactLayer;
     public string keyTag, LightorbTag;
     public bool hasKey, hasLightOrb;
     public GameObject lightorbPosition;
 
     // Private variables
     private GameObject lightOrbObject;
+    private GameObject finalDoorObject;
     private GameObject puzzleObject;
     private Animator anim;
     private PlayerController pc;
@@ -28,12 +28,21 @@ public class PlayerInteract : MonoBehaviour
     {
         if(DoorInRange == true && hasLightOrb)
         {
-            InteractWithObject();
+            InteractWithDoor();
+            anim.SetTrigger("Interact");
+        }
+
+        if(puzzleInRange && hasKey)
+        {
+            InteractWithPuzzle();
             anim.SetTrigger("Interact");
         }
 
         if(hasKey == false || hasLightOrb == false)
+        {
             PickupObject();
+            // Pick up animation
+        }
     }
 
     private void PickupObject()
@@ -46,6 +55,7 @@ public class PlayerInteract : MonoBehaviour
             if(hit.collider.CompareTag(keyTag))
             {
                 hasKey = true;
+                hit.collider.gameObject.SetActive(false);
             }
             if(hit.collider.CompareTag(LightorbTag))
             {
@@ -64,27 +74,42 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    private void InteractWithObject()
+    private void InteractWithDoor()
     {
-        puzzleObject.GetComponent<IInteractable>()?.Interact();
-        puzzleObject.GetComponent<Collider>().enabled = false;
+        finalDoorObject.GetComponent<IInteractable>()?.Interact();
         pc.canMoveForward = true;
 
     }
 
+    private void InteractWithPuzzle()
+    {
+        puzzleObject.GetComponent<Puzzle>().Interact();
+        pc.canMoveForward = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Puzzle"))
+        if(other.CompareTag("Final Door"))
         {
             DoorInRange = true;
+            finalDoorObject = other.gameObject;
+        }
+        if(other.CompareTag("Puzzle"))
+        {
+            puzzleInRange = true;
             puzzleObject = other.gameObject;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("Puzzle"))
+        if(other.CompareTag("Final Door"))
         {
             DoorInRange = false;;
+            finalDoorObject = null;
+        }
+        if(other.CompareTag("Puzzle"))
+        {
+            puzzleInRange = false;
             puzzleObject = null;
         }
     }

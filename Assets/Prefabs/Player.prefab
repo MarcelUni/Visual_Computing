@@ -111,9 +111,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 3.2782967
+  m_Height: 3.0989892
   m_Direction: 1
-  m_Center: {x: 0, y: 0.40949523, z: 0}
+  m_Center: {x: 0, y: 0.49914896, z: 0}
 --- !u!54 &6657971894315351892
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathCreators:
   - {fileID: 0}
+  currentPathIndex: 0
   normalMoveSpeed: 3
   sneakMoveSpeed: 1
   speedUpAndSlowDownTime: 0.1
@@ -184,13 +185,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DoorInRange: 0
-  pickUpRadius: 10
-  interactLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  puzzleInRange: 0
+  pickUpRadius: 2
   keyTag: Key
   LightorbTag: Lightorb
-  hasKey: 0
+  hasKey: 1
   hasLightOrb: 0
   lightorbPosition: {fileID: 4055074288913360748}
 --- !u!114 &7493263303222069855

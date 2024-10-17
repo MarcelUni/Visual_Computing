@@ -203,9 +203,13 @@ public class PlayerController : MonoBehaviour
     private void UpdateAnimations()
     {
         if(canMoveForward == false)
+        {
+             anim.SetBool("IsMoving", false);
             return; 
-            
+        }
+        
         anim.SetBool("IsMoving", isMoving);
+            
         anim.SetBool("IsCrouching", isSneaking);
     }
 
@@ -241,7 +245,7 @@ public class PlayerController : MonoBehaviour
                 canMove = true;
             }
         }
-        if(other.CompareTag("Puzzle"))
+        if(other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
         {
             canMoveForward = false;
         }
@@ -255,7 +259,7 @@ public class PlayerController : MonoBehaviour
             // canSwitchPath = false;
             // isAtPathChoice = false;
         }
-        if(other.CompareTag("Puzzle"))
+        if(other.CompareTag("Puzzle") || other.CompareTag("Final Door"))
         {
             canMoveForward = true;
         }

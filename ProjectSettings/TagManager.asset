@@ -10,6 +10,7 @@ TagManager:
   - CanPickup
   - Lightorb
   - Key
+  - Final Door
   layers:
   - Default
   - TransparentFX
