@@ -26,31 +26,31 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(moveForwardKey))
-        {
-            MoveForward();
-        }
-        else if (Input.GetKey(moveBackwardKey))
-        {
-            MoveBackward();
-        }
-        else if (Input.GetKey(sneakForwardKey))
-        {
-            ForwardSneak();
-        }
-        else if (Input.GetKey(sneakBackwardKey))
-        {
-            BackwardSneak();
-        }
-        else
-        {
-            NoInput();
-        }
+        // if (Input.GetKey(moveForwardKey))
+        // {
+        //     MoveForward();
+        // }
+        // else if (Input.GetKey(moveBackwardKey))
+        // {
+        //     MoveBackward();
+        // }
+        // else if (Input.GetKey(sneakForwardKey))
+        // {
+        //     ForwardSneak();
+        // }
+        // else if (Input.GetKey(sneakBackwardKey))
+        // {
+        //     BackwardSneak();
+        // }
+        // else
+        // {
+        //     NoInput();
+        // }
 
-        if(Input.GetKeyDown(interactKey))
-        {
-            playerInteract.Interact();
-        }
+        // if(Input.GetKeyDown(interactKey))
+        // {
+        //     playerInteract.Interact();
+        // }
     }
 
     /// <summary>
