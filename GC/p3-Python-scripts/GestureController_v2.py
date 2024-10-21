@@ -19,9 +19,8 @@ print('Starting application...')
 
 #TODO Testing
 # - Hvor langt kan man gå ud af billedet før den fucker. Alle sider
-# - Hvor markant skal gesturen være, for at den genkender den korrekt
+# - Hvor markant skal gesturen være, for at den genkender den korrekt - ved ikke om det skal måles i procenter
 # - v1 - Kan den stabilt vise gestures v2 - Kan den stabilt vise flere gestures - Kan den stabilt vise 6 gestures
-
 
 #BLA
 i = 0
@@ -77,8 +76,9 @@ gesture_name = ''
 gestureIndex = 0
 
 # Threshold for the binary image processing 
-# if the pixel value is below this, it will be turned to black, otherwise white
 white_threshold = 167
+
+# Threshold determining how accurate a match should be to return the gesture
 match_threshold = 0.35
 
 # Create a folder to store the images
@@ -560,6 +560,8 @@ states = {
 cap = cv2.VideoCapture(1)
 
 running = True
+
+print('Running...')
 
 # Initial state
 current_state = 'capture_gestures'
