@@ -138,7 +138,7 @@ def process_gesture(img):
         contours_refs.append(contoursGesture)
 
         # Getting defects #################### # TODO Få lige samlet nogle af de her defects relaterede ting
-        defectsTotal, defects = getDefectsAmount(contoursGesture[0])
+        defectsTotal, defects = getDefects(contoursGesture[0])
         # Save defects total for the gestures
         defects_gestures.append(defectsTotal)
         print(f'Number of convexity defects: {defectsTotal}')
@@ -160,6 +160,8 @@ def getBinaryVideo(frame):
 
 def drawDefects(frame, contours, defects):
     frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+
+    # source: https://docs.opencv.org/4.x/d5/d45/tutorial_py_contours_more_functions.html
     try:
         for i in range(defects.shape[0]):
             s,e,f,d = defects[i,0]
@@ -190,17 +192,15 @@ def findBestMatch(contours_refs, contours_live, defects_live):
         match_value = cv2.matchShapes(contours_live[0], gesture_contours[0], 1, 0.0)
 
         #TODO HER
-
-        if match_value < best_match_value and defects_gestures == defects_live:
+        # Only sets a new best match if it both has a better accuracy value, and the amount of defects match
+        if match_value < best_match_value and defects_gestures[i] == defects_live:
             best_match_value = match_value
             best_match_index = i
-    
-    #TODO Hvis defects ikke matcher, skal den returnere den næstbedste og tjekke igen
-        
+            
     return best_match_index, best_match_value
 
 def removeNoise(frame):
-    # Processing er teknisk set opening 
+    # Processen er teknisk set opening 
     erosion_iterations = 2
     dilate_iterations = 2
 
@@ -236,7 +236,7 @@ def closingImage(img):
 
     return img
 
-def getDefectsAmount(contours):
+def getDefects(contours):
     hull = cv2.convexHull(contours, returnPoints=False)
     defects = cv2.convexityDefects(contours,hull)
 
@@ -414,14 +414,14 @@ def state_match_gestures(raw_frame, binary_frame):
         return 'match_gestures'
 
     # Getting defects
-    defectsLive, _ = getDefectsAmount(contoursLive)
+    defectsLive, _ = getDefects(contoursLive)
 
     best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive, defectsLive)
 
     # Display the match accuracy on the frame
     displayMatchAccuracy(frame, round(best_match_value, 2))
 
-    # TODO Skal buffer laves til en funktion?
+    # TODO Skal buffer laves til en funktion? Hvis det var, så skal den bare returnere bedste match værdi, og så skal display og send til Unity være i den her state. Lowkey banger ide.
 ######################## BUFFER ############################
     # Adding the best matched gesture to buffer, if it meets the threshold
     if best_match_value < match_threshold:
@@ -430,7 +430,7 @@ def state_match_gestures(raw_frame, binary_frame):
     else:
         bufferDict['No gesture'] += 1   
     
-    print(bufferDict)
+    # print(bufferDict)
 
     maxBufferValue = max(bufferDict.values())
 
@@ -477,6 +477,9 @@ def state_match_gestures(raw_frame, binary_frame):
                 
     frame = displayText(frame, f'Matched Gesture: {gesture_name}')
 
+    # Tester defects og tegner dem på live billede
+    binary_frame = drawDefects(binary_frame, contoursLive, defectsLive)
+
     # Displaying the feeds
     cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
     cv2.imshow('Binary Feed', binary_frame)  # Updates 'Binary Feed' window
@@ -501,7 +504,6 @@ running = True
 current_state = 'capture_gestures'
 
 while current_state and running:
-    # Capture frame-by-frame
     ret, frame = cap.read()
     if not ret:
         print("Error: Failed to capture image")
@@ -510,12 +512,12 @@ while current_state and running:
 
     raw_frame = cv2.flip(frame, 1)  # Flip the frame horizontally (mirror effect)
     
-    # Cropping frame
+    # Cropping frame - only relevant due to physical setup.
     y, x, h, w = 0, 50, 550, 650
     frame = raw_frame[y:y+h, x:x+w]
 
     binary_frame = getBinaryVideo(raw_frame.copy()) # Getting binary frame
-    binary_frame = removeNoise(binary_frame) # Remove noise
+    binary_frame = removeNoise(binary_frame) # Removes noise by 'opening'
     binary_frame = closingImage(binary_frame) # Closing image (should close potential holes in hands, like tattoos, and small shadows)
 
     #Define the key press
