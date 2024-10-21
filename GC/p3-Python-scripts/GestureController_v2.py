@@ -469,7 +469,7 @@ def state_match_gestures(raw_frame, binary_frame):
         return 'match_gestures'
 
     # Getting defects
-    defectsLive, _ = getDefects2(contoursLive)
+    defectsLive, _ = getDefects2(contoursLive[0])
 
     # Checking for contours
     if defectsLive is None:
