@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -18,7 +17,6 @@ public class InstancedIndirectGrassRenderer : MonoBehaviour
     //changing it won't affect the performance but the grass blades will be more spaced (You gonna have to increase the density value then)
 
     public Material instanceMaterial;
-    public Camera camera;
 
     [Header("Internal")]
     public ComputeShader computeShader;
@@ -69,9 +67,10 @@ public class InstancedIndirectGrassRenderer : MonoBehaviour
         instanceMaterial.SetFloat("_OffsetRange", drawDistance / density);
 
         //ComputeShader Properties
+        UnityEngine.Camera camera = UnityEngine.Camera.main;
         computeShader.SetMatrix("_VPMatrix", camera.projectionMatrix * camera.worldToCameraMatrix);
         computeShader.SetFloat("_DrawDistance", drawDistance);
-        //computeShader.SetVector("_CameraPositionXZ", new Vector2(camera.transform.position.x, camera.transform.position.z));
+        computeShader.SetVector("_CameraPositionXZ", new Vector2(camera.transform.position.x, camera.transform.position.z));
         computeShader.SetInt("_CountSqrt", density);
         computeShader.SetBuffer(0, "_InstancesPosWSBuffer", instancesPosWSBuffer);
 
@@ -100,7 +99,7 @@ public class InstancedIndirectGrassRenderer : MonoBehaviour
 
         //Rendering Bounds
         Bounds renderBound = new Bounds();
-        renderBound.center = GetComponent<Camera>().transform.position;
+        renderBound.center = UnityEngine.Camera.main.transform.position;
         renderBound.extents = new Vector3(drawDistance, 0, drawDistance);
 
         //Big DrawCall
