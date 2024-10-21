@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import socket
+import copy
 
 print('Starting application...')
 
@@ -13,7 +14,9 @@ print('Starting application...')
 
 #TODO - VÆR OBS - DER BLIVER LAVET NOGET BRECT SHIT, SOM IKKE SES NÅR PROGRAMMET KØRER UMIDDELBART
 
-#TODO - Convexity Defects
+#TODO - Convexity Defects - hvis de skal inkorporeres skal det kun være antallet af dem
+
+#TODO - En måde at gemme på i guess, så man ikke altid behøver tage nye billeder - NOK FUTURE WORK
 
 #Communication with Unity ####################################################################
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
@@ -28,7 +31,7 @@ filenames = []
 contours_refs = []
 
 # All gestures to be captured
-gestures = ['Forward', 'Backward']
+gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
 
 key = ''
 
@@ -46,6 +49,7 @@ for gesture in gestures:
 # Adding no gesture to bufferDict
 bufferDict['No gesture'] = 0
 
+#TODO Find ud af hvordan vi finder 
 # Value that a gesture needs to meet, in order to send
 bufferThreshhold = 6
 
@@ -64,7 +68,7 @@ gestureIndex = 0
 # Threshold for the binary image processing 
 # if the pixel value is below this, it will be turned to black, otherwise white
 white_threshold = 167
-match_threshold = 0.4
+match_threshold = 0.35
 
 # Create a folder to store the images
 folder = "images"
@@ -116,12 +120,20 @@ def process_gesture(img):
         #Getting contour
         contoursGesture, hierachy = cv2.findContours(gesture, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
+        defectsTotal, defects = getDefectsAmount(contoursGesture[0])
+
         print(f'Number of contours: {len(hierachy)}')
+        print(f'Number of convexity defects: {defectsTotal}')
 
         #Checking if contours are present. If they are, store in contours array
         if len(contoursGesture) == 0:
             print(f"No contours found")
         contours_refs.append(contoursGesture)
+
+        
+        ### MAKING COPY WITH DRAWN DEFECTS ###
+        newImage = drawDefects(img, contoursGesture[0], defects)
+        cv2.imwrite('Defects_test.png', newImage)
 
     except Exception as e:
         print(f"Error processing the file {img}: {e}")        
@@ -133,7 +145,9 @@ def getBinaryVideo(frame):
 
     return binaryImg
 
+# TODO Distance filtering
 def drawDefects(frame, contours, defects):
+    frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
     try:
         for i in range(defects.shape[0]):
             s,e,f,d = defects[i,0]
@@ -170,7 +184,7 @@ def findBestMatch(contours_refs, contours_live):
     return best_match_index, best_match_value
 
 def removeNoise(frame):
-
+    # Processing er teknisk set opening 
     erosion_iterations = 2
     dilate_iterations = 2
 
@@ -186,8 +200,8 @@ def removeNoise(frame):
 
     return frame
 
-#NOTE Marcel funktion:
 def closingImage(img):
+    #NOTE Marcel funktion:
 
     # Closing image holes
     dilateIterations = 3
@@ -206,11 +220,31 @@ def closingImage(img):
 
     return img
 
+def getDefectsAmount(contours):
+    hull = cv2.convexHull(contours, returnPoints=False)
+    defects = cv2.convexityDefects(contours,hull)
+
+    print(defects)
+
+    # As defects have locations, we are only interested in the amount
+    if defects is None:
+        print('No defects')
+        defects_total = 0
+    else:
+        defects_total = defects.shape[0]
+
+    return defects_total, defects
+
 # QUALITY OF LIFE, SMALL FUNCTIONS ####################################################
 
 def displayText(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(image, text, (10, 30), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
+    return image
+
+def displayTextBelow(image, text):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    cv2.putText(image, text, (10, 65), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
     return image
 
 def displayMatchAccuracy(image, match):
@@ -306,22 +340,32 @@ def state_capture_gestures(raw_frame, binary_frame):
 
     if gestureIndex < len(gestures):
         gesture = gestures[gestureIndex]
-        frame = displayText(raw_frame.copy(), f'Capturing {gesture}. Press "s" to save,')
 
         contoursLive, _ = cv2.findContours(binary_frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE) # Bruges til at croppe billedet
 
-        # Cropper billedet til kun hånden
-        if len(contoursLive) > 0:
-            cropped_frame = cropToBrect(frame, contoursLive[0])
-            brect_binary_frame = drawBrect(binary_frame, contoursLive)
-
-            # Displaying the feeds
+        # Checking for contours
+        if len(contoursLive) == 0:
+            frame = displayText(raw_frame.copy(), 'No contours found in live feed')
             cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
-            cv2.imshow('Binary Feed', brect_binary_frame)  # Updates 'Binary Feed' window
+            return 'capture_gestures'
+        
+        # Displaying instructions
+        frame = displayText(raw_frame.copy(), f'Capturing {gesture}. Press "s" to save,')
+
+        # Cropper billedet til kun hånden
+        # cropped_frame = cropToBrect(frame, contoursLive[0])
+        
+        #brect_binary_frame = drawBrect(binary_frame, contoursLive)
+        binary_frame = getBinaryVideo(raw_frame.copy())
+
+        # Displaying the feeds
+        cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
+        cv2.imshow('Binary Feed', binary_frame)  # Updates 'Binary Feed' window
 
         # Handle keyboard events
         if key == ord('s'):
-            binaryImg = getBinaryImage(cropped_frame, gesture) # Uses the cropped image for processing
+            # Her skal frame måske tilbage til cropped_frame
+            binaryImg = getBinaryImage(frame, gesture) # Uses the cropped image for processing
             process_gesture(binaryImg)
             gestureIndex += 1  # Move to the next gesture
             print(f'Current index:{gestureIndex}')
@@ -347,7 +391,7 @@ def state_match_gestures(raw_frame, binary_frame):
     if len(contoursLive) == 0:
         frame = displayText(frame, 'No contours found in live feed')
         cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
-        return state_match_gestures
+        return 'match_gestures'
 
     best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive)
 
@@ -377,7 +421,7 @@ def state_match_gestures(raw_frame, binary_frame):
             gesture_name = get_key_from_buffer(maxBufferValue)
             print(gesture_name)
 
-            #Reset buffer
+            # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
             # Send gesture_name to Unity via UDP
@@ -389,7 +433,15 @@ def state_match_gestures(raw_frame, binary_frame):
 
         else:
             print('No certain gesture')
-             #Reset buffer
+
+            currentGesture = 'No gesture'
+            print(f"currentGesture updated to: {currentGesture}")
+
+            # Send gesture_name to Unity via UDP
+            sock.sendto(str.encode(gesture_name), serverAddressPort)
+            print(f'Sending {gesture_name} to Unity')
+
+            # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
     # If there is no new gesture, keep the same gesture and send it
