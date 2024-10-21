@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import os
 import socket
-import copy
 
 print('Starting application...')
 
@@ -12,11 +11,20 @@ print('Starting application...')
 
 # TODO Slet det der brect shit
 
-#TODO - VÆR OBS - DER BLIVER LAVET NOGET BRECT SHIT, SOM IKKE SES NÅR PROGRAMMET KØRER UMIDDELBART
+#TODO - Convexity Defects 
 
-#TODO - Convexity Defects - hvis de skal inkorporeres skal det kun være antallet af dem
+#TODO - TIL KODEGRAFIK - ÆNDR ORIENTATION, både til v1 og v2
 
 #TODO - En måde at gemme på i guess, så man ikke altid behøver tage nye billeder - NOK FUTURE WORK
+
+#TODO Testing
+# - Hvor langt kan man gå ud af billedet før den fucker. Alle sider
+# - Hvor markant skal gesturen være, for at den genkender den korrekt
+# - v1 - Kan den stabilt vise gestures v2 - Kan den stabilt vise flere gestures - Kan den stabilt vise 6 gestures
+
+
+#BLA
+i = 0
 
 #Communication with Unity ####################################################################
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
@@ -24,11 +32,14 @@ serverAddressPort = ("127.0.0.1", 5052)
 
 # INITIALIZED VARIABLES #####################################################################
 
-# Array to store filenames of the pictures taken
+# List to store filenames of the pictures taken
 filenames = []
 
-# Array to store contours of the gestures
+# List to store contours of the gestures
 contours_refs = []
+
+# List to store convexity defects for contours
+defects_gestures = []
 
 # All gestures to be captured
 gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
@@ -44,7 +55,6 @@ bufferDict = {}
 bufferDict = {}
 for gesture in gestures:
     bufferDict[gesture] = 0
-
 
 # Adding no gesture to bufferDict
 bufferDict['No gesture'] = 0
@@ -111,29 +121,32 @@ def getBinaryImage(frame, gestureName):
     return binaryImg
 
 def process_gesture(img):
+    global i, defects_gestures
     try:
         #Reading image
         gesture = img
         if gesture is None:
             print(f"Error: File not found.")
 
-        #Getting contour
+        # Getting contours ##################
         contoursGesture, hierachy = cv2.findContours(gesture, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-        defectsTotal, defects = getDefectsAmount(contoursGesture[0])
-
         print(f'Number of contours: {len(hierachy)}')
-        print(f'Number of convexity defects: {defectsTotal}')
 
-        #Checking if contours are present. If they are, store in contours array
+        # Checking if contours are present. If they are, store in contours array
         if len(contoursGesture) == 0:
             print(f"No contours found")
         contours_refs.append(contoursGesture)
 
-        
+        # Getting defects #################### # TODO Få lige samlet nogle af de her defects relaterede ting
+        defectsTotal, defects = getDefectsAmount(contoursGesture[0])
+        # Save defects total for the gestures
+        defects_gestures.append(defectsTotal)
+        print(f'Number of convexity defects: {defectsTotal}')
+
         ### MAKING COPY WITH DRAWN DEFECTS ###
         newImage = drawDefects(img, contoursGesture[0], defects)
-        cv2.imwrite('Defects_test.png', newImage)
+        cv2.imwrite(f'Defects_test{i}.png', newImage)
+        i += 1
 
     except Exception as e:
         print(f"Error processing the file {img}: {e}")        
@@ -145,7 +158,6 @@ def getBinaryVideo(frame):
 
     return binaryImg
 
-# TODO Distance filtering
 def drawDefects(frame, contours, defects):
     frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
     try:
@@ -162,8 +174,9 @@ def drawDefects(frame, contours, defects):
 
     return frame
 
-def findBestMatch(contours_refs, contours_live):
-    
+def findBestMatch(contours_refs, contours_live, defects_live):
+    global defects_gestures
+
     best_match_value = float('inf')
     best_match_index = -1
 
@@ -173,13 +186,16 @@ def findBestMatch(contours_refs, contours_live):
             print(f"Warning: Empty contour encountered at index {i}. Skipping.")
             continue
 
+        #TODO - Leg mere med match modes måske
         match_value = cv2.matchShapes(contours_live[0], gesture_contours[0], 1, 0.0)
 
-        #print(f"Gesture: {gestures[i]}, Match Value: {match_value}")  # Debug print
+        #TODO HER
 
-        if match_value < best_match_value:
+        if match_value < best_match_value and defects_gestures == defects_live:
             best_match_value = match_value
             best_match_index = i
+    
+    #TODO Hvis defects ikke matcher, skal den returnere den næstbedste og tjekke igen
         
     return best_match_index, best_match_value
 
@@ -224,16 +240,18 @@ def getDefectsAmount(contours):
     hull = cv2.convexHull(contours, returnPoints=False)
     defects = cv2.convexityDefects(contours,hull)
 
-    print(defects)
-
+    # Distance filtering irrelevant points
+    filter_arr = defects[:, 0, 3] > 5000  # Create a boolean mask where the distance value is greater than 500 #NOTE : betyder for alle, 0 betyder for x-akse, og så det 4. element. So for hvert element i x-aksen, find fjerde element, tjek condition, og ændr værdi til true eller false. Derfor lægges vores filter array på vores defects. God forklaring: https://johnfoster.pge.utexas.edu/numerical-methods-book/ScientificPython_Numpy.html
+    newDefects = defects[filter_arr]  # Apply the boolean mask to filter the defects
+ 
     # As defects have locations, we are only interested in the amount
-    if defects is None:
+    if newDefects is None:
         print('No defects')
         defects_total = 0
     else:
-        defects_total = defects.shape[0]
+        defects_total = newDefects.shape[0]
 
-    return defects_total, defects
+    return defects_total, newDefects
 
 # QUALITY OF LIFE, SMALL FUNCTIONS ####################################################
 
@@ -380,6 +398,8 @@ def state_capture_gestures(raw_frame, binary_frame):
 # State of matching the captured gesture with the live feed
 def state_match_gestures(raw_frame, binary_frame):
     global contours_refs, match_threshold, bufferDict, currentGesture, bufferTotalThreshold, gesture_name
+    
+    print(contours_refs)
 
     # Display the frame with no text
     frame = displayText(raw_frame.copy(), '')
@@ -393,7 +413,10 @@ def state_match_gestures(raw_frame, binary_frame):
         cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
         return 'match_gestures'
 
-    best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive)
+    # Getting defects
+    defectsLive, _ = getDefectsAmount(contoursLive)
+
+    best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive, defectsLive)
 
     # Display the match accuracy on the frame
     displayMatchAccuracy(frame, round(best_match_value, 2))
@@ -494,8 +517,6 @@ while current_state and running:
     binary_frame = getBinaryVideo(raw_frame.copy()) # Getting binary frame
     binary_frame = removeNoise(binary_frame) # Remove noise
     binary_frame = closingImage(binary_frame) # Closing image (should close potential holes in hands, like tattoos, and small shadows)
-
-#todo Convexity Defects er nok ligegyldige da de har positioner - måske mere stabilitet kun kan være med mere træningsmateriale?
 
     #Define the key press
     key = cv2.waitKey(3) & 0xFF
