@@ -226,6 +226,7 @@ def getDefects(contours):
         return 0, None
     
     # Ensure the contours are in correct format
+    #TODO - Slet alt der overflødigt her
     contours = np.array(contours, dtype=np.int32)
 
     # Check if contours array are None after conversion
