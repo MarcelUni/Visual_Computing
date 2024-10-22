@@ -9,6 +9,8 @@ print('Starting application...')
 
 #TODO-  Slet det der brect shit
 
+#TODO https://stackoverflow.com/questions/75267154/how-do-i-add-an-image-overlay-to-my-live-video-using-cv2 - Kan evt bruges til hvis der skal være instrukser til brugeren for hvordan de skal placere deres hånd for billederne
+
 #TODO - TIL KODEGRAFIK - ÆNDR ORIENTATION, både til v1 og v2
 
 #TODO - En måde at gemme på i guess, så man ikke altid behøver tage nye billeder - NOK FUTURE WORK
