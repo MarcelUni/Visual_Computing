@@ -69,7 +69,6 @@ currentGesture = 'Bla'
 
 gesture_name = ''
 
-# Initializing gesture index
 gestureIndex = 0
 
 # Threshold for the binary image processing 
@@ -140,7 +139,7 @@ def process_gesture(img):
         defects_gestures.append(defectsTotal)
         print(f'Number of convexity defects: {defectsTotal}')
 
-        ### MAKING COPY WITH DRAWN DEFECTS ###
+        ### MAKING COPY WITH DRAWN DEFECTS AND HULL ###
         newImage = drawDefects(img, contoursGesture[0], defects)
         cv2.imwrite(f'Defects_test{i}.png', newImage)
         i += 1
@@ -220,11 +219,6 @@ def getDefects(contours):
         print('No contours found')
         return 0, None
 
-    # Check if contours array are None after conversion
-    if contours.size == 0:
-        print('Contours array error')
-        return 0, None
-
     hull = cv2.convexHull(contours, returnPoints=False)
     defects = cv2.convexityDefects(contours,hull)
 
@@ -236,15 +230,11 @@ def getDefects(contours):
     distanceFilter = 10000
 
     # Distance filtering irrelevant points
-    filter_arr = defects[:, 0, 3] > distanceFilter  # Create a boolean mask where the distance value is greater than 500 #NOTE : betyder for alle, 0 betyder for x-akse, og så det 4. element. So for hvert element i x-aksen, find fjerde element, tjek condition, og ændr værdi til true eller false. Derfor lægges vores filter array på vores defects. God forklaring: https://johnfoster.pge.utexas.edu/numerical-methods-book/ScientificPython_Numpy.html
+    filter_arr = defects[:, 0, 3] > distanceFilter  # Create a boolean mask #NOTE : betyder for alle, 0 betyder for x-akse, og så det 4. element. So for hvert element i x-aksen, find fjerde element, tjek condition, og ændr værdi til true eller false. Derfor lægges vores filter array på vores defects. God forklaring: https://johnfoster.pge.utexas.edu/numerical-methods-book/ScientificPython_Numpy.html
     newDefects = defects[filter_arr]  # Apply the boolean mask to filter the defects
  
     # As defects have locations, we are only interested in the amount
-    if newDefects is None:
-        print('No defects')
-        defects_total = 0
-    else:
-        defects_total = newDefects.shape[0]
+    defects_total = newDefects.shape[0]
 
     return defects_total, newDefects
 
@@ -262,7 +252,6 @@ def drawDefects(frame, contours, defects):
             cv2.circle(frame,far,5,[0,0,255],-1)
     except:
         print('Error with Draw defects')
-        close_application
 
     return frame
 
@@ -340,10 +329,7 @@ def close_application():
 
 # Use this if we want to delete images afterwards
 def full_close_application():
-    global cap
-
-    cap.release()
-    cv2.destroyAllWindows()
+    close_application()
     # Delete all the files in the filenames array
     for filename in filenames:
         try:
@@ -362,7 +348,7 @@ def state_capture_gestures(raw_frame, binary_frame):
     if gestureIndex < len(gestures):
         gesture = gestures[gestureIndex]
 
-        contoursLive, _ = cv2.findContours(binary_frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE) # Bruges til at croppe billedet
+        contoursLive, _ = cv2.findContours(binary_frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE) 
 
         # Checking for contours
         if len(contoursLive) == 0:
@@ -373,10 +359,6 @@ def state_capture_gestures(raw_frame, binary_frame):
         # Displaying instructions
         frame = displayText(raw_frame.copy(), f'Capturing {gesture}. Press "s" to save,')
 
-        # Cropper billedet til kun hånden
-        # cropped_frame = cropToBrect(frame, contoursLive[0])
-        
-        #brect_binary_frame = drawBrect(binary_frame, contoursLive)
         binary_frame = getBinaryVideo(raw_frame.copy())
 
         # Displaying the feeds
@@ -522,9 +504,9 @@ while current_state and running:
 
     binary_frame = getBinaryVideo(raw_frame.copy()) # Getting binary frame
     binary_frame = removeNoise(binary_frame) # Removes noise by 'opening'
-    binary_frame = closingImage(binary_frame) # Closing image (should close potential holes in hands, like tattoos, and small shadows)
+    binary_frame = closingImage(binary_frame) # Closing image (should close potential holes in binary images of hands, like tattoos, and small shadows)
 
-    #Define the key press
+    # Define the key press
     key = cv2.waitKey(3) & 0xFF
     if key == ord('q'):
         close_application()
