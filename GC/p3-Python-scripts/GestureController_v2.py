@@ -16,7 +16,8 @@ print('Starting application...')
 #TODO Testing
 # - Hvor langt kan man gå ud af billedet før den fucker. Alle sider
 # - Hvor markant skal gesturen være, for at den genkender den korrekt - ved ikke om det skal måles i procenter
-# - v1 - Kan den stabilt vise gestures v2 - Kan den stabilt vise flere gestures - Kan den stabilt vise 6 gestures
+# - v1 - Kan den stabilt vise gestures v2 - Kan den stabilt vise flere gestures - Kan den stabilt vise 6 gestures - Hvad er stabilt?
+# - Kan man lave custom gestures uden problemer? Hvor crazy kan man gå?
 
 #BLA
 i = 0
@@ -133,7 +134,7 @@ def process_gesture(img):
             print(f"No contours found")
         contours_refs.append(contoursGesture)
 
-        # Getting defects #################### # TODO Få lige samlet nogle af de her defects relaterede ting
+        # Getting defects #################### 
         defectsTotal, defects = getDefects(contoursGesture[0])
         # Save defects total for the gestures
         defects_gestures.append(defectsTotal)
@@ -166,10 +167,8 @@ def findBestMatch(contours_refs, contours_live, defects_live):
             print(f"Warning: Empty contour encountered at index {i}. Skipping.")
             continue
 
-        #TODO - Leg mere med match modes måske
         match_value = cv2.matchShapes(contours_live[0], gesture_contours[0], 1, 0.0)
 
-        #TODO HER
         # Only sets a new best match if it both has a better accuracy value, and the amount of defects match
         if match_value < best_match_value and defects_gestures[i] == defects_live:
             best_match_value = match_value
@@ -220,10 +219,6 @@ def getDefects(contours):
     if len(contours) == 0:
         print('No contours found')
         return 0, None
-    
-    # Ensure the contours are in correct format
-    #TODO - Slet alt der overflødigt her
-    contours = np.array(contours, dtype=np.int32)
 
     # Check if contours array are None after conversion
     if contours.size == 0:
