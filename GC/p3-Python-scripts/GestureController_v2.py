@@ -9,13 +9,9 @@ print('Starting application...')
 
 #TODO-  Slet det der brect shit
 
-#TODO - Convexity Defects 
-
 #TODO - TIL KODEGRAFIK - ÆNDR ORIENTATION, både til v1 og v2
 
 #TODO - En måde at gemme på i guess, så man ikke altid behøver tage nye billeder - NOK FUTURE WORK
-
-#TODO - FIKS BINARY VIDEO HURLUMHEJ - Ingen tekst på binary frame, pls
 
 #TODO Testing
 # - Hvor langt kan man gå ud af billedet før den fucker. Alle sider
@@ -41,8 +37,8 @@ contours_refs = []
 defects_gestures = []
 
 # All gestures to be captured
-#gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
-gestures = ['Forward', 'Backward']
+gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
+# gestures = ['Forward', 'Backward'] # Test bunch
 
 key = ''
 
@@ -138,7 +134,7 @@ def process_gesture(img):
         contours_refs.append(contoursGesture)
 
         # Getting defects #################### # TODO Få lige samlet nogle af de her defects relaterede ting
-        defectsTotal, defects = getDefects2(contoursGesture[0])
+        defectsTotal, defects = getDefects(contoursGesture[0])
         # Save defects total for the gestures
         defects_gestures.append(defectsTotal)
         print(f'Number of convexity defects: {defectsTotal}')
@@ -242,8 +238,10 @@ def getDefects(contours):
         print('No defects')
         return 0, None
 
+    distanceFilter = 10000
+
     # Distance filtering irrelevant points
-    filter_arr = defects[:, 0, 3] > 5000  # Create a boolean mask where the distance value is greater than 500 #NOTE : betyder for alle, 0 betyder for x-akse, og så det 4. element. So for hvert element i x-aksen, find fjerde element, tjek condition, og ændr værdi til true eller false. Derfor lægges vores filter array på vores defects. God forklaring: https://johnfoster.pge.utexas.edu/numerical-methods-book/ScientificPython_Numpy.html
+    filter_arr = defects[:, 0, 3] > distanceFilter  # Create a boolean mask where the distance value is greater than 500 #NOTE : betyder for alle, 0 betyder for x-akse, og så det 4. element. So for hvert element i x-aksen, find fjerde element, tjek condition, og ændr værdi til true eller false. Derfor lægges vores filter array på vores defects. God forklaring: https://johnfoster.pge.utexas.edu/numerical-methods-book/ScientificPython_Numpy.html
     newDefects = defects[filter_arr]  # Apply the boolean mask to filter the defects
  
     # As defects have locations, we are only interested in the amount
@@ -252,48 +250,6 @@ def getDefects(contours):
         defects_total = 0
     else:
         defects_total = newDefects.shape[0]
-
-    return defects_total, newDefects
-
-def getDefects2(contours):
-    # Check for contours
-    if len(contours) == 0:
-        print('No contours found')
-        return 0, None
-
-    # Ensure the contours are in the correct format
-    contours = np.array(contours, dtype=np.int32)
-
-    # Debugging: Print the shape and dtype of the contours array
-    print(f'Contours shape: {contours.shape}, dtype: {contours.dtype}')
-
-    # Check if the contours array is empty after conversion
-    if contours.size == 0:
-        print('Contours array is empty after conversion')
-        return 0, None
-
-    # Check if the depth of the contours array is correct
-    if contours.dtype != np.int32 and contours.dtype != np.float32:
-        print('Contours array has incorrect depth')
-        return 0, None
-
-    try:
-        hull = cv2.convexHull(contours, returnPoints=False)
-        defects = cv2.convexityDefects(contours, hull)
-    except cv2.error as e:
-        print(f'Error in cv2.convexHull or cv2.convexityDefects: {e}')
-        return 0, None
-
-    # Check for convexity defects
-    if defects is None:
-        print('No defects')
-        return 0, None
-
-    # Distance filtering irrelevant points
-    filter_arr = defects[:, 0, 3] > 5000  # Create a boolean mask where the distance value is greater than 5000
-    newDefects = defects[filter_arr]  # Apply the boolean mask to filter the defects
-
-    defects_total = newDefects.shape[0] if newDefects is not None else 0
 
     return defects_total, newDefects
 
@@ -403,16 +359,6 @@ def full_close_application():
         except Exception as e:
             print(f"Error deleting the file {filename}: {e}")
 
-# KEY PRESS HANDLING ####################################################################
-#def key_press_detection():
-    global running, key_pressed
-    while running:
-        key = cv2.waitKey(1) & 0xFF  # Check for key press every 1 millisecond
-        if key != 255:  # If a key is pressed
-            key_pressed = key
-            if key == ord('q'):
-                close_application()
-
 # STATES ###################################################################################
 
 def state_capture_gestures(raw_frame, binary_frame):
@@ -470,15 +416,15 @@ def state_match_gestures(raw_frame, binary_frame):
         return 'match_gestures'
 
     # Getting defects
-    defectsLive, _ = getDefects2(contoursLive[0])
+    defectsTotalLive, defectsLive = getDefects(contoursLive[0])
 
     # Checking for contours
-    if defectsLive is None:
+    if defectsTotalLive is None:
         frame = displayText(frame, 'No defects found in live feed')
         cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
         return 'match_gestures'
 
-    best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive, defectsLive)
+    best_match_index, best_match_value = findBestMatch(contours_refs, contoursLive, defectsTotalLive)
 
     # Display the match accuracy on the frame
     displayMatchAccuracy(frame, round(best_match_value, 2))
@@ -540,14 +486,13 @@ def state_match_gestures(raw_frame, binary_frame):
     frame = displayText(frame, f'Matched Gesture: {gesture_name}')
 
     # Tester defects og tegner dem på live billede
-    binary_frame = drawDefects(binary_frame, contoursLive, defectsLive)
+    binary_frame = drawDefects(binary_frame, contoursLive[0], defectsLive)
 
     # Displaying the feeds
     cv2.imshow('Live Feed', frame)  # Updates 'Live Feed' window
     cv2.imshow('Binary Feed', binary_frame)  # Updates 'Binary Feed' window
 
     return 'match_gestures'  # Remain in the current state
-
 
 # State dictionary
 states = {
