@@ -454,6 +454,7 @@ def state_match_gestures(raw_frame, binary_frame):
             # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
+    #TODO Det her ser ikke rigtigt ud, skal lige ryddes op
     # If there is no new gesture, keep the same gesture and send it
     elif currentGesture == currentGesture:
             # Send gesture_name to Unity via UDP
