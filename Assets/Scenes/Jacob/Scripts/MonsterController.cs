@@ -18,6 +18,7 @@ public class MonsterController : MonoBehaviour
     private Animator animator;
     private NavMeshAgent agent;
     private Transform playerTransform;
+    private Vector3 lastKnowPos;
 
     [Header("Monster State settings")]
     public MonsterState currentState;
@@ -50,11 +51,13 @@ public class MonsterController : MonoBehaviour
             // check if the player is sneaking and set the new target if not
             if(playerTransform.GetComponent<PlayerController>().isSneaking == false)
             {
-                Investigate(playerTransform, 1);
+                currentState = MonsterState.Investigate;
+                lastKnowPos = playerTransform.position;
                 detectedLumi = true;
             }
-            else if(playerTransform.GetComponent<PlayerController>().isSneaking)
+            else if(playerTransform.GetComponent<PlayerController>().isSneaking == true)
             {
+                currentState = MonsterState.Investigate;
                 detectedLumi = false;
             }
         }
@@ -63,25 +66,17 @@ public class MonsterController : MonoBehaviour
             detectedLumi = false;
         }
 
-        // Check if the monster has reached its destination, and transition to idle if so.
-        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
-        {
-            // When the monster has reached the destination, set state to Idle
-            if (currentState == MonsterState.Investigate)
-            {
-                InvestigatingAtLastKnowPos();
-            }
-        }
-
         // Handle state behavior
         switch (currentState)
         {
             case MonsterState.Investigate:
-                Debug.Log("Investigating, playing walk animation");
+                Investigate(lastKnowPos, 1);
                 break;
+
             case MonsterState.Idle:
 
                 break;
+
             case MonsterState.Roaming:
                 Debug.Log("Roaming, playing walk animation");
                 Roam();
@@ -97,9 +92,11 @@ public class MonsterController : MonoBehaviour
             Debug.LogError("No patrol points found");
             return;
         }
-
         Transform currentPatrolPoint = patrolPoints[currentPatrolPointIndex];
         agent.SetDestination(currentPatrolPoint.position);
+        animator.SetBool("Investigating", false); 
+
+
         animator.SetBool("IsMoving", true);
 
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
@@ -114,40 +111,47 @@ public class MonsterController : MonoBehaviour
     }
 
 
-    private void Investigate(Transform target, int stoppingDistance)
+    private void Investigate(Vector3 target, int stoppingDistance)
     {
-        agent.stoppingDistance = stoppingDistance;
-        agent.SetDestination(target.position);
-        animator.SetBool("IsMoving", true);
-        currentState = MonsterState.Investigate;
+        // Check if the monster has reached its destination, and transition to idle if so.
+        if (agent.remainingDistance <= agent.stoppingDistance)
+        {
+            animator.SetBool("IsMoving", false);
+            StartCoroutine(InvestigateWait());
+        }
+        else
+        {
+            agent.stoppingDistance = stoppingDistance;
+            agent.SetDestination(target);
+            animator.SetBool("IsMoving", true);
+        }
 
         // Check for proximity to kill the player
-        if (Vector3.Distance(target.position, transform.position) <= killRadius && detectedLumi)
+        if (Vector3.Distance(target, transform.position) <= killRadius && detectedLumi)
         {
             Kill();
         }
-    }
-
-    // Switch to idle state and handle logic for being idle
-    private void InvestigatingAtLastKnowPos()
-    {
-        currentState = MonsterState.Idle;
-        animator.SetTrigger("Investigate"); // Ensure Idle animation is triggered
-        StartCoroutine(InvestigateWait()); // After waiting, resume patrol
     }
 
     private IEnumerator InvestigateWait()
     {
         yield return new WaitForSeconds(waitToResumeRoaming);
         currentState = MonsterState.Roaming; // Resume patrol after waiting
-        Debug.Log("Resuming roaming after idle");
     }
 
+    private bool killOnce = false;
     private void Kill()
     {
-        animator.SetTrigger("Attack");
-        Debug.Log("Lumi is dead");
-        // Call method from charactercontroller to kill Lumi or restart the level
+        animator.SetBool("Investigating", false); 
+        if(killOnce == false)
+        {
+            killOnce = true;
+            animator.SetTrigger("Attack");
+
+            playerTransform.GetComponent<PlayerController>().isDead = true;
+
+            currentState = MonsterState.Idle;
+        }
     }
 
      private bool InView()

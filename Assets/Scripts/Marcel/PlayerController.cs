@@ -74,6 +74,11 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateAnimations();
+
+        if(isDead)
+        {
+            canMove = false;
+        }
     }
 
     /// <summary>

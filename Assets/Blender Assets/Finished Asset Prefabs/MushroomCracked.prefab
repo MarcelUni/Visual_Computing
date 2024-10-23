@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7573317102754491910}
   - component: {fileID: 8138124832782334513}
   - component: {fileID: 6117797481669918369}
+  - component: {fileID: 4100434965138369267}
   m_Layer: 0
   m_Name: MushroomCracked
   m_TagString: Untagged
@@ -83,3 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!208 &4100434965138369267
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5949383106951914537}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 4.37, y: 14.768001, z: 4.37}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -1.18, y: 13.82, z: -1.16}
+  m_TimeToStationary: 0.5
