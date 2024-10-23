@@ -791,7 +791,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -1792,11 +1792,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Zombie Idle (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6832285850775866415, guid: d97247604351e4d8cadf0abe46e66fe1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8239248760840081475, guid: d97247604351e4d8cadf0abe46e66fe1,
         type: 3}

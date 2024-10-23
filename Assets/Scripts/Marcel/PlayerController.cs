@@ -144,8 +144,7 @@ public class PlayerController : MonoBehaviour
         // Check if the player has reached the end of the path
         if (distanceTravelled >= pathCreators[currentPathIndex].path.length || distanceTravelled <= 1)
         {
-            // Handle the end of the path (e.g., stop the player, switch to a new path, etc.)
-            Debug.Log("Reached the end of the path");
+            //Debug.Log("Reached the end of the path");
             return;
         }
 
