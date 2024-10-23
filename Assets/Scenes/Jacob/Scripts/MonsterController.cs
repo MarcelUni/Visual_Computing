@@ -55,7 +55,7 @@ public class MonsterController : MonoBehaviour
                 lastKnowPos = playerTransform.position;
                 detectedLumi = true;
             }
-            else if(playerTransform.GetComponent<PlayerController>().isSneaking == true)
+            else if(playerTransform.GetComponent<PlayerController>().isSneaking == true && lastKnowPos != Vector3.zero)
             {
                 currentState = MonsterState.Investigate;
                 detectedLumi = false;
@@ -113,6 +113,8 @@ public class MonsterController : MonoBehaviour
 
     private void Investigate(Vector3 target, int stoppingDistance)
     {
+        agent.SetDestination(target);
+
         // Check if the monster has reached its destination, and transition to idle if so.
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
@@ -122,7 +124,6 @@ public class MonsterController : MonoBehaviour
         else
         {
             agent.stoppingDistance = stoppingDistance;
-            agent.SetDestination(target);
             animator.SetBool("IsMoving", true);
         }
 
@@ -136,6 +137,7 @@ public class MonsterController : MonoBehaviour
     private IEnumerator InvestigateWait()
     {
         yield return new WaitForSeconds(waitToResumeRoaming);
+        lastKnowPos = Vector3.zero;
         currentState = MonsterState.Roaming; // Resume patrol after waiting
     }
 
