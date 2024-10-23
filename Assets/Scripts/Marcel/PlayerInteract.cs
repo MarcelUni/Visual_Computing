@@ -55,7 +55,20 @@ public class PlayerInteract : MonoBehaviour
             if(hit.collider.CompareTag(keyTag))
             {
                 hasKey = true;
+
+                // Find the Particle System by name and play it at the hit collider's position
+                GameObject particleSystemObject = GameObject.Find("Particle System");
+                if (particleSystemObject != null)
+                {
+                    ParticleSystem ps = particleSystemObject.GetComponent<ParticleSystem>();
+                    if (ps != null)
+                    {
+                        ps.Play();
+                    }
+                }
+
                 hit.collider.gameObject.SetActive(false);
+               
             }
             if(hit.collider.CompareTag(LightorbTag))
             {
