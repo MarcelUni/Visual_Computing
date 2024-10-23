@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GesturePuzzle : MonoBehaviour
 {
-    // der skal lige gøres sådan at cameraShake ikke bliver spillet hele tiden (skal stoppe når dørenen har åbnet helt)
+    // der skal lige gï¿½res sï¿½dan at cameraShake ikke bliver spillet hele tiden (skal stoppe nï¿½r dï¿½renen har ï¿½bnet helt)
     public GameObject leftDoor;
     public GameObject rightDoor;
 
@@ -16,7 +16,7 @@ public class GesturePuzzle : MonoBehaviour
     public bool input2Activated = false; 
     public bool input3Activated = false;
 
-    private bool start = true;
+    //private bool start = true;
 
     private GameObject player;
 
