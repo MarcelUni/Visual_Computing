@@ -28,12 +28,14 @@ public class PlayerInteract : MonoBehaviour
     {
         if(DoorInRange == true && hasLightOrb)
         {
+            Debug.Log("dorr");
             InteractWithDoor();
             anim.SetTrigger("Interact");
         }
 
         if(puzzleInRange && hasKey)
         {
+            Debug.Log("key");
             InteractWithPuzzle();
             anim.SetTrigger("Interact");
         }
@@ -97,6 +99,7 @@ public class PlayerInteract : MonoBehaviour
     private void InteractWithPuzzle()
     {
         puzzleObject.GetComponent<Puzzle>().Interact();
+        puzzleInRange = false;
         pc.canMoveForward = true;
     }
 

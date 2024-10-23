@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5315561984147412157}
   - component: {fileID: 1638363611624747632}
   - component: {fileID: 6278635149418991490}
+  - component: {fileID: 6167805020305028932}
   m_Layer: 0
   m_Name: MushroomLongHat
   m_TagString: Untagged
@@ -84,6 +85,22 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!208 &6167805020305028932
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1275700381034202098}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 3, y: 14.502001, z: 3}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -20.918001, y: 13.96, z: -0.22800002}
+  m_TimeToStationary: 0.5
 --- !u!1 &4354862225080769898
 GameObject:
   m_ObjectHideFlags: 0

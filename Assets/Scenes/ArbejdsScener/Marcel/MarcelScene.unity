@@ -1793,6 +1793,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie Idle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6832285850775866415, guid: d97247604351e4d8cadf0abe46e66fe1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8239248760840081475, guid: d97247604351e4d8cadf0abe46e66fe1,
         type: 3}
       propertyPath: patrolPoints.Array.data[0]
