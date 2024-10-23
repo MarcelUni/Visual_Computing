@@ -10,6 +10,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float waitToResumeRoaming = 5f;
     [SerializeField] private float killRadius = 5f;
+
     [SerializeField] private float viewRadius;
     [SerializeField] private float viewAngle;
     [SerializeField] private LayerMask playerLayer;
@@ -77,16 +78,13 @@ public class MonsterController : MonoBehaviour
         {
             case MonsterState.Investigate:
                 Debug.Log("Investigating, playing walk animation");
-               // animator.Play("Walk"); // Play walk animation while investigating
                 break;
             case MonsterState.Idle:
-                Debug.Log("Idle, playing idle animation");
-               // animator.Play("Idle"); // Play idle animation
+
                 break;
             case MonsterState.Roaming:
                 Debug.Log("Roaming, playing walk animation");
                 Roam();
-               // animator.Play("Walk"); // Play walk animation while roaming
                 break;
         }
     }
@@ -102,6 +100,7 @@ public class MonsterController : MonoBehaviour
 
         Transform currentPatrolPoint = patrolPoints[currentPatrolPointIndex];
         agent.SetDestination(currentPatrolPoint.position);
+        animator.SetBool("IsMoving", true);
 
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
@@ -119,6 +118,7 @@ public class MonsterController : MonoBehaviour
     {
         agent.stoppingDistance = stoppingDistance;
         agent.SetDestination(target.position);
+        animator.SetBool("IsMoving", true);
         currentState = MonsterState.Investigate;
 
         // Check for proximity to kill the player
@@ -132,8 +132,7 @@ public class MonsterController : MonoBehaviour
     private void InvestigatingAtLastKnowPos()
     {
         currentState = MonsterState.Idle;
-        animator.Play("Idle"); // Ensure Idle animation is triggered
-        Debug.Log("Monster switched to Idle state");
+        animator.SetTrigger("Investigate"); // Ensure Idle animation is triggered
         StartCoroutine(InvestigateWait()); // After waiting, resume patrol
     }
 
@@ -146,6 +145,7 @@ public class MonsterController : MonoBehaviour
 
     private void Kill()
     {
+        animator.SetTrigger("Attack");
         Debug.Log("Lumi is dead");
         // Call method from charactercontroller to kill Lumi or restart the level
     }
