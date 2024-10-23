@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,23 +8,22 @@ public class MonsterController : MonoBehaviour
 {
     [Header("Monster Settings")]
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float detectionDistance = 20f;
     [SerializeField] private float waitToResumeRoaming = 5f;
-    [SerializeField] private GameObject killBox;
-    [SerializeField] private float killBoxRadius = 5f;
+    [SerializeField] private float killRadius = 5f;
+    [SerializeField] private float viewRadius;
+    [SerializeField] private float viewAngle;
+    [SerializeField] private LayerMask playerLayer;
 
     private Animator animator;
-    private PlayerController playerController;
     private NavMeshAgent agent;
+    private Transform playerTransform;
 
     [Header("Monster State settings")]
     public MonsterState currentState;
-
     public Transform[] patrolPoints;
 
-    public bool detectedLumi = false;
-    public bool gotLatestPosition = false;
-    public bool reached = false;
+    private bool detectedLumi = false;
+    private int currentPatrolPointIndex = 0;
 
     public enum MonsterState
     {
@@ -35,23 +35,40 @@ public class MonsterController : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        playerController = GetComponent<PlayerController>();
         agent = GetComponent<NavMeshAgent>(); // Cache the NavMeshAgent
+        agent.speed = this.speed;
 
-        float sphereRadius = GetComponent<SphereCollider>().radius;
         currentState = MonsterState.Roaming;
-        sphereRadius = detectionDistance;
     }
 
     private void Update()
     {
+        // If the player is in view
+        if(InView())
+        {
+            // check if the player is sneaking and set the new target if not
+            if(playerTransform.GetComponent<PlayerController>().isSneaking == false)
+            {
+                Investigate(playerTransform, 1);
+                detectedLumi = true;
+            }
+            else if(playerTransform.GetComponent<PlayerController>().isSneaking)
+            {
+                detectedLumi = false;
+            }
+        }
+        else
+        {
+            detectedLumi = false;
+        }
+
         // Check if the monster has reached its destination, and transition to idle if so.
         if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
         {
             // When the monster has reached the destination, set state to Idle
             if (currentState == MonsterState.Investigate)
             {
-                SwitchToIdle();
+                InvestigatingAtLastKnowPos();
             }
         }
 
@@ -74,7 +91,6 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private int currentPatrolPointIndex = 0;
 
     private void Roam()
     {
@@ -98,53 +114,30 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking == false && other.GetComponent<PlayerController>().isMoving)
-        {
-            Investigate(other.transform, true, 1);
-            detectedLumi = true;
-        }
-  
-        if (other.CompareTag("Player") && other.GetComponent<PlayerController>().isSneaking)
-        {
-            detectedLumi = false;
-        }
-    }
 
-    private void Investigate(Transform target, bool lumiDetected, int stoppingDistance)
+    private void Investigate(Transform target, int stoppingDistance)
     {
         agent.stoppingDistance = stoppingDistance;
-
-        if (lumiDetected)
-        {
-            detectedLumi = true;
-        }
-        else
-        {
-            detectedLumi = false;
-        }
-
         agent.SetDestination(target.position);
         currentState = MonsterState.Investigate;
 
         // Check for proximity to kill the player
-        if (Vector3.Distance(target.position, killBox.transform.position) <= killBoxRadius && detectedLumi)
+        if (Vector3.Distance(target.position, transform.position) <= killRadius && detectedLumi)
         {
             Kill();
         }
     }
 
     // Switch to idle state and handle logic for being idle
-    private void SwitchToIdle()
+    private void InvestigatingAtLastKnowPos()
     {
         currentState = MonsterState.Idle;
         animator.Play("Idle"); // Ensure Idle animation is triggered
         Debug.Log("Monster switched to Idle state");
-        StartCoroutine(IdleWait()); // After waiting, resume patrol
+        StartCoroutine(InvestigateWait()); // After waiting, resume patrol
     }
 
-    private IEnumerator IdleWait()
+    private IEnumerator InvestigateWait()
     {
         yield return new WaitForSeconds(waitToResumeRoaming);
         currentState = MonsterState.Roaming; // Resume patrol after waiting
@@ -155,5 +148,51 @@ public class MonsterController : MonoBehaviour
     {
         Debug.Log("Lumi is dead");
         // Call method from charactercontroller to kill Lumi or restart the level
+    }
+
+     private bool InView()
+    {
+        Collider[] targets = Physics.OverlapSphere(transform.position, viewRadius, playerLayer);
+        
+        foreach(Collider obj in targets)
+        {
+            Vector3 directionToTarget = (obj.transform.position - transform.position).normalized;
+            Vector3 forward = transform.forward;
+            
+            // Calculating angle formula
+            float dotProduct = Vector3.Dot(directionToTarget, forward);
+
+            float angleInRadians = Mathf.Acos(dotProduct);
+
+            float angleInDegrees = angleInRadians * Mathf.Rad2Deg;
+            
+            if(Mathf.Abs(angleInDegrees) <= viewAngle)    
+            {
+                if(Physics.Raycast(transform.position, directionToTarget, out RaycastHit hit, viewRadius))
+                {
+                    if(hit.collider == obj)
+                    {
+                        playerTransform = hit.collider.gameObject.transform;
+                        return true;
+                    }
+                }
+            }
+
+        }
+        return false;
+    }
+    private void OnDrawGizmos()
+    {
+        // Draw the detection range as a wire sphere
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, viewRadius);
+
+        // Draw the 90-degree field of view
+        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle, 0) * transform.forward * viewRadius;
+        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle, 0) * transform.forward * viewRadius;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
+        Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
     }
 }

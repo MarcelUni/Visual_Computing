@@ -28,11 +28,7 @@ public class PlayerController : MonoBehaviour
 
     private float currentVelocity;
     private float currentSpeed = 0;
-    private float transitionDuration = 1f; // Duration for smooth transition
     private bool isTransitioning = false; // Indicates if a path transition is happening
-    private float transitionProgress = 0f;
-    private float initialDistanceTravelled;
-    private float targetDistanceTravelled;
 
     [HideInInspector] public float distanceTravelled = 8;
     private Rigidbody rb;
@@ -145,6 +141,14 @@ public class PlayerController : MonoBehaviour
 
     private void UpdatePositionAndRotation()
     {
+        // Check if the player has reached the end of the path
+        if (distanceTravelled >= pathCreators[currentPathIndex].path.length || distanceTravelled <= 1)
+        {
+            // Handle the end of the path (e.g., stop the player, switch to a new path, etc.)
+            Debug.Log("Reached the end of the path");
+            return;
+        }
+
         Vector3 currentPosition = rb.position;
         Vector3 pathPosition = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled);
 

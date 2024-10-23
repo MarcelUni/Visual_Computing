@@ -15,7 +15,6 @@ public class CharacterControllerScript : MonoBehaviour
     private bool isGrounded;
 
     public float mouseSensitivity = 100f;
-    private float xRotation = 0f;
 
     private void Start()
     {
