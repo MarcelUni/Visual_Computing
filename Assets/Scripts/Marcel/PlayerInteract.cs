@@ -59,7 +59,7 @@ public class PlayerInteract : MonoBehaviour
                 hasKey = true;
 
                 // Find the Particle System by name and play it at the hit collider's position
-                GameObject particleSystemObject = GameObject.Find("Particle System");
+                GameObject particleSystemObject = GameObject.Find("PickUpParticle");
                 if (particleSystemObject != null)
                 {
                     ParticleSystem ps = particleSystemObject.GetComponent<ParticleSystem>();
