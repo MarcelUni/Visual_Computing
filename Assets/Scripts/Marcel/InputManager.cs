@@ -26,7 +26,7 @@ public class InputManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+  /*  void Update()
     {
         if(useKeys == false)
             return;
@@ -56,7 +56,7 @@ public class InputManager : MonoBehaviour
          {
              playerInteract.Interact();
          }
-    }
+    }*/
 
     public void ReceiveInput(string inputGesture)
     {
