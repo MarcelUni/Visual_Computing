@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public bool useKeys;
+
     // Keycodes
     public KeyCode moveForwardKey;
     public KeyCode moveBackwardKey;
@@ -26,6 +28,9 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(useKeys == false)
+            return;
+
          if (Input.GetKey(moveForwardKey))
          {
              MoveForward();

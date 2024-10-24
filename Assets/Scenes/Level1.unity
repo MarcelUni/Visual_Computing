@@ -24,7 +24,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.3773585, g: 0.046940293, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0, g: 0.04442024, b: 0.26415092, a: 1}
   m_AmbientGroundColor: {r: 0.25075653, g: 0.31148022, b: 0.46226418, a: 1}
-  m_AmbientIntensity: 0.86
+  m_AmbientIntensity: 0.33
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: c82a334cf5a5e47978749c210cee72a7, type: 2}
@@ -1789,7 +1789,7 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 5
-    NearClipPlane: 4
+    NearClipPlane: 2
     FarClipPlane: 750
     Dutch: 0
     ModeOverride: 0
@@ -3005,7 +3005,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.3
+  m_Intensity: 0.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -9495,7 +9495,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 4
+  near clip plane: 2
   far clip plane: 750
   field of view: 40
   orthographic: 0
@@ -15410,7 +15410,7 @@ PrefabInstance:
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.8388214
+      value: 1.81
       objectReference: {fileID: 0}
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
@@ -15420,7 +15420,7 @@ PrefabInstance:
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.4134598
+      value: -0.49
       objectReference: {fileID: 0}
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
@@ -18071,17 +18071,17 @@ PrefabInstance:
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.5888214
+      value: -3.69
       objectReference: {fileID: 0}
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7600002
+      value: 1.14
       objectReference: {fileID: 0}
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.0265427
+      value: 8.46
       objectReference: {fileID: 0}
     - target: {fileID: 8025043002289265398, guid: 95e15333308294ca18f5b94f4a24fae6,
         type: 3}
@@ -18575,21 +18575,21 @@ MonoBehaviour:
       - {x: -5.8477483, y: 0.6185349, z: -29.88273}
       - {x: -5.4912415, y: 0.7527981, z: -27.900406}
       - {x: -4.562195, y: 1.102684, z: -22.734528}
-      - {x: -6.7239685, y: -0.82188416, z: 9.8934555}
-      - {x: -5.7186584, y: -0.8982315, z: 12.897408}
-      - {x: -4.1894994, y: -1.0143621, z: 17.466665}
+      - {x: -6.684662, y: -1.1659622, z: 10.382622}
+      - {x: -5.679352, y: -1.2423096, z: 13.386574}
+      - {x: -4.1501927, y: -1.3584402, z: 17.955832}
       - {x: 7.4151306, y: 0.5229788, z: 22.26104}
       - {x: 10.114548, y: 0.44418144, z: 23.230827}
       - {x: 14.555563, y: 0.314546, z: 24.826298}
-      - {x: 28.744019, y: 0.3982153, z: 24.335304}
-      - {x: 32.177597, y: -0.19698048, z: 27.436684}
-      - {x: 35.333717, y: -0.7440798, z: 30.287447}
-      - {x: 33.14468, y: -1.3024855, z: 35.189842}
-      - {x: 32.588943, y: -0.9028292, z: 36.58642}
-      - {x: 30.718948, y: 0.4419756, z: 41.28576}
-      - {x: 22.99825, y: 1.2023712, z: 41.75862}
-      - {x: 21.557846, y: 1.3637581, z: 48.27195}
-      - {x: 20.205765, y: 1.5152493, z: 54.385902}
+      - {x: 21.945585, y: 6.118753, z: 29.90739}
+      - {x: 25.379166, y: 5.5235558, z: 33.008766}
+      - {x: 28.535278, y: 4.9764566, z: 35.85952}
+      - {x: 27.954224, y: 2.9090233, z: 39.006264}
+      - {x: 27.370468, y: 3.1333294, z: 40.725594}
+      - {x: 26.098019, y: 3.622264, z: 44.473328}
+      - {x: 27.33317, y: 3.1453586, z: 44.805843}
+      - {x: 26.49759, y: 3.8290424, z: 51.390587}
+      - {x: 26.048752, y: 4.196287, z: 54.92762}
       - {x: 17.501343, y: -0.04136944, z: 61.907845}
       - {x: 15.254013, y: -0.20010376, z: 66.24842}
       isClosed: 0
@@ -18612,7 +18612,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 270
       flipNormals: 1
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0
     showTransformTool: 0
