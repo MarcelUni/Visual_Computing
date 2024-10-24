@@ -26,7 +26,7 @@ public class InputManager : MonoBehaviour
     }
 
     // Update is called once per frame
-  /*  void Update()
+    void Update()
     {
         if(useKeys == false)
             return;
@@ -56,22 +56,22 @@ public class InputManager : MonoBehaviour
          {
              playerInteract.Interact();
          }
-    }*/
+    }
 
     public void ReceiveInput(string inputGesture)
     {
         switch (inputGesture)
         {
-            case "MoveForward":
+            case "Forward":
                 MoveForward();
                 break;
-            case "MoveBackward":
+            case "Backward":
                 MoveBackward();
                 break;
-            case "SneakForward":
+            case "ForwardSneak":
                 ForwardSneak();
                 break;
-            case "SneakBackward":
+            case "BackwardSneak":
                 BackwardSneak();
                 break;
             case "Interact":

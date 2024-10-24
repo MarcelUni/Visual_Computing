@@ -65,10 +65,10 @@ public class UDPReceive : MonoBehaviour
             case "Backward":
                 im.MoveBackward();
                 break;
-            case "Forward Sneak":
+            case "ForwardSneak":
                 im.ForwardSneak();
                 break;
-            case "Backward Sneak":
+            case "BackwardSneak":
                 im.BackwardSneak();
                 break;
             case "Interact":
