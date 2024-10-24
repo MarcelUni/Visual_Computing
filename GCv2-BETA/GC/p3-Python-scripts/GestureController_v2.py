@@ -21,7 +21,7 @@ filenames = []
 contours_refs = []
 
 # All gestures to be captured
-gestures = ['Forward', 'Backward', 'Stop']
+gestures = ['Forward', 'Backward']
 
 
 ######################## BUFFER RELATED #######################
@@ -285,7 +285,7 @@ def state_capture_gestures(raw_frame, binary_frame):
             #cv2.imshow('Cropped Feed', cropped_frame)  # Updates 'Cropped Feed' window
 
         # Handle keyboard events
-        key = cv2.waitKey(2) & 0xFF
+        key = cv2.waitKey(5) & 0xFF
         if key == ord('s'):
             binaryImg = getBinaryImage(cropped_frame, gesture) # Uses the cropped image for processing
             process_gesture(binaryImg)
@@ -414,7 +414,7 @@ while current_state:
     binary_frame = closingImage(binary_frame) # Closing image (should remove noise, and close potential holes in hands, like tattoos)
 
     #Define the key press
-    key = cv2.waitKey(2) & 0xFF
+    key = cv2.waitKey(5) & 0xFF
     if key == ord('q'):
         close_application()
         

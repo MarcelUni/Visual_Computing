@@ -24,7 +24,7 @@ public class InputManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+  /*  void Update()
     {
          if (Input.GetKey(moveForwardKey))
          {
@@ -51,7 +51,7 @@ public class InputManager : MonoBehaviour
          {
              playerInteract.Interact();
          }
-    }
+    }*/
 
     public void ReceiveInput(string inputGesture)
     {
