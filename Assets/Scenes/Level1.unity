@@ -13068,6 +13068,11 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 112
       objectReference: {fileID: 0}
+    - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: useKeys
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8604917074561652703, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -18971,6 +18976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f78d85515869400ab00eb147a548beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useKeys: 0
   moveForwardKey: 119
   moveBackwardKey: 115
   sneakForwardKey: 101
