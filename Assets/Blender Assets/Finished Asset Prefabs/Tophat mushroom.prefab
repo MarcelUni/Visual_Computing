@@ -115,6 +115,11 @@ PrefabInstance:
       propertyPath: m_Extents.z
       value: 2.73
       objectReference: {fileID: 0}
+    - target: {fileID: 6278635149418991490, guid: 86d585971fd2c154bad7b07389e6c2e7,
+        type: 3}
+      propertyPath: m_StaticShadowCaster
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
