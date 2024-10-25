@@ -13,10 +13,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float sneakMoveSpeed;
     [SerializeField] private float speedUpAndSlowDownTime;
     [SerializeField] private float rotateSpeed;
-    [SerializeField] private GameObject playerModelObject;
+    [SerializeField] public GameObject playerModelObject;
     public bool moveForward;
     public bool moveBackward;
-    private bool canMove;
+    public bool canMove;
+    public bool isJumping = false;
     [HideInInspector] public bool canMoveForward = true; // If player reaches a closed door.
 
     [Header("Behavior bools")]
@@ -162,7 +163,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward(float speed)
     {
-        if(canMoveForward == false)
+        if(canMoveForward == false || isJumping == true)
             return;
 
         currentSpeed = Mathf.SmoothDamp(currentSpeed, speed, ref currentVelocity, speedUpAndSlowDownTime);

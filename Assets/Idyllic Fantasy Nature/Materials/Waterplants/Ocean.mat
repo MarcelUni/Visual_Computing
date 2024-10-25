@@ -8,7 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ocean
-  m_Shader: {fileID: -6465566751694194690, guid: 7fa4e42edf1dd924dac45c3fd224b5e3, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 7fa4e42edf1dd924dac45c3fd224b5e3,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -191,7 +192,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DeepColor: {r: 0.42070132, g: 0.52411705, b: 0.5471698, a: 0.5803922}
-    - _Deep_Color: {r: 0, g: 0.53333336, b: 0.6901961, a: 0.8039216}
+    - _Deep_Color: {r: 0.0420257, g: 0.16981131, b: 0.040690627, a: 0.9098039}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 0.65882355}
     - _FoamScale: {r: 100, g: 400, b: 0, a: 0}
@@ -205,7 +206,7 @@ Material:
     - _RippleScale: {r: 50, g: 200, b: 0, a: 0}
     - _Ripple_Color: {r: 1, g: 1, b: 1, a: 1}
     - _Ripple_Scale: {r: 1000, g: 1000, b: 0, a: 0}
-    - _Shallow_Color: {r: 0.30980393, g: 0.6745098, b: 0.8117647, a: 0.6862745}
+    - _Shallow_Color: {r: 0.096311815, g: 0.3056603, b: 0.15448616, a: 0.81960785}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SurfaceColor: {r: 0.47405657, g: 0.6287414, b: 0.6320754, a: 0.70980394}
     - _Surface_Color: {r: 0.3812745, g: 0.61567825, b: 0.6792453, a: 0.5254902}

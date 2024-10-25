@@ -11,6 +11,7 @@ TagManager:
   - Lightorb
   - Key
   - Final Door
+  - AutoJumpTrigger
   layers:
   - Default
   - TransparentFX
