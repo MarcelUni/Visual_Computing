@@ -3,7 +3,8 @@ using System.Collections;
 
 public class AutoJumpController : MonoBehaviour
 {
-    public Transform[] stonePositions; // Assign in the Inspector
+    // we can make the stonePositions array private and use a the on trigger enter to populate the stones from another script, this way we can make the script more modular and reusable
+    private Transform[] stonePositions; // Assign in the Inspector
     public float jumpHeight = 2f;
     public float jumpDuration = 0.5f;
     public float jumpTimer = 0.5f;
@@ -26,11 +27,38 @@ public class AutoJumpController : MonoBehaviour
     {
         if (other.CompareTag("AutoJumpTrigger") && !isAutoJumping)
         {
-            other.enabled = false; // Prevent re-triggering
+            var stoneListPopulate = other.GetComponent<JumpLocationPopulator>(); 
+            stonePositions = stoneListPopulate.stonePositions; // Populate the stonePositions array from the JumpLocationPopulator script
+
+                                                               // Disable all AutoJumpTrigger colliders to prevent multiple jumps
+            GameObject[] autoJumpTriggers = GameObject.FindGameObjectsWithTag("AutoJumpTrigger");
+            foreach (GameObject trigger in autoJumpTriggers)
+            {
+                Collider triggerCollider = trigger.GetComponent<Collider>();
+                if (triggerCollider != null)
+                {
+                    triggerCollider.enabled = false;
+                }
+            }
+            StartCoroutine(AutoJumpTriggerDisabled());
             StartCoroutine(AutoJumpSequence());
         }
     }
 
+    IEnumerator AutoJumpTriggerDisabled()
+    {
+        yield return new WaitForSeconds(5f);
+        // Disable all AutoJumpTrigger colliders to prevent multiple jumps
+        GameObject[] autoJumpTriggers = GameObject.FindGameObjectsWithTag("AutoJumpTrigger");
+        foreach (GameObject trigger in autoJumpTriggers)
+        {
+            Collider triggerCollider = trigger.GetComponent<Collider>();
+            if (triggerCollider != null)
+            {
+                triggerCollider.enabled = true;
+            }
+        }
+    }
     IEnumerator AutoJumpSequence()
     {
         isAutoJumping = true;
@@ -87,7 +115,7 @@ public class AutoJumpController : MonoBehaviour
             // Trigger the Land animation when the player reaches the stone
             if (animator != null)
             {
-                // animator.SetTrigger("Land");
+                // animator.SetTrigger("Land"); // We can set up 2 animations one for the inital jump and one for landing, this way we can make it more realistic ín game maybe 
             }
 
             // Wait between jumps
