@@ -3,8 +3,7 @@ using System.Collections;
 
 public class AutoJumpController : MonoBehaviour
 {
-    // we can make the stonePositions array private and use a the on trigger enter to populate the stones from another script, this way we can make the script more modular and reusable
-    private Transform[] stonePositions; // Assign in the Inspector
+    private Transform[] stonePositions; // Gets assigned from the JumpLocationPopulator script that is attached to the AutoJumpTrigger object
     public float jumpHeight = 2f;
     public float jumpDuration = 0.5f;
     public float jumpTimer = 0.5f;
@@ -68,22 +67,24 @@ public class AutoJumpController : MonoBehaviour
         {
             rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         }
+        // Trigger the Jump Up animation when starting the jump
+        if (animator != null)
+        {
+            // animator.SetTrigger("JumpUp");
+        }
 
         // Disable path movement and player input during the sequence
         pc.canMove = false;
         pc.isJumping = true;
 
+        
         foreach (Transform target in stonePositions)
         {
             Vector3 startPos = transform.position;
             Vector3 endPos = target.position;
             float elapsedTime = 0f;
 
-            // Trigger the Jump Up animation when starting the jump
-            if (animator != null)
-            {
-                // animator.SetTrigger("JumpUp");
-            }
+            
 
             // Remove the player from the path system during the jump
             pc.enabled = false;
