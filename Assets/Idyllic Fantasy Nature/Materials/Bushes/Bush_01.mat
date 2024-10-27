@@ -173,7 +173,7 @@ Material:
     - _WindSpeed2: 0
     - _WindStrength: 0.5
     - _Wind_Direction: 0
-    - _Wind_Speed: 1
+    - _Wind_Speed: 0.2
     - _Wind_Strength: 0.2
     - _Wind_Variation: 0
     - _WorkflowMode: 0
