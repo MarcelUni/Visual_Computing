@@ -12,6 +12,8 @@ public class InputManager : MonoBehaviour
     public KeyCode sneakForwardKey;
     public KeyCode sneakBackwardKey;
     public KeyCode interactKey;
+    public KeyCode switchPathIndex1Key;
+    public KeyCode switchPathIndex0Key;
     private KeyCode currentKey;
 
     private PlayerInteract playerInteract;
@@ -31,7 +33,24 @@ public class InputManager : MonoBehaviour
         if(useKeys == false)
             return;
 
-         if (Input.GetKey(moveForwardKey))
+        if (pc.isAtPathChoice)
+        {
+            // Disable movement during path choice
+            pc.canMove = false;
+
+            // Check for input to switch path or continue
+            if (Input.GetKeyDown(switchPathIndex1Key))
+            {
+                StartCoroutine(pc.SmoothSwitchPath(1)); // Switch to the next path smoothly
+                pc.isAtPathChoice = false; // Player has made a decision
+            }
+            else if (Input.GetKeyDown(switchPathIndex0Key))
+            {
+                StartCoroutine(pc.SmoothSwitchPath(0)); // Switch to the next path smoothly
+                pc.isAtPathChoice = false; // Player chooses to continue on the current path
+            }
+        }
+        else if (Input.GetKey(moveForwardKey))
          {
              MoveForward();
          }
@@ -47,10 +66,11 @@ public class InputManager : MonoBehaviour
          {
              BackwardSneak();
          }
-         else
-         {
-             NoInput();
-         }
+        
+        else
+        {
+            NoInput();
+        }
 
          if(Input.GetKeyDown(interactKey))
          {
@@ -87,6 +107,9 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveForward()
     {
+        if (pc.isAtPathChoice)
+            return;
+
         pc.moveForward = true;
         pc.moveBackward = false;
         pc.isMoving = true;

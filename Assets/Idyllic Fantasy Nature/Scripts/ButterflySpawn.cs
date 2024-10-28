@@ -29,12 +29,13 @@ namespace IdyllicFantasyNature
 
             // makes the butterfly invisible until the animation starts playing
             _butterflyChild.SetActive(false);
+            ActivateButterfly();
         }
 
         // Update is called once per frame
         void Update()
         {
-            ActivateButterfly();
+            
         }
 
 
@@ -45,24 +46,14 @@ namespace IdyllicFantasyNature
         {
             if (!_isPlaying)
             {
-                if (_cooldown <= 0)
-                {
                     // activates the animator to play the animation
                     _animator.enabled = true;
-                    // resets the cooldown for the respawn
-                    _cooldown = Random.Range(_area.MinCooldown, _area.MaxCooldown);
                     // makes the butterfly visible
                     _butterflyChild.SetActive(true);
                     // determines a random position for the butterfly in the spawn area
                     transform.position = new Vector3(Random.Range(_area.Collider.bounds.min.x, _area.Collider.bounds.max.x), Random.Range(_area.Collider.bounds.min.y, _area.Collider.bounds.max.y), Random.Range(_area.Collider.bounds.min.z, _area.Collider.bounds.max.z));
 
                     _isPlaying = true;
-
-                }
-                else
-                {
-                    _cooldown -= Time.deltaTime;
-                }
             }
         }
 

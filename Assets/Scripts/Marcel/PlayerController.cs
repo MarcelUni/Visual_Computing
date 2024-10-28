@@ -36,9 +36,6 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
     [SerializeField] private CamFollowPath camFollowPath;
 
-    // Keep track of trigger entry counts
-    private Dictionary<string, int> triggerEntryCounts = new Dictionary<string, int>();
-
     void Start()
     {
         canSwitchPath = false;
@@ -49,24 +46,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (isAtPathChoice)
-        {
-            // Disable movement during path choice
-            canMove = false;
-
-            // Check for input to switch path or continue
-            if (Input.GetKeyDown(KeyCode.V))
-            {
-                StartCoroutine(SmoothSwitchPath(true)); // Switch to the next path smoothly
-                isAtPathChoice = false; // Player has made a decision
-            }
-            else if (Input.GetKeyDown(KeyCode.B))
-            {
-                isAtPathChoice = false; // Player chooses to continue on the current path
-                canMove = true; // Re-enable movement
-            }
-        }
-        else
+       
+        if (canMove)
         {
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Interact") || anim.GetCurrentAnimatorStateInfo(0).IsName("InteractOut"))
                 canMove = false;
@@ -87,19 +68,16 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     /// <param name="switchToNext"></param>
     /// <returns></returns>
-    private IEnumerator SmoothSwitchPath(bool switchToNext)
+    public IEnumerator SmoothSwitchPath(int pathIndex)
     {
         isTransitioning = true;
-        canMove = false;
 
-        int previousPathIndex = currentPathIndex;
+        if (pathIndex == currentPathIndex)
+                yield return null;
 
-        if (switchToNext)
-        {
-            currentPathIndex = (currentPathIndex + 1) % pathCreators.Count; // Switch to the next path
-            camFollowPath.currentPathIndex = (camFollowPath.currentPathIndex + 1) % camFollowPath.pathCreators.Count; // Switch camera path
-            yield return null;
-        }
+        currentPathIndex = pathIndex; // Switch to the specified path
+        camFollowPath.currentPathIndex = pathIndex; // Switch camera path
+        
 
         isTransitioning = false;
         canMove = true;
@@ -224,35 +202,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("PathTrigger"))
+        if (other.CompareTag("PathTrigger") && !moveBackward)
         {
-            // Use the trigger's unique identifier
-            string triggerID = other.gameObject.GetInstanceID().ToString();
-
-            // Increment the entry count
-            if (!triggerEntryCounts.ContainsKey(triggerID))
-            {
-                triggerEntryCounts[triggerID] = 1;
-            }
-            else
-            {
-                triggerEntryCounts[triggerID]++;
-            }
-
-            // Check if the entry count is odd
-            if (triggerEntryCounts[triggerID] % 2 == 1)
-            {
                 canSwitchPath = true;
                 isAtPathChoice = true;
-                currentSpeed = 0; // Stop the player
-            }
-            else
-            {
-                // Even entry count; do not activate path choice
-                canSwitchPath = false;
-                isAtPathChoice = false;
-                canMove = true;
-            }
+        }
+        else
+        {
+            return;
         }
         if(other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
         {
@@ -266,7 +223,7 @@ public class PlayerController : MonoBehaviour
         {
             // You can remove this if not needed
             // canSwitchPath = false;
-            // isAtPathChoice = false;
+            isAtPathChoice = false;
         }
         if(other.CompareTag("Puzzle") || other.CompareTag("Final Door"))
         {

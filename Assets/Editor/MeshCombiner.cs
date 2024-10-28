@@ -27,18 +27,19 @@ public class MeshCombiner
         // Instantiate the prefab
         GameObject instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
 
-        // Get all MeshFilters and MeshRenderers in the prefab
+        // Get all MeshFilters and SkinnedMeshRenderers in the prefab
         MeshFilter[] meshFilters = instance.GetComponentsInChildren<MeshFilter>();
-        MeshRenderer[] meshRenderers = instance.GetComponentsInChildren<MeshRenderer>();
+        SkinnedMeshRenderer[] skinnedMeshRenderers = instance.GetComponentsInChildren<SkinnedMeshRenderer>();
 
         // Dictionary to map materials to their corresponding CombineInstances
         Dictionary<Material, List<CombineInstance>> materialToCombineInstances = new Dictionary<Material, List<CombineInstance>>();
 
-        // Build the mapping of materials to CombineInstances
-        for (int i = 0; i < meshFilters.Length; i++)
+        // Process MeshFilters
+        foreach (MeshFilter meshFilter in meshFilters)
         {
-            MeshFilter meshFilter = meshFilters[i];
-            MeshRenderer meshRenderer = meshRenderers[i];
+            MeshRenderer meshRenderer = meshFilter.GetComponent<MeshRenderer>();
+            if (meshRenderer == null)
+                continue;
 
             Mesh mesh = meshFilter.sharedMesh;
             if (mesh == null)
@@ -60,6 +61,43 @@ public class MeshCombiner
                 combineInstance.mesh = mesh;
                 combineInstance.subMeshIndex = s;
                 combineInstance.transform = meshRenderer.transform.localToWorldMatrix;
+
+                if (materialToCombineInstances.ContainsKey(material))
+                {
+                    materialToCombineInstances[material].Add(combineInstance);
+                }
+                else
+                {
+                    materialToCombineInstances[material] = new List<CombineInstance>() { combineInstance };
+                }
+            }
+        }
+
+        // Process SkinnedMeshRenderers
+        foreach (SkinnedMeshRenderer skinnedRenderer in skinnedMeshRenderers)
+        {
+            Mesh mesh = new Mesh();
+            skinnedRenderer.BakeMesh(mesh);
+
+            if (mesh == null)
+                continue;
+
+            Material[] materials = skinnedRenderer.sharedMaterials;
+
+            for (int s = 0; s < mesh.subMeshCount; s++)
+            {
+                if (s >= materials.Length)
+                {
+                    Debug.LogWarning("Mesh submesh count is greater than materials count. Skipping submesh.");
+                    continue;
+                }
+
+                Material material = materials[s];
+
+                CombineInstance combineInstance = new CombineInstance();
+                combineInstance.mesh = mesh;
+                combineInstance.subMeshIndex = s;
+                combineInstance.transform = skinnedRenderer.transform.localToWorldMatrix;
 
                 if (materialToCombineInstances.ContainsKey(material))
                 {
