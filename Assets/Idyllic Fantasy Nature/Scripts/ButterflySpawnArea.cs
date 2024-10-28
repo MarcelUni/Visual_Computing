@@ -11,9 +11,19 @@ namespace IdyllicFantasyNature
         [Tooltip("the maximum cooldown for the butterfly to respawn")]
         [Min(1)] public float MaxCooldown;
 
+        public ButterflySpawn ButterflySpawn;
+
         private void Start()
         {
             Collider = GetComponent<Collider>();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if(other.transform.CompareTag("Player"))
+            {
+               
+            }
         }
     }
 }
