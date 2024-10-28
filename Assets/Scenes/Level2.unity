@@ -1840,7 +1840,7 @@ MonoBehaviour:
     FieldOfView: 40
     OrthographicSize: 5
     NearClipPlane: 2
-    FarClipPlane: 750
+    FarClipPlane: 200
     Dutch: 0
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
@@ -20842,7 +20842,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 2
-  far clip plane: 750
+  far clip plane: 200
   field of view: 40
   orthographic: 0
   orthographic size: 5
