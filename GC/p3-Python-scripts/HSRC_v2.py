@@ -5,9 +5,9 @@ import socket
 
 print('Starting application...')
 
-#TODO - Dokumenter v1, og test, før vi går videre til v2 - evt test alles hænder 
+# HAND SIGN RECOGNITION CONTROLLER - HSRC
 
-#TODO-  Slet det der brect shit
+#TODO - Dokumenter v1, og test, før vi går videre til v2 - evt test alles hænder 
 
 #TODO https://stackoverflow.com/questions/75267154/how-do-i-add-an-image-overlay-to-my-live-video-using-cv2 - Kan evt bruges til hvis der skal være instrukser til brugeren for hvordan de skal placere deres hånd for billederne
 
@@ -15,13 +15,8 @@ print('Starting application...')
 
 #TODO - En måde at gemme på i guess, så man ikke altid behøver tage nye billeder - NOK FUTURE WORK
 
-#TODO Testing
-# - Hvor langt kan man gå ud af billedet før den fucker. Alle sider
-# - Hvor markant skal gesturen være, for at den genkender den korrekt - ved ikke om det skal måles i procenter
-# - v1 - Kan den stabilt vise gestures v2 - Kan den stabilt vise flere gestures - Kan den stabilt vise 6 gestures - Hvad er stabilt?
-# - Kan man lave custom gestures uden problemer? Hvor crazy kan man gå?
-
-#BLA
+# Iterable variable for defects test images.
+# DELETE FOR FINAL VERSION
 i = 0
 
 #Communication with Unity ####################################################################
@@ -50,20 +45,18 @@ key = ''
 bufferDict = {}
 
 # Adding all gestures to dict as keys with value 0
-# bufferDict = {gesture: 0 for gesture in gestures}
-bufferDict = {}
-for gesture in gestures:
-    bufferDict[gesture] = 0
+bufferDict = {gesture: 0 for gesture in gestures} # List comprehension - https://www.w3schools.com/python/python_lists_comprehension.asp
 
 # Adding no gesture to bufferDict
 bufferDict['No gesture'] = 0
 
-#TODO Find ud af hvordan vi finder 
-# Value that a gesture needs to meet, in order to send
-bufferThreshhold = 6
-
 # Buffer size before it sends gesture to Unity
 bufferTotalThreshold = 8
+
+# Value that a handsign needs to meet, in order to send #TODO Skal måles i procent
+bufferThreshhold = round(bufferTotalThreshold*0.8, 0) # 80% accuracy
+print(f'Buffer threshold: {bufferThreshhold}')
+
 ################################################################
 
 # Initilizing gesture variables
@@ -297,24 +290,6 @@ def get_buffer_total():
 
     return total
 
-# BOUNDING RECTANGLE RELATED ############################################################
-
-def cropToBrect(frame, contours): 
-    x, y, width, height = cv2.boundingRect(contours)
-    
-    # Crop the frame to the dimensions of the brect
-    cropped_frame = frame[y:y+height, x:x+width]
-
-    return cropped_frame
-
-def drawBrect(frame, contours):
-    x, y, width, height = cv2.boundingRect(contours[0])
-
-    # Draw the rectangle on the frame
-    drawn_frame = cv2.rectangle(frame.copy(), (x, y), (x + width, y + height), (0, 255, 0), 2)
-
-    return drawn_frame
-
 # CLOSING THE APPLICATION
 
 def close_application():
@@ -454,12 +429,12 @@ def state_match_gestures(raw_frame, binary_frame):
             # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
-    #TODO Det her ser ikke rigtigt ud, skal lige ryddes op
+    #TODO Det her ser ikke rigtigt ud, skal lige ryddes op - teknisk set sender den mens buffer tæller til næste
     # If there is no new gesture, keep the same gesture and send it
     elif currentGesture == currentGesture:
-            # Send gesture_name to Unity via UDP
-            sock.sendto(str.encode(gesture_name), serverAddressPort)
-            print(f'Sending {gesture_name} to Unity')
+        # Send gesture_name to Unity via UDP
+        sock.sendto(str.encode(gesture_name), serverAddressPort)
+        print(f'Sending {gesture_name} to Unity')
     else:
         print('No currentGesture')
                 
