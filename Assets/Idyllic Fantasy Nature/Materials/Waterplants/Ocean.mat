@@ -3,7 +3,7 @@
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 32
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -163,7 +163,7 @@ Material:
     - _RefractionAmount: 0.05
     - _RefractionSpeed: 2
     - _RefractionStrength: 0.13
-    - _Refraction_Strength: 0.177
+    - _Refraction_Strength: 0.529
     - _RimRize: 1
     - _RimTiling: -0.21
     - _RippleDensity: 1
@@ -174,7 +174,7 @@ Material:
     - _Ripple_Distance: 5.01
     - _Ripple_Fade: 5.2
     - _Ripple_Slimness: 9.7
-    - _Smoothness: 0.7
+    - _Smoothness: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

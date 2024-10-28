@@ -1589,8 +1589,8 @@ Transform:
   m_GameObject: {fileID: 112658051}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 102.21011, y: 7.201232, z: 52.898376}
-  m_LocalScale: {x: -16.82443, y: 5.9356, z: 10.711384}
+  m_LocalPosition: {x: 122.5023, y: 7.2012, z: 42.3114}
+  m_LocalScale: {x: -9.643102, y: 4.8338337, z: 7.567861}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -10420,6 +10420,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 6117797481669918369, guid: 880864819bdbe1d448caf1f03b609f38,
+        type: 3}
+      propertyPath: m_ReceiveGI
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7573317102754491910, guid: 880864819bdbe1d448caf1f03b609f38,
         type: 3}
@@ -23630,7 +23635,7 @@ Light:
   m_InnerSpotAngle: 129.82399
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
