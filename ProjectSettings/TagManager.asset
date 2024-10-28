@@ -12,6 +12,7 @@ TagManager:
   - Key
   - Final Door
   - AutoJumpTrigger
+  - Portal
   layers:
   - Default
   - TransparentFX

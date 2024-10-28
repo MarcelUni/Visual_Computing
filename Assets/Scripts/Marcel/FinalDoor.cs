@@ -20,8 +20,9 @@ public class FinalDoor : MonoBehaviour, IInteractable
     }
 }
 
-
 public interface IInteractable
 {
     public void Interact();
 }
+
+
