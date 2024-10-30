@@ -1,4 +1,4 @@
-using System.Collections;
+    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
@@ -45,15 +45,12 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Update()
-    {
-       
-        if (canMove)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Interact") || anim.GetCurrentAnimatorStateInfo(0).IsName("InteractOut"))
-                canMove = false;
-            else
-                canMove = true;
-        }
+    {   
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Interact") || anim.GetCurrentAnimatorStateInfo(0).IsName("InteractOut"))
+            canMove = false;
+        else
+            canMove = true;
+        
 
         UpdateAnimations();
 
@@ -204,12 +201,8 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("PathTrigger") && !moveBackward)
         {
-                canSwitchPath = true;
-                isAtPathChoice = true;
-        }
-        else
-        {
-            return;
+            canSwitchPath = true;
+            isAtPathChoice = true;
         }
         if(other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
         {

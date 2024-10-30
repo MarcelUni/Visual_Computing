@@ -78,7 +78,6 @@ public class MonsterController : MonoBehaviour
                 break;
 
             case MonsterState.Roaming:
-                Debug.Log("Roaming, playing walk animation");
                 Roam();
                 break;
         }

@@ -35,7 +35,6 @@ public class PlayerInteract : MonoBehaviour
 
         if(puzzleInRange && hasKey)
         {
-            Debug.Log("key");
             InteractWithPuzzle();
             anim.SetTrigger("Interact");
         }
