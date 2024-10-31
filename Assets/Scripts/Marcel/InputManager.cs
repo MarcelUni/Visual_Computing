@@ -50,6 +50,7 @@ public class InputManager : MonoBehaviour
                 pc.isAtPathChoice = false; // Player chooses to continue on the current path
             }
         }
+        
         else if (Input.GetKey(moveForwardKey))
          {
              MoveForward();

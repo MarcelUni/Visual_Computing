@@ -27,7 +27,6 @@ public class UDPReceive : MonoBehaviour
         receiveThread.Start();
     }
 
-
     // receive thread
     private void ReceiveData()
     {
@@ -43,9 +42,9 @@ public class UDPReceive : MonoBehaviour
 
                 if (printToConsole) { print(data); }
             }
-            catch (Exception)
+            catch (Exception err)
             {
-                //print(err.ToString());
+                print(err.ToString());
             }
         }
     }

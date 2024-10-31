@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image img;
     public float fadeTime = 1;
     public float sceneLoadWaitTime = 2;
-
     public static GameManager instance;
 
     private void Awake()

@@ -207,6 +207,7 @@ public class PlayerController : MonoBehaviour
             canSwitchPath = true;
             isAtPathChoice = true;
         }
+
         if(other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
         {
             canMoveForward = false;
