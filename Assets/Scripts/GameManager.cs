@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     private int currentSceneIndex;
     private WalkThroughDetection portal;
+    private PlayerController player;
     [SerializeField] private Image img;
     public float fadeTime = 1;
     public float sceneLoadWaitTime = 2;
@@ -14,13 +15,14 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         DontDestroyOnLoad(this.gameObject);
-        FindNewPortal();    
+        FindNewObjects();    
         currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
-    private void FindNewPortal()
+    private void FindNewObjects()
     {
         portal = GameObject.FindWithTag("Portal")?.GetComponent<WalkThroughDetection>();
+        player = GameObject.FindWithTag("Player")?.GetComponent<PlayerController>();
 
         if (portal != null)
         {
@@ -28,7 +30,16 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Portal object not found!");
+            Debug.Log("No portal object");
+        }
+
+        if(player != null)
+        {
+            player.deathEvent.AddListener(ReloadScene);
+        }
+        else
+        {
+            Debug.Log("No player object");
         }
     }
 
@@ -56,7 +67,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Find portal object in the new scene
-        FindNewPortal();
+        FindNewObjects();
 
         // Fade back into game
         StartCoroutine(FadeImage(true));
@@ -86,6 +97,13 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
         }
+    }
+
+    private void ReloadScene()
+    {
+        StartCoroutine(FadeImage(false));
+
+        StartCoroutine(LoadSceneAndFindPortal(currentSceneIndex));
     }
 
 }

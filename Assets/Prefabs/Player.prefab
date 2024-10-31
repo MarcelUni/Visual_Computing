@@ -66,6 +66,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -110,10 +113,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 3.0989892
+  m_Radius: 0.5900614
+  m_Height: 3.415277
   m_Direction: 1
-  m_Center: {x: 0, y: 0.49914896, z: 0}
+  m_Center: {x: 0.00093507767, y: 0.71471953, z: -0.021005332}
 --- !u!54 &6657971894315351892
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -161,8 +164,10 @@ MonoBehaviour:
   speedUpAndSlowDownTime: 0.1
   rotateSpeed: 3
   playerModelObject: {fileID: 1326052256773382098}
-  moveForward: 1
+  moveForward: 0
   moveBackward: 0
+  canMove: 0
+  isJumping: 0
   canMoveForward: 1
   isSneaking: 0
   isMoving: 0
@@ -172,6 +177,9 @@ MonoBehaviour:
   distanceTravelled: 0
   anim: {fileID: 5750228077373857554}
   camFollowPath: {fileID: 0}
+  deathEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5490893551203294618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DoorInRange: 0
   puzzleInRange: 0
-  pickUpRadius: 2
+  pickUpRadius: 5
   keyTag: Key
   LightorbTag: Lightorb
   hasKey: 0
@@ -204,11 +212,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f78d85515869400ab00eb147a548beb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useKeys: 1
   moveForwardKey: 119
   moveBackwardKey: 115
   sneakForwardKey: 101
   sneakBackwardKey: 113
   interactKey: 9
+  switchPathIndex1Key: 0
+  switchPathIndex0Key: 0
 --- !u!1 &3202879703508449158
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +557,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1630794972795428178, guid: 81bb9eea30387e442899949a80011e55,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 945e2f586a1a63a49a99d9080a8e9f24, type: 2}
     - target: {fileID: 1667929172310202805, guid: 81bb9eea30387e442899949a80011e55,
@@ -634,6 +645,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: d3839ac2811d143568284f87535824ac, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 81bb9eea30387e442899949a80011e55,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5914726506004335473, guid: 81bb9eea30387e442899949a80011e55,
         type: 3}
       propertyPath: m_Layer

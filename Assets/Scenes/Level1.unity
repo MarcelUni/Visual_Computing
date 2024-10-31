@@ -14921,91 +14921,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1326052256773382098, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 1481120135973533779, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 1481120135973533779, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4336777931528894927, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_Height
-      value: 3.415277
-      objectReference: {fileID: 0}
-    - target: {fileID: 4336777931528894927, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.5900614
-      objectReference: {fileID: 0}
-    - target: {fileID: 4336777931528894927, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_Center.x
-      value: 0.00093507767
-      objectReference: {fileID: 0}
-    - target: {fileID: 4336777931528894927, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.71471953
-      objectReference: {fileID: 0}
-    - target: {fileID: 4336777931528894927, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_Center.z
-      value: -0.021005332
-      objectReference: {fileID: 0}
-    - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: pickUpRadius
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750228077373857554, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750228077373857554, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_UpdateMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5750228077373857554, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: moveForward
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: normalMoveSpeed
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: 'pathCreators.Array.data[0]'
       value: 
       objectReference: {fileID: 114462759100685856}
-    - target: {fileID: 6657971894315351892, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_Constraints
-      value: 112
-      objectReference: {fileID: 0}
-    - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: useKeys
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8604917074561652703, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -21659,6 +21584,9 @@ MonoBehaviour:
   distanceTravelled: 0
   anim: {fileID: 305060171544871864}
   camFollowPath: {fileID: 0}
+  deathEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &305060171544871868
 MonoBehaviour:
   m_ObjectHideFlags: 0

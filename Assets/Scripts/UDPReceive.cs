@@ -43,9 +43,9 @@ public class UDPReceive : MonoBehaviour
 
                 if (printToConsole) { print(data); }
             }
-            catch (Exception err)
+            catch (Exception)
             {
-                print(err.ToString());
+                //print(err.ToString());
             }
         }
     }

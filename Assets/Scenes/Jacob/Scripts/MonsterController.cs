@@ -150,6 +150,7 @@ public class MonsterController : MonoBehaviour
             animator.SetTrigger("Attack");
 
             playerTransform.GetComponent<PlayerController>().isDead = true;
+            playerTransform.GetComponent<PlayerController>().deathEvent?.Invoke();
 
             currentState = MonsterState.Idle;
         }
