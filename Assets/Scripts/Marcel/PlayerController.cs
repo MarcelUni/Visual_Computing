@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public Animator anim;
     [SerializeField] private CamFollowPath camFollowPath;
+
+    [Header("Events")]
     public UnityEvent deathEvent;
 
     void Start()
