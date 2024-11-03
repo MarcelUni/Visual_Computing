@@ -25,7 +25,7 @@ public class CamFollowPath : MonoBehaviour
         StartCoroutine(SmoothFollow());
     }
 
-    void LateUpdate()
+    void Update()
     {
         MoveCam();
     }
