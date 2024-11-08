@@ -6,7 +6,6 @@ public class Puzzle : MonoBehaviour, IInteractable
 {
     public GameObject puzzleSolvedObject;
 
-
     public void Interact()
     {
         puzzleSolvedObject.SetActive(true);
