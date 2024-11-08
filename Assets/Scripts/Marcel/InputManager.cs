@@ -79,9 +79,9 @@ public class InputManager : MonoBehaviour
          }
     }
 
-    public void ReceiveInput(string inputGesture)
+    public void ReceiveInput(string inputString)
     {
-        switch (inputGesture)
+        switch (inputString)
         {
             case "Forward":
                 MoveForward();
@@ -98,11 +98,15 @@ public class InputManager : MonoBehaviour
             case "Interact":
                 Interact();
                 break;
+            case "Stop":
+                NoInput();
+                break;
             default:
                 NoInput();
                 break;
         }
     }
+
     /// <summary>
     /// Has to be called for moving forward gesture
     /// </summary>

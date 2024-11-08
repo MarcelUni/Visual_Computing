@@ -51,7 +51,8 @@ public class UDPReceive : MonoBehaviour
 
     private void Update()
     {
-        SendData();
+        //SendData();
+        im.ReceiveInput(data);
     }
 
     private void SendData()

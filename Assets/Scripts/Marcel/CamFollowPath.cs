@@ -40,6 +40,7 @@ public class CamFollowPath : MonoBehaviour
             distanceTravelled += cameraSpeed * Time.deltaTime;
         }
 
+        // If the distance is lower than the minimum allowed distance
         if (distanceToPlayer < minCameraDistance)
         {
             distanceTravelled -= cameraSpeed * Time.deltaTime;
@@ -48,6 +49,7 @@ public class CamFollowPath : MonoBehaviour
         // Ensure distanceTravelled does not go below zero
         distanceTravelled = Mathf.Max(0, distanceTravelled);
     }
+    
     private IEnumerator SmoothFollow()
     {
         while (true)
