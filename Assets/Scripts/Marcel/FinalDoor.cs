@@ -6,6 +6,7 @@ using UnityEngine;
 public class FinalDoor : MonoBehaviour, IInteractable
 {
     private Animator anim;
+    [SerializeField] private GameObject lightOrb;
     
     void Start()
     {

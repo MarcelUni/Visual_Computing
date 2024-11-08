@@ -10,9 +10,11 @@ public class PlayerInteract : MonoBehaviour
     public string keyTag, LightorbTag;
     public bool hasKey, hasLightOrb;
     public GameObject lightorbPosition;
+    public float lightOrbLerpSpeed;
 
     // Private variables
     private GameObject lightOrbObject;
+    private GameObject doorLightOrb;
     private GameObject finalDoorObject;
     private GameObject puzzleObject;
     private Animator anim;
@@ -92,7 +94,21 @@ public class PlayerInteract : MonoBehaviour
     {
         finalDoorObject.GetComponent<IInteractable>()?.Interact();
         pc.canMoveForward = true;
+        StartCoroutine(MoveLightOrb());
+    }
 
+    private IEnumerator MoveLightOrb()
+    {
+        Debug.Log(lightOrbObject.name);
+        Debug.Log(doorLightOrb.name);
+
+        while(Vector3.Distance(lightOrbObject.transform.position, doorLightOrb.transform.position) < .5f)
+        {
+            lightOrbObject.transform.position = Vector3.Lerp(transform.position, doorLightOrb.transform.position, lightOrbLerpSpeed);
+            Debug.Log("ban");
+        }
+
+        yield return null;
     }
 
     private void InteractWithPuzzle()
@@ -108,6 +124,7 @@ public class PlayerInteract : MonoBehaviour
         {
             DoorInRange = true;
             finalDoorObject = other.gameObject;
+            doorLightOrb = finalDoorObject.GetComponentInChildren<LightOrbBehavior>().gameObject;
         }
         if(other.CompareTag("Puzzle"))
         {

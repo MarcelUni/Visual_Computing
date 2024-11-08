@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     public Animator anim;
     [SerializeField] private CamFollowPath camFollowPath;
+
+    [Header("Events")]
     public UnityEvent deathEvent;
 
     void Start()
@@ -205,6 +207,7 @@ public class PlayerController : MonoBehaviour
             canSwitchPath = true;
             isAtPathChoice = true;
         }
+
         if(other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
         {
             canMoveForward = false;
