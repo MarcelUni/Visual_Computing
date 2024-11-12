@@ -41,13 +41,14 @@ public class InputManager : MonoBehaviour
             // Check for input to switch path or continue
             if (Input.GetKeyDown(switchPathIndex1Key))
             {
-                StartCoroutine(pc.SmoothSwitchPath(1)); // Switch to the next path smoothly
                 pc.isAtPathChoice = false; // Player has made a decision
+                StartCoroutine(pc.SmoothSwitchPath(1)); // Switch to the next path smoothly
             }
             else if (Input.GetKeyDown(switchPathIndex0Key))
             {
-                StartCoroutine(pc.SmoothSwitchPath(0)); // Switch to the next path smoothly
                 pc.isAtPathChoice = false; // Player chooses to continue on the current path
+                StartCoroutine(pc.SmoothSwitchPath(0)); // Switch to the next path smoothly
+                
             }
         }
         
