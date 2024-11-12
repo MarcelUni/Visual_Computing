@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInteract : MonoBehaviour
 {
     // public variables
-    public bool DoorInRange, puzzleInRange;
+    public bool DoorInRange, puzzleInRange, trapInRange;
     public float pickUpRadius;
     public string keyTag, LightorbTag;
     public bool hasKey, hasLightOrb;
@@ -16,7 +16,7 @@ public class PlayerInteract : MonoBehaviour
     private GameObject lightOrbObject;
     private GameObject doorLightOrb;
     private GameObject finalDoorObject;
-    private GameObject puzzleObject;
+    private GameObject puzzleObject, trapObject;
     private Animator anim;
     private PlayerController pc;
     
@@ -41,10 +41,15 @@ public class PlayerInteract : MonoBehaviour
             anim.SetTrigger("Interact");
         }
 
+        if(trapInRange && hasKey)
+        {
+            InteractWithTrap();
+            anim.SetTrigger("Interact");
+        }
+
         if(hasKey == false || hasLightOrb == false)
         {
             PickupObject();
-            anim.SetTrigger("Interact");
             // Pick up animation
         }
     }
@@ -59,7 +64,7 @@ public class PlayerInteract : MonoBehaviour
             if(hit.collider.CompareTag(keyTag))
             {
                 hasKey = true;
-
+                anim.SetTrigger("Interact");
                 // Find the Particle System by name and play it at the hit collider's position
                 GameObject particleSystemObject = GameObject.Find("PickUpParticle");
                 if (particleSystemObject != null)
@@ -76,6 +81,7 @@ public class PlayerInteract : MonoBehaviour
             }
             if(hit.collider.CompareTag(LightorbTag))
             {
+                anim.SetTrigger("Interact");
                 // Doing stuff to make light orb work and follow player
 
                 hasLightOrb = true;
@@ -119,6 +125,12 @@ public class PlayerInteract : MonoBehaviour
         pc.canMoveForward = true;
     }
 
+    private void InteractWithTrap()
+    {
+        trapObject.GetComponent<Trap>().Interact();
+        trapInRange = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Final Door"))
@@ -132,6 +144,11 @@ public class PlayerInteract : MonoBehaviour
             puzzleInRange = true;
             puzzleObject = other.gameObject;
         }
+        if(other.CompareTag("Trap"))
+        {
+            trapInRange = true;
+            trapObject = other.gameObject;
+        }
     }
     private void OnTriggerExit(Collider other)
     {
@@ -144,6 +161,11 @@ public class PlayerInteract : MonoBehaviour
         {
             puzzleInRange = false;
             puzzleObject = null;
+        }
+        if(other.CompareTag("Trap"))
+        {
+            trapInRange = false;
+            trapObject = null;
         }
     }
 }

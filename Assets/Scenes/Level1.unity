@@ -9029,30 +9029,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1857820657532496740, guid: e60188681ce854c9596f58d7be606db8,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
     - target: {fileID: 2508243857035137890, guid: e60188681ce854c9596f58d7be606db8,
         type: 3}
       propertyPath: m_Name
       value: Log Key
-      objectReference: {fileID: 0}
-    - target: {fileID: 2508243857035137890, guid: e60188681ce854c9596f58d7be606db8,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 5718864333406691540, guid: e60188681ce854c9596f58d7be606db8,
-        type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: af860aff0f9305b449a06304f209c7f7, type: 2}
-    - target: {fileID: 9189623106257559622, guid: e60188681ce854c9596f58d7be606db8,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.6248333
       objectReference: {fileID: 0}
     - target: {fileID: 9189623106257559622, guid: e60188681ce854c9596f58d7be606db8,
         type: 3}

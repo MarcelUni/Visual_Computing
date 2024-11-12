@@ -13,6 +13,7 @@ TagManager:
   - Final Door
   - AutoJumpTrigger
   - Portal
+  - Trap
   layers:
   - Default
   - TransparentFX
