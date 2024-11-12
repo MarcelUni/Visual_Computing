@@ -18,6 +18,7 @@ public class FinalDoor : MonoBehaviour, IInteractable
         anim.SetTrigger("OpenDoors");
         this.enabled = false;
         GetComponent<Collider>().enabled = false;
+        
     }
 }
 
