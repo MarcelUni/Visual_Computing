@@ -44,6 +44,7 @@ public class PlayerInteract : MonoBehaviour
         if(hasKey == false || hasLightOrb == false)
         {
             PickupObject();
+            anim.SetTrigger("Interact");
             // Pick up animation
         }
     }
@@ -111,7 +112,7 @@ public class PlayerInteract : MonoBehaviour
         yield return null;
     }
 
-    private void InteractWithPuzzle()
+    private void InteractWithPuzzle()   
     {
         puzzleObject.GetComponent<Puzzle>().Interact();
         puzzleInRange = false;
