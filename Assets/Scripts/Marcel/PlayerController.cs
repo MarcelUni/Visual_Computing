@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     public bool canSwitchPath = false;
     public bool isAtPathChoice = false;
 
+    private float pathChoiceCooldownTime = 0.5f; // Duration of the cooldown in seconds
+    private float pathChoiceCooldownTimer = 0f;   // Timer to track the cooldown
+
     private float currentVelocity;
     private float currentSpeed = 0;
     private bool isTransitioning = false; // Indicates if a path transition is happening
@@ -61,6 +64,11 @@ public class PlayerController : MonoBehaviour
         {
             canMove = false;
         }
+
+        if (pathChoiceCooldownTimer > 0)
+        {
+            pathChoiceCooldownTimer -= Time.deltaTime;
+        }
     }
 
     /// <summary>
@@ -71,17 +79,40 @@ public class PlayerController : MonoBehaviour
     public IEnumerator SmoothSwitchPath(int pathIndex)
     {
         isTransitioning = true;
+        isAtPathChoice = false;  // Disable path choice prompt during transition
+        canSwitchPath = false;   // Temporarily disable path switching
 
         if (pathIndex == currentPathIndex)
-                yield return null;
+        {
+            isTransitioning = false;
+            yield break;
+        }
 
-        currentPathIndex = pathIndex; // Switch to the specified path
-        camFollowPath.currentPathIndex = pathIndex; // Switch camera path
-        
+        // Get the player's current position
+        Vector3 playerPosition = transform.position;
+
+        // Find the closest point on the new path to the player's current position
+        float newDistanceTravelled = pathCreators[pathIndex].path.GetClosestDistanceAlongPath(playerPosition);
+
+        // Update the currentPathIndex and camera path index
+        currentPathIndex = pathIndex;
+        camFollowPath.currentPathIndex = pathIndex;
+
+        // Update the distanceTravelled to the new distance
+        distanceTravelled = newDistanceTravelled;
+
+        // Move the player slightly along the new path to avoid retriggering the collider
+        distanceTravelled += 0.1f; // Adjust the value as needed
 
         isTransitioning = false;
         canMove = true;
+
+        // Set the cooldown timer
+        pathChoiceCooldownTimer = pathChoiceCooldownTime;
+
+        yield break;
     }
+
 
     private void FixedUpdate()
     {
@@ -141,7 +172,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward(float speed)
     {
-        if(canMoveForward == false || isJumping == true)
+        if (isAtPathChoice == true || isJumping == true)
             return;
 
         currentSpeed = Mathf.SmoothDamp(currentSpeed, speed, ref currentVelocity, speedUpAndSlowDownTime);
@@ -152,6 +183,8 @@ public class PlayerController : MonoBehaviour
 
     private void MoveBackward(float speed)
     {
+        if (isAtPathChoice == true || isJumping == true)
+            return;
         currentSpeed = Mathf.SmoothDamp(currentSpeed, -speed, ref currentVelocity, speedUpAndSlowDownTime);
         distanceTravelled += currentSpeed * Time.fixedDeltaTime;
 
@@ -202,24 +235,25 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("PathTrigger") && !moveBackward)
+        if (other.CompareTag("PathTrigger") && !moveBackward && !isTransitioning && pathChoiceCooldownTimer <= 0f)
         {
             canSwitchPath = true;
             isAtPathChoice = true;
         }
 
-        if(other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
+        if (other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
         {
             canMoveForward = false;
         }
     }
+
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("PathTrigger"))
         {
             // You can remove this if not needed
-            // canSwitchPath = false;
+            canSwitchPath = false;
             isAtPathChoice = false;
         }
         if(other.CompareTag("Puzzle") || other.CompareTag("Final Door"))
