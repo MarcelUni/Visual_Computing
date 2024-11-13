@@ -6,9 +6,12 @@ public class PressurePlate : MonoBehaviour
 {
     public List<GameObject> targetObjects;  // List of target objects with animations
     public float openAnimationDelay = 0.5f; // Delay in seconds before playing the open animation
+    public string playerTag = "Player";     // Tag for the player object
+    public string keyTag = "Key";           // Tag for objects that can also trigger the animations
 
     private Dictionary<GameObject, (string closeAnimationName, string openAnimationName)> animationClips
         = new Dictionary<GameObject, (string, string)>();
+    private int triggerCount = 0; // Counter to track the number of triggers entered
 
     private void Start()
     {
@@ -48,23 +51,57 @@ public class PressurePlate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        foreach (var kvp in animationClips)
+        if (other.CompareTag(playerTag))
         {
-            GameObject targetObject = kvp.Key;
-            (string closeAnimationName, string _) = kvp.Value;
-
-            Animation anim = targetObject.GetComponent<Animation>();
-            if (anim != null && !string.IsNullOrEmpty(closeAnimationName))
+            triggerCount++;
+            if (triggerCount == 1) // Only play animations on the first object that enters
             {
-                anim.Play(closeAnimationName);
+                foreach (var kvp in animationClips)
+                {
+                    GameObject targetObject = kvp.Key;
+                    (string closeAnimationName, string _) = kvp.Value;
+
+                    Animation anim = targetObject.GetComponent<Animation>();
+                    if (anim != null && !string.IsNullOrEmpty(closeAnimationName))
+                    {
+                        anim.Play(closeAnimationName);
+                    }
+                }
+                MovePlateDown();
             }
         }
-        MovePlateDown();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag(keyTag))
+        {
+                foreach (var kvp in animationClips)
+                {
+                    GameObject targetObject = kvp.Key;
+                    (string closeAnimationName, string _) = kvp.Value;
+
+                    Animation anim = targetObject.GetComponent<Animation>();
+                    if (anim != null && !string.IsNullOrEmpty(closeAnimationName))
+                    {
+                        anim.Play(closeAnimationName);
+                    }
+                }
+                MovePlateDown();
+            
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        StartCoroutine(PlayOpenAnimationsWithDelay());
+        if (other.CompareTag(playerTag) || other.CompareTag(keyTag))
+        {
+            triggerCount--;
+            if (triggerCount == 0) // Only play animations when all objects have left
+            {
+                StartCoroutine(PlayOpenAnimationsWithDelay());
+            }
+        }
     }
 
     private IEnumerator PlayOpenAnimationsWithDelay()
