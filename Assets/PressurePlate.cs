@@ -1,30 +1,35 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PressurePlate : MonoBehaviour
 {
-    public Transform[] rocks;  // Assign rock transforms in Inspector
-    private bool isActivated = false;
+    public List<GameObject> targetObjects;  // List of target objects with animations
 
-    private void OnTriggerEnter(Collider other)
-    {
-        // Check if the player stepped on the plate
-        if (other.CompareTag("Player") && !isActivated)
-        {
-            isActivated = true;
-            PlayRockAnimations(0);  // Play the first animation (close path)
-            MovePlateDown();
-        }
-    }
+    private Dictionary<GameObject, (string closeAnimationName, string openAnimationName)> animationClips
+        = new Dictionary<GameObject, (string, string)>();
 
-    private void OnTriggerExit(Collider other)
+    private void Start()
     {
-        // Check if the player stepped off the plate
-        if (other.CompareTag("Player") && isActivated)
+        foreach (GameObject targetObject in targetObjects)
         {
-            isActivated = false;
-            PlayRockAnimations(1);  // Play the second animation (open path)
-            MovePlateUp();
+            Animation anim = targetObject.GetComponent<Animation>();
+            if (anim != null && anim.GetClipCount() >= 2)
+            {
+                var enumerator = anim.GetEnumerator();
+                enumerator.MoveNext(); // Move to the first clip
+                string closeAnimationName = ((AnimationState)enumerator.Current).name;
+
+                enumerator.MoveNext(); // Move to the second clip
+                string openAnimationName = ((AnimationState)enumerator.Current).name;
+
+                // Store animation clip names in the dictionary
+                animationClips[targetObject] = (closeAnimationName, openAnimationName);
+            }
+            else
+            {
+                Debug.LogWarning($"Target Object {targetObject.name} does not have at least two animation clips.");
+            }
         }
     }
 
@@ -40,24 +45,34 @@ public class PressurePlate : MonoBehaviour
         transform.position = originalPosition;
     }
 
-    private void PlayRockAnimations(int animationIndex)
+    private void OnTriggerEnter(Collider other)
     {
-        // Trigger the specified animation clip by index (0 for close, 1 for open) for each rock
-        foreach (Transform rock in rocks)
+        foreach (var kvp in animationClips)
         {
-            Animation rockAnimation = rock.GetComponent<Animation>();
-            if (rockAnimation != null)
+            GameObject targetObject = kvp.Key;
+            (string closeAnimationName, string _) = kvp.Value;
+
+            Animation anim = targetObject.GetComponent<Animation>();
+            if (anim != null && !string.IsNullOrEmpty(closeAnimationName))
             {
-                int currentIndex = 0;
-                foreach (AnimationState animState in rockAnimation)
-                {
-                    if (currentIndex == animationIndex)
-                    {
-                        rockAnimation.Play(animState.name);  // Play the specific animation by its name
-                        break;
-                    }
-                    currentIndex++;
-                }
+                anim.Play(closeAnimationName);
+                MovePlateDown();
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        foreach (var kvp in animationClips)
+        {
+            GameObject targetObject = kvp.Key;
+            (_, string openAnimationName) = kvp.Value;
+
+            Animation anim = targetObject.GetComponent<Animation>();
+            if (anim != null && !string.IsNullOrEmpty(openAnimationName))
+            {
+                anim.Play(openAnimationName);
+                MovePlateUp();
             }
         }
     }
