@@ -55,11 +55,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: 3, y: 0, z: 1}
       index: 6
-      probeCount: 223808
+      probeCount: 223616
       minSubdiv: 0
       indexChunkCount: 91
       shChunkCount: 28
-      bricksCount: 3497
+      bricksCount: 3494
       indirectionEntryInfo:
       - positionInBricks: {x: 81, y: 0, z: 27}
         minSubdiv: 0
@@ -83,11 +83,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: 4, y: 0, z: 0}
       index: 1
-      probeCount: 53632
+      probeCount: 53696
       minSubdiv: 0
       indexChunkCount: 91
       shChunkCount: 7
-      bricksCount: 838
+      bricksCount: 839
       indirectionEntryInfo:
       - positionInBricks: {x: 108, y: 0, z: 0}
         minSubdiv: 0
@@ -97,11 +97,11 @@ MonoBehaviour:
         hasOnlyBiggerBricks: 0
     - position: {x: 4, y: 0, z: 1}
       index: 7
-      probeCount: 178496
+      probeCount: 178432
       minSubdiv: 0
       indexChunkCount: 91
       shChunkCount: 22
-      bricksCount: 2789
+      bricksCount: 2788
       indirectionEntryInfo:
       - positionInBricks: {x: 108, y: 0, z: 27}
         minSubdiv: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
     m_Keys:
     - Default
     m_Values:
-    - sceneHash: 276973179
+    - sceneHash: 1860629480
       cellDataAsset:
         m_AssetGUID: 6ce5c68d82e244b999d5d7545e822bc4
         m_StreamableAssetPath: APVStreamingAssets/4d5dbfb04db1b464b8d61fd118dec91b/6ce5c68d82e244b999d5d7545e822bc4.bytes
@@ -221,14 +221,14 @@ MonoBehaviour:
       - offset: 0
         elementCount: 510
       - offset: 8160
-        elementCount: 3497
-      - offset: 64112
+        elementCount: 3494
+      - offset: 64064
         elementCount: 178
-      - offset: 66960
-        elementCount: 838
-      - offset: 80368
-        elementCount: 2789
-      - offset: 124992
+      - offset: 66912
+        elementCount: 839
+      - offset: 80336
+        elementCount: 2788
+      - offset: 124944
         elementCount: 64
     m_Asset: {fileID: 0}
   cellSupportDataAsset:
