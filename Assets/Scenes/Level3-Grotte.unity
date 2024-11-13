@@ -9983,13 +9983,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2331728745457341900, guid: c4ad778bac0444f448d90e629e5f7662,
         type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2331728745457341900, guid: c4ad778bac0444f448d90e629e5f7662,
+        type: 3}
       propertyPath: m_RenderingLayerMask
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2331728745457341900, guid: c4ad778bac0444f448d90e629e5f7662,
+        type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 0.392
       objectReference: {fileID: 0}
     - target: {fileID: 2944943710307406652, guid: c4ad778bac0444f448d90e629e5f7662,
         type: 3}
       propertyPath: m_RenderingLayers
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2944943710307406652, guid: c4ad778bac0444f448d90e629e5f7662,
+        type: 3}
+      propertyPath: m_AdditionalLightsShadowResolutionTier
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8152245870372311091, guid: c4ad778bac0444f448d90e629e5f7662,
         type: 3}
