@@ -88,7 +88,7 @@ public class MonsterController : MonoBehaviour
     {
         if (patrolPoints.Length == 0)
         {
-            Debug.LogError("No patrol points found");
+            Debug.Log("No patrol points found");
             return;
         }
         Transform currentPatrolPoint = patrolPoints[currentPatrolPointIndex];

@@ -205,7 +205,7 @@ Material:
     - _Ambient: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 0}
     - _BaseColor: {r: 0.13960227, g: 0.3773585, b: 0.12281951, a: 1}
     - _BottomColor: {r: 0.39550883, g: 0.4509804, b: 0, a: 0}
-    - _Bottom_Color: {r: 0.39177656, g: 0.42352942, b: 0, a: 0}
+    - _Bottom_Color: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 0.13960227, g: 0.3773585, b: 0.12281951, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HueVariation: {r: 1, g: 0.5, b: 0, a: 0.1}
@@ -214,7 +214,7 @@ Material:
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SubsurfaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _TopColor: {r: 0.7176471, g: 0.6700845, b: 0, a: 0}
-    - _Top_Color: {r: 0.64672714, g: 0.7254902, b: 0, a: 0}
+    - _Top_Color: {r: 0.21876594, g: 0.24528301, b: 0, a: 0}
     - _WindDirection: {r: 0.44, g: 2, b: 0, a: 0}
     - _WindDirection_1: {r: 1, g: 0, b: 0, a: 0}
     - _Wind_Direction: {r: 0.1, g: 0.1, b: 0, a: 0}
