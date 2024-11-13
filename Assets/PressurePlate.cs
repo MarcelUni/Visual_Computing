@@ -5,6 +5,7 @@ using UnityEngine;
 public class PressurePlate : MonoBehaviour
 {
     public List<GameObject> targetObjects;  // List of target objects with animations
+    public float openAnimationDelay = 0.5f; // Delay in seconds before playing the open animation
 
     private Dictionary<GameObject, (string closeAnimationName, string openAnimationName)> animationClips
         = new Dictionary<GameObject, (string, string)>();
@@ -56,13 +57,20 @@ public class PressurePlate : MonoBehaviour
             if (anim != null && !string.IsNullOrEmpty(closeAnimationName))
             {
                 anim.Play(closeAnimationName);
-                MovePlateDown();
             }
         }
+        MovePlateDown();
     }
 
     private void OnTriggerExit(Collider other)
     {
+        StartCoroutine(PlayOpenAnimationsWithDelay());
+    }
+
+    private IEnumerator PlayOpenAnimationsWithDelay()
+    {
+        yield return new WaitForSeconds(openAnimationDelay); // Wait for the specified delay
+
         foreach (var kvp in animationClips)
         {
             GameObject targetObject = kvp.Key;
@@ -72,8 +80,8 @@ public class PressurePlate : MonoBehaviour
             if (anim != null && !string.IsNullOrEmpty(openAnimationName))
             {
                 anim.Play(openAnimationName);
-                MovePlateUp();
             }
         }
+        MovePlateUp();
     }
 }
