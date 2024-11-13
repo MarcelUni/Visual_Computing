@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,10 +11,16 @@ public class LightOrbBehavior : MonoBehaviour
 
     private bool hasBeenDimmed = false;
     private bool hasBeenIncreased = false;
+    private Light orbLight;
+
+    public float orbitSpeed, rotationSpeed, angle;
+    public float wavyFreq, amplitude;
+    public Vector3 orbitAxis;
 
     public void InitializeOrb()
     {
         pc = GetComponentInParent<PlayerController>();  
+        orbLight = GetComponentInChildren<Light>();
     }
 
     private void Update()
@@ -29,11 +36,14 @@ public class LightOrbBehavior : MonoBehaviour
         {
             IncreaseLight();
         }
+
+        CircleAroundPlayer();
     }
 
     private void DimLight()
     {
         Debug.Log("DIM LIGHT");
+        orbLight.intensity = 0.5f;
         hasBeenDimmed = true;
         hasBeenIncreased = false;
     }
@@ -42,7 +52,24 @@ public class LightOrbBehavior : MonoBehaviour
     {
 
         Debug.Log("INCREASE LIGHT");
+        orbLight.intensity = 2f;
         hasBeenIncreased = true;
         hasBeenDimmed = false;
+    }
+
+    private void CircleAroundPlayer()
+    {
+        // Orbit in a wavy pattern up and down
+        float time = Time.time * wavyFreq;
+        
+        float wave = Mathf.Cos(time) * amplitude;
+
+        transform.Translate(0, wave * Time.deltaTime, 0);
+
+        // Orbit around the sun
+        transform.RotateAround(pc.transform.position, orbitAxis, orbitSpeed * Time.deltaTime);
+
+        // Rotate around itself
+        transform.Rotate(0, angle * rotationSpeed * Time.deltaTime, 0);
     }
 }

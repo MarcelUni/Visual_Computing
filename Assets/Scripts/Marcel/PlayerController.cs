@@ -116,7 +116,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!canMove || pathCreators.Count == 0)
+        if (canMove == false || pathCreators.Count == 0)
             return;
 
         if (isTransitioning)
@@ -222,9 +222,9 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateAnimations()
     {
-        if(canMoveForward == false)
+        if(canMoveForward == false || canMove == false)
         {
-             anim.SetBool("IsMoving", false);
+            anim.SetBool("IsMoving", false);
             return; 
         }
         
@@ -239,6 +239,7 @@ public class PlayerController : MonoBehaviour
         {
             canSwitchPath = true;
             isAtPathChoice = true;
+            canMove = false;
         }
 
         if (other.CompareTag("Final Door") || other.CompareTag("Puzzle"))

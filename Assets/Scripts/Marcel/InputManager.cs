@@ -14,17 +14,20 @@ public class InputManager : MonoBehaviour
     public KeyCode interactKey;
     public KeyCode switchPathIndex1Key;
     public KeyCode switchPathIndex0Key;
-    private KeyCode currentKey;
 
     private PlayerInteract playerInteract;
     private PlayerController pc;
-    private PickupObjects pickupObjects;
 
     void Start()
     {
         pc = GetComponent<PlayerController>();
         playerInteract = GetComponent<PlayerInteract>();   
-        pickupObjects = GetComponent<PickupObjects>();
+    }
+
+    private void ChoosePath(int index)
+    {
+        pc.isAtPathChoice = false; // Player has made a decision
+        StartCoroutine(pc.SmoothSwitchPath(index)); // Switch to the next path smoothly
     }
 
     // Update is called once per frame
@@ -37,47 +40,33 @@ public class InputManager : MonoBehaviour
         {
             // Disable movement during path choice
             pc.canMove = false;
-
-            // Check for input to switch path or continue
-            if (Input.GetKeyDown(switchPathIndex1Key))
-            {
-                pc.isAtPathChoice = false; // Player has made a decision
-                StartCoroutine(pc.SmoothSwitchPath(1)); // Switch to the next path smoothly
-            }
-            else if (Input.GetKeyDown(switchPathIndex0Key))
-            {
-                pc.isAtPathChoice = false; // Player chooses to continue on the current path
-                StartCoroutine(pc.SmoothSwitchPath(0)); // Switch to the next path smoothly
-                
-            }
         }
         
-        else if (Input.GetKey(moveForwardKey))
-         {
-             MoveForward();
-         }
-         else if (Input.GetKey(moveBackwardKey))
-         {
-             MoveBackward();
-         }
-         else if (Input.GetKey(sneakForwardKey))
-         {
-             ForwardSneak();
-         }
-         else if (Input.GetKey(sneakBackwardKey))
-         {
-             BackwardSneak();
-         }
-        
+        if (Input.GetKey(moveForwardKey))
+        {
+            MoveForward();
+        }
+        else if (Input.GetKey(moveBackwardKey))
+        {
+           MoveBackward();
+        }
+        else if (Input.GetKey(sneakForwardKey))
+        {
+            ForwardSneak();
+        }
+        else if (Input.GetKey(sneakBackwardKey))
+        {
+            BackwardSneak();
+        }
         else
         {
             NoInput();
         }
 
-         if(Input.GetKeyDown(interactKey))
-         {
-             playerInteract.Interact();
-         }
+        if(Input.GetKeyDown(interactKey))
+        {
+           Interact();
+        }
     }
 
     public void ReceiveInput(string inputString)
@@ -113,9 +102,6 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveForward()
     {
-        if (pc.isAtPathChoice)
-            return;
-
         pc.moveForward = true;
         pc.moveBackward = false;
         pc.isMoving = true;
@@ -148,10 +134,17 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void ForwardSneak()
     {
-        pc.moveForward = true;
-        pc.moveBackward = false;
-        pc.isMoving = true;
-        pc.isSneaking = true;
+        if(pc.isAtPathChoice)
+        {
+            ChoosePath(0);
+        }
+        else
+        {
+            pc.moveForward = true;
+            pc.moveBackward = false;
+            pc.isMoving = true;
+            pc.isSneaking = true;
+        }
     }
 
     /// <summary>
@@ -162,7 +155,7 @@ public class InputManager : MonoBehaviour
         pc.moveForward = false;
         pc.moveBackward = true;
         pc.isMoving = true;
-        pc.isSneaking = true;
+        pc.isSneaking = true;   
     }
 
     /// <summary>
@@ -170,7 +163,14 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void Interact()
     {
-        playerInteract.Interact();
+        if(pc.isAtPathChoice)
+        {
+            ChoosePath(1);
+        }
+        else
+        {
+            playerInteract.Interact();
+        }
         // pickupObjects.PickupAndDrop();
     }
 }

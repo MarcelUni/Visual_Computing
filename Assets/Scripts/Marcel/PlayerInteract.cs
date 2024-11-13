@@ -137,7 +137,7 @@ public class PlayerInteract : MonoBehaviour
         {
             DoorInRange = true;
             finalDoorObject = other.gameObject;
-            doorLightOrb = finalDoorObject.GetComponentInChildren<LightOrbBehavior>().gameObject;
+            doorLightOrb = finalDoorObject.GetComponentInChildren<LightOrbBehavior>()?.gameObject;
         }
         if(other.CompareTag("Puzzle"))
         {
