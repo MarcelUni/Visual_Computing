@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     public bool moveBackward;
     public bool canMove;
     public bool isJumping = false;
-    [HideInInspector] public bool canMoveForward = true; // If player reaches a closed door.
+    public bool canMoveForward = true; // If player reaches a closed door.
 
     [Header("Behavior bools")]
     public bool isSneaking;
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveForward(float speed)
     {
-        if (isAtPathChoice == true || isJumping == true)
+        if (isAtPathChoice == true || isJumping == true || canMoveForward == false)
             return;
 
         currentSpeed = Mathf.SmoothDamp(currentSpeed, speed, ref currentVelocity, speedUpAndSlowDownTime);

@@ -30,7 +30,6 @@ public class PlayerInteract : MonoBehaviour
     {
         if(DoorInRange == true && hasLightOrb)
         {
-            Debug.Log("dorr");
             InteractWithDoor();
             anim.SetTrigger("Interact");
         }
@@ -143,6 +142,7 @@ public class PlayerInteract : MonoBehaviour
         {
             puzzleInRange = true;
             puzzleObject = other.gameObject;
+            Debug.Log(puzzleObject.name);
         }
         if(other.CompareTag("Trap"))
         {

@@ -14704,6 +14704,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
+      propertyPath: pickUpRadius
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5490893551203294618, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
       propertyPath: lightOrbLerpSpeed
       value: 0.1
       objectReference: {fileID: 0}
@@ -15937,7 +15942,7 @@ PrefabInstance:
     - target: {fileID: 8152245870372311091, guid: c4ad778bac0444f448d90e629e5f7662,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -21496,6 +21501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DoorInRange: 0
   puzzleInRange: 0
+  trapInRange: 0
   pickUpRadius: 2
   keyTag: Key
   LightorbTag: Lightorb

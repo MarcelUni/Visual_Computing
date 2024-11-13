@@ -7,7 +7,7 @@ public class PressurePlate : MonoBehaviour
     public List<GameObject> targetObjects;  // List of target objects with animations
     public float openAnimationDelay = 0.5f; // Delay in seconds before playing the open animation
     public string playerTag = "Player";     // Tag for the player object
-    public string keyTag = "Key";           // Tag for objects that can also trigger the animations
+    public string keyTag = "Box";           // Tag for objects that can also trigger the animations
 
     private Dictionary<GameObject, (string closeAnimationName, string openAnimationName)> animationClips
         = new Dictionary<GameObject, (string, string)>();

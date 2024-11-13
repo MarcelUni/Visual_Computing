@@ -8,6 +8,7 @@ public class Puzzle : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        Debug.Log("poop");
         puzzleSolvedObject.SetActive(true);
         GetComponent<Collider>().enabled = false;
     }

@@ -194,12 +194,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DoorInRange: 0
   puzzleInRange: 0
+  trapInRange: 0
   pickUpRadius: 5
   keyTag: Key
   LightorbTag: Lightorb
   hasKey: 0
   hasLightOrb: 0
   lightorbPosition: {fileID: 4055074288913360748}
+  lightOrbLerpSpeed: 0
 --- !u!114 &7493263303222069855
 MonoBehaviour:
   m_ObjectHideFlags: 0
