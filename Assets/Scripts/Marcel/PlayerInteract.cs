@@ -71,6 +71,7 @@ public class PlayerInteract : MonoBehaviour
                     ParticleSystem ps = particleSystemObject.GetComponent<ParticleSystem>();
                     if (ps != null)
                     {
+                        AudioManager.instance.PlaySFX("PickupSound");
                         ps.Play();
                     }
                 }
@@ -82,6 +83,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 anim.SetTrigger("Interact");
                 // Doing stuff to make light orb work and follow player
+                AudioManager.instance.PlaySFX("PickupSound");
 
                 hasLightOrb = true;
                 lightOrbObject = hit.transform.gameObject;

@@ -82,6 +82,9 @@ public class GameManager : MonoBehaviour
         // Find portal object in the new scene
         FindNewObjects();
 
+        // Reset audio on death
+        AudioManager.instance.ResetAudioOnDeath();
+
         // Fade back into game
         StartCoroutine(FadeImage(true));
     }
