@@ -183,5 +183,6 @@ public class AudioManager : MonoBehaviour
     public void ResetAudioOnDeath()
     {
         PlaySceneAmbience(currentSceneIndex);
+        PlayMusic(currentSceneIndex);
     }
 }
