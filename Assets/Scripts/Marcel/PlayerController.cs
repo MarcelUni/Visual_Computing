@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
         canMove = true;
         isAtPathChoice = false;
         rb = GetComponent<Rigidbody>();
+
+        anim.SetBool("IsMoving", false);
     }
 
     private void Update()
@@ -228,8 +230,10 @@ public class PlayerController : MonoBehaviour
             return; 
         }
         
-        anim.SetBool("IsMoving", isMoving);
-            
+        anim.SetBool("IsMoving", isMoving); // vitterligt et mysterie
+        
+        Debug.Log("walk bool:  " + anim.GetBool("IsMoving"));
+
         anim.SetBool("IsCrouching", isSneaking);
     }
 

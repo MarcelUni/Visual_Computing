@@ -24,8 +24,6 @@ public class PlayerInteract : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         pc = GetComponent<PlayerController>();
-
-        anim.SetBool("IsMoving", false);
     }
 
     public void Interact()
@@ -89,7 +87,10 @@ public class PlayerInteract : MonoBehaviour
             {
                 anim.SetTrigger("Interact");
                 // Doing stuff to make light orb work and follow player
-                AudioManager.instance.PlaySFX("PickupSound");
+                if(AudioManager.instance != null)
+                {
+                    AudioManager.instance.PlaySFX("PickupSound");
+                }
 
                 hasLightOrb = true;
                 lightOrbObject = hit.transform.gameObject;
