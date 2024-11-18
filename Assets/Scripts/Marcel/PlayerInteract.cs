@@ -66,12 +66,14 @@ public class PlayerInteract : MonoBehaviour
                 anim.SetTrigger("Interact");
                 // Find the Particle System by name and play it at the hit collider's position
                 GameObject particleSystemObject = GameObject.Find("PickUpParticle");
+                
+                AudioManager.instance.PlaySFX("PickupSound");
+
                 if (particleSystemObject != null)
                 {
                     ParticleSystem ps = particleSystemObject.GetComponent<ParticleSystem>();
                     if (ps != null)
                     {
-                        AudioManager.instance.PlaySFX("PickupSound");
                         ps.Play();
                     }
                 }

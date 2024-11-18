@@ -483,7 +483,7 @@ states = {
 # MAIN #####################################################################################
 
 # Open the camera
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 
 running = True
 
@@ -502,8 +502,8 @@ while current_state and running:
     raw_frame = cv2.flip(frame, 1)  # Flip the frame horizontally (mirror effect)
     
     # Cropping frame - only relevant due to physical setup.
-    y, x, h, w = 0, 50, 550, 650
-    frame = raw_frame[y:y+h, x:x+w]
+    #y, x, h, w = 0, 50, 550, 650
+    #frame = raw_frame[y:y+h, x:x+w]
 
     binary_frame = getBinaryVideo(raw_frame.copy()) # Getting binary frame
     binary_frame = removeNoise(binary_frame) # Removes noise by 'opening'

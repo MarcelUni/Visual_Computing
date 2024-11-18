@@ -116,7 +116,7 @@ public class AutoJumpController : MonoBehaviour
             // Trigger the Land animation when the player reaches the stone
             if (animator != null)
             {
-                // animator.SetTrigger("Land"); // We can set up 2 animations one for the inital jump and one for landing, this way we can make it more realistic ín game maybe 
+                // animator.SetTrigger("Land"); // We can set up 2 animations one for the inital jump and one for landing, this way we can make it more realistic ï¿½n game maybe 
             }
 
             // Wait between jumps
