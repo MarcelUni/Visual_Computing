@@ -37,8 +37,8 @@ contours_refs = []
 defects_gestures = []
 
 # All gestures to be captured
-#gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
-gestures = ['Forward', 'Backward'] # Test bunch
+gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
+#gestures = ['Forward', 'Backward'] # Test bunch
 
 key = ''
 
@@ -53,7 +53,7 @@ bufferDict = {gesture: 0 for gesture in gestures} # List comprehension - https:/
 bufferDict['No gesture'] = 0
 
 # Buffer size before it sends gesture to Unity
-bufferTotalThreshold = 100
+bufferTotalThreshold = 1000
 
 # Value that a handsign needs to meet, in order to send 
 bufferThreshhold = round(bufferTotalThreshold*0.75, 0) # 75% of bufferTotalThreshold
