@@ -13,18 +13,31 @@ public class UDPReceive : MonoBehaviour
     public bool startRecieving = true;
     public bool printToConsole = false;
     public string data;
-
     public InputManager im;
+
+    public static UDPReceive instance;
 
 
     public void Start()
     {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        DontDestroyOnLoad(this.gameObject);
 
         receiveThread = new Thread(
             new ThreadStart(ReceiveData));
 
         receiveThread.IsBackground = true;
         receiveThread.Start();
+
     }
 
     // receive thread
@@ -55,33 +68,9 @@ public class UDPReceive : MonoBehaviour
         im.ReceiveInput(data);
     }
 
-    private void SendData()
+    public void FindInputManager()
     {
-        switch (data)
-        {
-            case "Forward":
-                im.MoveForward();
-                break;
-            case "Backward":
-                im.MoveBackward();
-                break;
-            case "ForwardSneak":
-                im.ForwardSneak();
-                break;
-            case "BackwardSneak":
-                im.BackwardSneak();
-                break;
-            case "Interact":
-                im.Interact();
-                break;
-            case "Stop":
-                im.NoInput();
-                break;
-
-            default:
-                im.NoInput();
-                break;
-        }
+        im = FindAnyObjectByType<InputManager>();
     }
 
 }

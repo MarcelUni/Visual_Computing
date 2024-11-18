@@ -10075,11 +10075,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
-      propertyPath: useKeys
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
       propertyPath: switchPath
       value: 118
       objectReference: {fileID: 0}
@@ -10091,16 +10086,6 @@ PrefabInstance:
     - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: switchPathIndex1
-      value: 118
-      objectReference: {fileID: 0}
-    - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: switchPathIndex0Key
-      value: 98
-      objectReference: {fileID: 0}
-    - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: switchPathIndex1Key
       value: 118
       objectReference: {fileID: 0}
     - target: {fileID: 8604917074561652703, guid: 90f811dd02806434ba7c03e2d758d392,

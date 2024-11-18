@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
     {
         portal = GameObject.FindWithTag("Portal")?.GetComponent<WalkThroughDetection>();
         player = GameObject.FindWithTag("Player")?.GetComponent<PlayerController>();
+        
+        if(UDPReceive.instance != null)
+            UDPReceive.instance.FindInputManager();
 
         if (portal != null)
         {

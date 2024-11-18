@@ -24,6 +24,8 @@ public class PlayerInteract : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         pc = GetComponent<PlayerController>();
+
+        anim.SetBool("IsMoving", false);
     }
 
     public void Interact()
@@ -55,8 +57,10 @@ public class PlayerInteract : MonoBehaviour
 
     private void PickupObject()
     {
+        float maxDistance = pickUpRadius;
+
         // Casting within a range to get objects we can pickup
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, pickUpRadius, transform.forward);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, pickUpRadius, transform.forward, maxDistance);
 
         foreach (RaycastHit hit in hits)
         {
@@ -104,13 +108,13 @@ public class PlayerInteract : MonoBehaviour
     {
         finalDoorObject.GetComponent<IInteractable>()?.Interact();
         pc.canMoveForward = true;
-        StartCoroutine(MoveLightOrb());
+        //StartCoroutine(MoveLightOrb());
     }
 
     private IEnumerator MoveLightOrb()
     {
         Debug.Log(lightOrbObject.name);
-        Debug.Log(doorLightOrb.name);
+        //Debug.Log(doorLightOrb.name);
 
         while(Vector3.Distance(lightOrbObject.transform.position, doorLightOrb.transform.position) < .5f)
         {
