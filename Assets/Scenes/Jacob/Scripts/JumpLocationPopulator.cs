@@ -5,4 +5,6 @@ using UnityEngine;
 public class JumpLocationPopulator : MonoBehaviour
 {
     public Transform[] stonePositions; // Assign in the Inspector
+
+    public bool forwardJump = true;
 }

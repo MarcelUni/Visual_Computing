@@ -9,6 +9,8 @@ public class AutoJumpController : MonoBehaviour
     public float jumpTimer = 0.5f;
     public float rotationSpeed = 5f; // Speed of rotation
     private bool isAutoJumping = false;
+    private bool forwardJump = true; // True = forward, False = backwards
+
     private CharacterController characterController;
     private PlayerController pc;
     private Animator animator;
@@ -28,8 +30,9 @@ public class AutoJumpController : MonoBehaviour
         {
             var stoneListPopulate = other.GetComponent<JumpLocationPopulator>(); 
             stonePositions = stoneListPopulate.stonePositions; // Populate the stonePositions array from the JumpLocationPopulator script
+            forwardJump = stoneListPopulate.forwardJump; // Get the forwardJump bool from the JumpLocationPopulator script
 
-                                                               // Disable all AutoJumpTrigger colliders to prevent multiple jumps
+                                                                // Disable all AutoJumpTrigger colliders to prevent multiple jumps
             GameObject[] autoJumpTriggers = GameObject.FindGameObjectsWithTag("AutoJumpTrigger");
             foreach (GameObject trigger in autoJumpTriggers)
             {
@@ -77,62 +80,77 @@ public class AutoJumpController : MonoBehaviour
         pc.canMove = false;
         pc.isJumping = true;
 
-        
-        foreach (Transform target in stonePositions)
-        {
-            Vector3 startPos = transform.position;
-            Vector3 endPos = target.position;
-            float elapsedTime = 0f;
+
+            foreach (Transform target in stonePositions)
+            {
+                Vector3 startPos = transform.position;
+                Vector3 endPos = target.position;
+                float elapsedTime = 0f;
+
+
+
+                // Remove the player from the path system during the jump
+                pc.enabled = false;
+
+                // Perform the jump movement
+                while (elapsedTime < jumpDuration)
+                {
+                    // Calculate the direction towards the target stone (only on the XZ plane)
+                    Vector3 directionToTarget = new Vector3(endPos.x - transform.position.x, 0, endPos.z - transform.position.z);
+
+                    // Calculate the target Y-axis rotation
+                    Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
+
+                    // Smoothly rotate the playerModelObject only on the Y-axis
+                    pc.playerModelObject.transform.rotation = Quaternion.Slerp(pc.playerModelObject.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+                    // Calculate jump height using parabolic arc
+                    float t = elapsedTime / jumpDuration;
+                    float height = 4 * jumpHeight * t * (1 - t);
+                    transform.position = Vector3.Lerp(startPos, endPos, t) + Vector3.up * height;
+
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+
+                // Ensure the player reaches the target position
+                transform.position = endPos;
+
+                // Trigger the Land animation when the player reaches the stone
+                if (animator != null)
+                {
+                    // animator.SetTrigger("Land"); // We can set up 2 animations one for the inital jump and one for landing, this way we can make it more realistic �n game maybe 
+                }
+
+                // Wait between jumps
+                float timer = 0f;
+                while (timer < jumpTimer)
+                {
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                if (forwardJump == true)
+                {
+                    // Wait for the player to move forward again before continuing
+                    while (!pc.moveForward)
+                    {
+                        yield return null;
+                    }
+                }
+                else
+                {
+                    // Wait for the player to move backwards again before continuing
+                    while (!pc.moveBackward)
+                    {
+                        yield return null;
+                    }
+                }
 
             
-
-            // Remove the player from the path system during the jump
-            pc.enabled = false;
-
-            // Perform the jump movement
-            while (elapsedTime < jumpDuration)
-            {
-                // Calculate the direction towards the target stone (only on the XZ plane)
-                Vector3 directionToTarget = new Vector3(endPos.x - transform.position.x, 0, endPos.z - transform.position.z);
-
-                // Calculate the target Y-axis rotation
-                Quaternion targetRotation = Quaternion.LookRotation(directionToTarget);
-
-                // Smoothly rotate the playerModelObject only on the Y-axis
-                pc.playerModelObject.transform.rotation = Quaternion.Slerp(pc.playerModelObject.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-                // Calculate jump height using parabolic arc
-                float t = elapsedTime / jumpDuration;
-                float height = 4 * jumpHeight * t * (1 - t);
-                transform.position = Vector3.Lerp(startPos, endPos, t) + Vector3.up * height;
-
-                elapsedTime += Time.deltaTime;
-                yield return null;
             }
-
-            // Ensure the player reaches the target position
-            transform.position = endPos;
-
-            // Trigger the Land animation when the player reaches the stone
-            if (animator != null)
-            {
-                // animator.SetTrigger("Land"); // We can set up 2 animations one for the inital jump and one for landing, this way we can make it more realistic �n game maybe 
-            }
-
-            // Wait between jumps
-            float timer = 0f;
-            while (timer < jumpTimer)
-            {
-                timer += Time.deltaTime;
-                yield return null;
-            }
-
-            // Wait for the player to move forward again before continuing
-            while (!pc.moveForward)
-            {
-                yield return null;
-            }
-        }
+        
+        
 
         // Re-enable path movement after the jump sequence is completed
         pc.enabled = true;
