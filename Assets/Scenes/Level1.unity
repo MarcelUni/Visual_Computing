@@ -2053,11 +2053,8 @@ MonoBehaviour:
   - {fileID: 114462759026334986}
   currentPathIndex: 0
   player: {fileID: 466284521}
-  offSet: 5
-  maxCameraDistance: 15
-  minCameraDistance: 10
+  offset: -14
   cameraSpeed: 3
-  distanceTravelled: 0
   lerpSpeed: 1
 --- !u!1001 &155966950
 PrefabInstance:
