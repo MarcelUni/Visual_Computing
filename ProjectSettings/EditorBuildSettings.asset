@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
+    path: Assets/Scenes/Level1-Forest.unity
     guid: 534c7a052caad9a4eb4dea63e88ad5f1
   - enabled: 1
     path: Assets/Scenes/Level2-GrotteIndgang.unity

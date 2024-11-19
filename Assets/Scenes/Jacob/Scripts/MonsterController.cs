@@ -10,6 +10,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float waitToResumeRoaming = 5f;
     [SerializeField] private float killRadius = 5f;
+    [SerializeField] private float attackRadius = 2f;
 
     [SerializeField] private float viewRadius;
     [SerializeField] private float viewAngle;
@@ -128,6 +129,10 @@ public class MonsterController : MonoBehaviour
 
         // Check for proximity to kill the player
         if (Vector3.Distance(target, transform.position) <= killRadius && detectedLumi)
+        {
+            Kill();
+        }
+        if (Vector3.Distance(target, transform.position) <= attackRadius && !detectedLumi)
         {
             Kill();
         }

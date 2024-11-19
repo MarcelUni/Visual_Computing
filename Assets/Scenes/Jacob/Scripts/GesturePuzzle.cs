@@ -1,166 +1,157 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GesturePuzzle : MonoBehaviour
 {
-    // der skal lige g�res s�dan at cameraShake ikke bliver spillet hele tiden (skal stoppe n�r d�renen har �bnet helt)
+    public GameObject[] buttons; // Assign button objects in the correct order
     public GameObject leftDoor;
     public GameObject rightDoor;
 
-    private bool inPuzzleRange = true;
+    public List<int> correctSequence = new List<int>(); // The correct order of button presses
+    private List<int> currentSequence = new List<int>(); // Tracks the player's inputs
 
-    public bool input1Activated = false; 
-    public bool input2Activated = false; 
-    public bool input3Activated = false;
+    public float buttonPushDistance = 0.2f; // Distance to move button on the Y-axis when pushed
+    public float buttonPushSpeed = 2f;     // Speed of button movement
+    public float resetDelay = 1f;          // Delay before resetting buttons on wrong input
 
-    //private bool start = true;
+    private bool puzzleComplete = false;
+    private bool isResetting = false; // Prevents input during reset
+    private bool inPuzzleRange = false; // Tracks if the player is inside the trigger
+    private Vector3[] originalPositions; // Stores original positions of buttons
 
-    private GameObject player;
-
-    private void Update()
+    void Start()
     {
-        if (inPuzzleRange == true)
+        // Store the original positions of the buttons
+        originalPositions = new Vector3[buttons.Length];
+        for (int i = 0; i < buttons.Length; i++)
         {
-            Interact();
+            originalPositions[i] = buttons[i].transform.localPosition;
         }
-
-        if (inPuzzleRange == false)
-        {
-            input1Activated = false;
-            input2Activated = false;
-            input3Activated = false;
-            Interact();
-        }
-
     }
 
+    void Update()
+    {
+        // Only detect hand signs if the player is in range and not resetting
+        if (inPuzzleRange && !puzzleComplete && !isResetting)
+        {
+            DetectHandSigns();
+        }
+    }
+
+    private void DetectHandSigns()
+    {
+        // Replace with actual hand sign detection logic
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            PushButton(0); // Simulate hand sign 1
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            PushButton(1); // Simulate hand sign 2
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            PushButton(2); // Simulate hand sign 3
+        }
+    }
+
+    private void PushButton(int buttonIndex)
+    {
+        if (buttonIndex < 0 || buttonIndex >= buttons.Length)
+            return;
+
+        // Animate button push
+        StartCoroutine(MoveButton(buttons[buttonIndex], originalPositions[buttonIndex] + new Vector3(buttonPushDistance, 0, 0)));
+
+        // Check if this button is the correct one in the sequence
+        currentSequence.Add(buttonIndex);
+
+        if (currentSequence[currentSequence.Count - 1] != correctSequence[currentSequence.Count - 1])
+        {
+            // Incorrect sequence, reset buttons
+            StartCoroutine(ResetButtons());
+        }
+        else if (currentSequence.Count == correctSequence.Count)
+        {
+            // Correct sequence completed
+            puzzleComplete = true;
+            StartCoroutine(OpenDoor());
+        }
+    }
+
+    private IEnumerator MoveButton(GameObject button, Vector3 targetPosition)
+    {
+        Vector3 startPosition = button.transform.localPosition;
+        float elapsedTime = 0;
+
+        while (elapsedTime < 1 / buttonPushSpeed)
+        {
+            button.transform.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime * buttonPushSpeed);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        button.transform.localPosition = targetPosition;
+    }
+
+    private IEnumerator ResetButtons()
+    {
+        isResetting = true; // Prevent further input
+
+        yield return new WaitForSeconds(resetDelay);
+
+        currentSequence.Clear();
+
+        // Reset all buttons to their original positions
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            StartCoroutine(MoveButton(buttons[i], originalPositions[i]));
+        }
+
+        isResetting = false; // Allow input again
+    }
+
+    private IEnumerator OpenDoor()
+    {
+        yield return new WaitForSeconds(buttonPushDistance);
+        // Move left and right doors to open
+        StartCoroutine(MoveDoorSmoothly(leftDoor, new Vector3(0, 0, -2)));
+        StartCoroutine(MoveDoorSmoothly(rightDoor, new Vector3(0, 0, 2)));
+        yield return null;
+    }
+
+    private IEnumerator MoveDoorSmoothly(GameObject door, Vector3 offset)
+    {
+        Vector3 startPosition = door.transform.position;
+        Vector3 targetPosition = startPosition + offset;
+        float duration = 1.0f;
+        float elapsedTime = 0.0f;
+
+        while (elapsedTime < duration)
+        {
+            door.transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        door.transform.position = targetPosition;
+    }
+
+    // Trigger logic
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            inPuzzleRange = true; 
-            player = other.gameObject;
+            inPuzzleRange = true;
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             inPuzzleRange = false;
         }
-    }
-
-    public void Interact()
-    {
-        Debug.Log("Interacting with puzzle");
-        // Get player inputs
-        bool input1 = GetPlayerInput1();
-        bool input2 = GetPlayerInput2();
-        bool input3 = GetPlayerInput3();
-
-        // Perform action based on inputs
-        if (input1 && input2 && input3)
-        {
-            // All inputs are true
-            StartCoroutine(MoveDoorSmoothly(true));
-            StartCoroutine(MoveDoorSmoothly(false));
-
-            StartCoroutine(CameraShake());
-            
-            
-        }
-        else if (input1 || input2 || input3)
-        {
-            // At least one input is true
-        }
-        else
-        {
-            // No inputs are true
-        }
-    }
-   IEnumerator CameraShake()
-    {
-        float shakeDuration = 1f;
-        Vector3 startPostion = player.transform.GetChild(1).transform.position;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < shakeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            player.transform.GetChild(1).transform.position = startPostion + Random.insideUnitSphere;
-
-            yield return null;
-        }
-
-        player.transform.GetChild(1).transform.position = startPostion;
-
-
-    }
-    private IEnumerator MoveDoorSmoothly(bool leftdoor)
-    {
-        if (leftdoor)
-        {
-            Vector3 targetPosition = leftDoor.transform.position + new Vector3(0, 0, 2);
-            float duration = 1.0f;
-            float elapsedTime = 0.0f;
-            Vector3 startingPosition = leftDoor.transform.position;
-
-            while (elapsedTime < duration)
-            {
-                leftDoor.transform.position = Vector3.Lerp(startingPosition, targetPosition, elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-            leftDoor.transform.position = targetPosition;
-        }
-        else
-        {
-            Vector3 targetPosition = rightDoor.transform.position + new Vector3(0, 0, -2);
-            float duration = 1.0f;
-            float elapsedTime = 0.0f;
-            Vector3 startingPosition = rightDoor.transform.position;
-
-            while (elapsedTime < duration)
-            {
-                rightDoor.transform.position = Vector3.Lerp(startingPosition, targetPosition, elapsedTime / duration);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-
-            rightDoor.transform.position = targetPosition;
-        }
-    }
-
-    private bool GetPlayerInput1()
-    {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            input1Activated = true; // Set input1Activated to true when B is pressed
-        }
-
-        return input1Activated; // Return true if B has been pressed
-    }
-
-    private bool GetPlayerInput2()
-    {
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            input2Activated = true; // Set input2Activated to true when N is pressed
-        }
-
-        return input2Activated; // Return true if N has been pressed
-    }
-
-    private bool GetPlayerInput3()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            input3Activated = true; // Set input3Activated to true when M is pressed
-        }
-
-        return input3Activated; // Return true if M has been pressed
     }
 }
