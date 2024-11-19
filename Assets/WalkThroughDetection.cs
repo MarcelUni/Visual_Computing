@@ -9,6 +9,7 @@ public class WalkThroughDetection : MonoBehaviour
     {   
         if(other.CompareTag("Player"))
         {
+            Debug.Log("fuck off");
             WentThroughEvent?.Invoke();
         }
     }

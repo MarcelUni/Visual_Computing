@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -6,12 +7,13 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private int currentSceneIndex;
-    private WalkThroughDetection portal;
+    public WalkThroughDetection portal;
     private PlayerController player;
     [SerializeField] private Image img;
     public float fadeTime = 1;
     public float sceneLoadWaitTime = 2;
     public static GameManager instance;
+    public PlayerUI playerUI;
 
     private void Awake()
     {
@@ -39,14 +41,24 @@ public class GameManager : MonoBehaviour
         
         if(UDPReceive.instance != null)
             UDPReceive.instance.FindInputManager();
+        
+        if(playerUI != null)
+        {
+            playerUI.FindNewObjects();
+        }
 
         if (portal != null)
         {
-            portal.WentThroughEvent.AddListener(ChangeScene);
-        }
-        else
-        {
-            Debug.Log("No portal object");
+            Debug.Log("Portal object found.");
+            if (portal.WentThroughEvent != null)
+            {
+                Debug.Log("WentThroughEvent is not null. Adding listener.");
+                portal.WentThroughEvent.AddListener(ChangeScene);
+            }
+            else
+            {
+                Debug.LogWarning("WentThroughEvent is null. Check if it is properly initialized.");
+            }
         }
 
         if(player != null)
@@ -59,7 +71,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ChangeScene()
+    public void ChangeScene()
     {
         // Fade screen to black
         StartCoroutine(FadeImage(false));
@@ -77,12 +89,12 @@ public class GameManager : MonoBehaviour
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
 
         // Wait until the scene is fully loaded
-        while (!asyncLoad.isDone)
+        while (asyncLoad.isDone == false)
         {
             yield return null;
         }
 
-        // Find portal object in the new scene
+        // Find objects in the new scene
         FindNewObjects();
 
         // Reset audio on death

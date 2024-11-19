@@ -69,7 +69,8 @@ public class PlayerInteract : MonoBehaviour
                 // Find the Particle System by name and play it at the hit collider's position
                 GameObject particleSystemObject = GameObject.Find("PickUpParticle");
                 
-                AudioManager.instance.PlaySFX("PickupSound");
+                if(AudioManager.instance != null)
+                    AudioManager.instance.PlaySFX("PickupSound");
 
                 if (particleSystemObject != null)
                 {
@@ -135,7 +136,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void InteractWithTrap()
     {
-        trapObject.GetComponent<Trap>().Interact();
+        trapObject.GetComponent<Puzzle>().Interact();
         trapInRange = false;
     }
 

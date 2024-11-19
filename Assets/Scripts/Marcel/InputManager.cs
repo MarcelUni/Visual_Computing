@@ -18,6 +18,8 @@ public class InputManager : MonoBehaviour
     private PlayerInteract playerInteract;
     private PlayerController pc;
 
+    public string inputPerformedString;
+
     void Start()
     {
         pc = GetComponent<PlayerController>();
@@ -45,32 +47,44 @@ public class InputManager : MonoBehaviour
         if (Input.GetKey(moveForwardKey))
         {
             MoveForward();
+            inputPerformedString = "Forward";
         }
         else if (Input.GetKey(moveBackwardKey))
         {
            MoveBackward();
+           inputPerformedString = "Backward";
         }
         else if (Input.GetKey(sneakForwardKey))
         {
             ForwardSneak();
+            inputPerformedString = "ForwardSneak";
         }
         else if (Input.GetKey(sneakBackwardKey))
         {
+            inputPerformedString = "BackwardSneak";
             BackwardSneak();
         }
         else
         {
+            inputPerformedString = "Stop";
             NoInput();
         }
 
-        if(Input.GetKeyDown(interactKey))
+        if(Input.GetKey(interactKey))
         {
+            inputPerformedString = "Interact";
            Interact();
         }
     }
 
     public void ReceiveInput(string inputString)
     {
+        if(useKeys == true)
+        {
+            return;
+        }
+        
+        inputPerformedString = inputString;
         switch (inputString)
         {
             case "Forward":
