@@ -9638,55 +9638,6 @@ Transform:
   - {fileID: 273314449}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1378246036
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1378246037}
-  - component: {fileID: 1378246038}
-  m_Layer: 0
-  m_Name: UDPReceiver
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1378246037
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1378246036}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.047017302, y: 0.35268673, z: -0.017746724, w: 0.934391}
-  m_LocalPosition: {x: 109, y: 12, z: 53}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1378246038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1378246036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02075b1ca7be74396b682f36c4933e73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  port: 5052
-  startRecieving: 1
-  printToConsole: 0
-  data: 
-  im: {fileID: 2092555304}
 --- !u!1001 &1428687959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12019,18 +11970,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc73209681b7f4f9fa0238e35f77a43d, type: 3}
---- !u!114 &2092555304 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
-    type: 3}
-  m_PrefabInstance: {fileID: 1567944882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1661170877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f78d85515869400ab00eb147a548beb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &2092555310 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8604917074561652703, guid: 90f811dd02806434ba7c03e2d758d392,
@@ -118899,7 +118838,6 @@ SceneRoots:
   - {fileID: 1195486770}
   - {fileID: 148831984}
   - {fileID: 1567944882}
-  - {fileID: 1378246037}
   - {fileID: 1302772979}
   - {fileID: 2013767937}
   - {fileID: 1692835117}
