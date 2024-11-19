@@ -2,62 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
-using Unity.VisualScripting;
-using System.Runtime.InteropServices;
 
 public class CamFollowPath : MonoBehaviour
 {
-    public List<PathCreator> pathCreators;
-    public int currentPathIndex = 0;
-    public PlayerController player;
-    public float offSet;
-    public float maxCameraDistance = 5f;
-    public float minCameraDistance;
-    public float cameraSpeed;
-    public float distanceTravelled;
-    public float lerpSpeed;
+    // opdaterede scriptet til bare at have et constant offset, vi kan gøre sådan,
+    // at når man går backwards eller forwards bliver offsettet ændret så man kan se hvor man går
+    // istedet for at få player distance, så får den bare player position på pathen direkte.
+    // så kan vi bruge math lerp til at lerpe til spillerens position på pathen
+    // og så kan vi bruge en coroutine til at lerp til den position
+
+    public List<PathCreator> pathCreators; // List of path creators
+    public int currentPathIndex = 0;       // Current path index
+    public PlayerController player;       // Reference to the player
+    public float offset;                  // Offset to maintain relative to the player
+    public float cameraSpeed = 5f;        // Speed at which the camera moves along the path
+    public float lerpSpeed = 5f;          // Speed of smooth interpolation
+
+    private float distanceTravelled = 0f; // Current distance travelled along the path
 
     void Start()
     {
-        // Initialize distanceTravelled to the player's initial distance from the start of the path
+        // Initialize the camera's distance based on the player's starting position
         distanceTravelled = pathCreators[currentPathIndex].path.GetClosestDistanceAlongPath(player.transform.position);
-
         StartCoroutine(SmoothFollow());
     }
 
     void Update()
     {
-        MoveCam();
+        UpdateDistanceTravelled();
     }
 
-    private void MoveCam()
+    private void UpdateDistanceTravelled()
     {
-        float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
+        // Align the camera's distance to the player's current position on the path
+        float playerDistance = pathCreators[currentPathIndex].path.GetClosestDistanceAlongPath(player.transform.position);
 
-        // If the distance is farther than the max allowed distance
-        if (distanceToPlayer > maxCameraDistance)
-        {
-            distanceTravelled += cameraSpeed * Time.deltaTime;
-        }
-
-        // If the distance is lower than the minimum allowed distance
-        if (distanceToPlayer < minCameraDistance)
-        {
-            distanceTravelled -= cameraSpeed * Time.deltaTime;
-        }
-
-        // Ensure distanceTravelled does not go below zero
-        distanceTravelled = Mathf.Max(0, distanceTravelled);
+        // Smoothly interpolate `distanceTravelled` towards `playerDistance`
+        distanceTravelled = Mathf.Lerp(distanceTravelled, playerDistance + offset, cameraSpeed * Time.deltaTime);
     }
 
     private IEnumerator SmoothFollow()
     {
         while (true)
         {
-            // Calculate the target position
-            Vector3 targetPosition = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled - offSet, EndOfPathInstruction.Stop);
+            // Get the target position for the camera based on `distanceTravelled`
+            Vector3 targetPosition = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled, EndOfPathInstruction.Stop);
 
-            // Smoothly interpolate the camera's position towards the target position
+            // Smoothly move the camera towards the target position
             transform.position = Vector3.Lerp(transform.position, targetPosition, lerpSpeed * Time.deltaTime);
             yield return null;
         }
