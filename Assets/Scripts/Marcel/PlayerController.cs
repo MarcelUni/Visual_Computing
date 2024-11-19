@@ -231,8 +231,6 @@ public class PlayerController : MonoBehaviour
         }
         
         anim.SetBool("IsMoving", isMoving); // vitterligt et mysterie
-        
-        Debug.Log("walk bool:  " + anim.GetBool("IsMoving"));
 
         anim.SetBool("IsCrouching", isSneaking);
     }

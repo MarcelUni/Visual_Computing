@@ -3,33 +3,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Trap : MonoBehaviour, IInteractable
+public class Trap : MonoBehaviour
 {
-    public GameObject trapDismantledObject;
-    public bool TrapDismantled;
-
-    public void Interact()
+    private void OnTriggerEnter(Collider other)
     {
-        trapDismantledObject.SetActive(true);
-        
-        Collider[] colliders = GetComponents<Collider>();
-        foreach (Collider collider in colliders)
+        if(other.gameObject.CompareTag("Player"))
         {
-            collider.enabled = false;
-        }
-
-        TrapDismantled = true;
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if(TrapDismantled)
-        {
-            GetComponent<Collider>().enabled = false;
-            return;
-        }
-        else if(other.gameObject.CompareTag("Player"))
-        {
+            Debug.Log("lol");
             other.gameObject.GetComponent<PlayerController>().deathEvent?.Invoke();
         }
     }

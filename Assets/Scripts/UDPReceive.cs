@@ -65,7 +65,8 @@ public class UDPReceive : MonoBehaviour
     private void Update()
     {
         //SendData();
-        im.ReceiveInput(data);
+        if(im != null)
+            im.ReceiveInput(data);
     }
 
     public void FindInputManager()
