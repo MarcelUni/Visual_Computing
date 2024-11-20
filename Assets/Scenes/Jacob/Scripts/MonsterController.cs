@@ -146,7 +146,7 @@ public class MonsterController : MonoBehaviour
         {
             Kill();
         }
-        if (Vector3.Distance(target, transform.position) <= attackRadius && !detectedLumi)
+        if (Vector3.Distance(playerTransform.position, transform.position) <= attackRadius && !detectedLumi)
         {
             Kill();
         }
@@ -163,6 +163,7 @@ public class MonsterController : MonoBehaviour
     private void Kill()
     {
         animator.SetBool("Investigating", false);
+
         if (killOnce == false)
         {
             killOnce = true;

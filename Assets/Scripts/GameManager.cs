@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     private int currentSceneIndex;
     public WalkThroughDetection portal;
-    private PlayerController player;
+    public PlayerController player;
     [SerializeField] private Image img;
     public float fadeTime = 1;
     public float sceneLoadWaitTime = 2;
@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
     }
 
@@ -49,15 +49,15 @@ public class GameManager : MonoBehaviour
 
         if (portal != null)
         {
-            Debug.Log("Portal object found.");
+            //Debug.Log("Portal object found.");
             if (portal.WentThroughEvent != null)
             {
-                Debug.Log("WentThroughEvent is not null. Adding listener.");
+                //Debug.Log("WentThroughEvent is not null. Adding listener.");
                 portal.WentThroughEvent.AddListener(ChangeScene);
             }
             else
             {
-                Debug.LogWarning("WentThroughEvent is null. Check if it is properly initialized.");
+                //Debug.LogWarning("WentThroughEvent is null. Check if it is properly initialized.");
             }
         }
 
