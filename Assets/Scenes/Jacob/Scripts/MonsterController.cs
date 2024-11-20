@@ -33,11 +33,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private Volume postProcessingVolume; // Reference to Post-Processing Volume
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private float vignetteMaxIntensity = 0.5f;
-    [SerializeField] private float shakeIntensity = 0.2f;
     [SerializeField] private float vignetteEaseSpeed = 1f;
-    [SerializeField] private float shakeEaseSpeed = 1f;
-
-
 
     private Vignette vignetteEffect;
     private Coroutine vignetteEaseCoroutine;
