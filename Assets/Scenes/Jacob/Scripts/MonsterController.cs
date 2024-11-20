@@ -12,6 +12,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private float waitToResumeRoaming = 5f;
     [SerializeField] private float killRadius = 5f;
     [SerializeField] private float attackRadius = 2f;
+    [SerializeField] private int stoppingDistance = 1;
     [SerializeField] private float viewRadius;
     [SerializeField] private float viewAngle;
     [SerializeField] private LayerMask playerLayer;
@@ -86,7 +87,7 @@ public class MonsterController : MonoBehaviour
         switch (currentState)
         {
             case MonsterState.Investigate:
-                Investigate(lastKnownPos, 1);
+                Investigate(lastKnownPos, stoppingDistance);
                 break;
             case MonsterState.Idle:
                 break;
