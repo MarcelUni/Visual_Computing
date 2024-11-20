@@ -27,6 +27,7 @@ public class MonsterController : MonoBehaviour
     public Transform[] patrolPoints;
     private bool detectedLumi = false;
     private int currentPatrolPointIndex = 0;
+    [SerializeField] private AudioSource MonsterIdleSound;
 
     [Header("Proximity Effects")]
     [SerializeField] private Volume postProcessingVolume; // Reference to Post-Processing Volume
@@ -35,6 +36,8 @@ public class MonsterController : MonoBehaviour
     [SerializeField] private float shakeIntensity = 0.2f;
     [SerializeField] private float vignetteEaseSpeed = 1f;
     [SerializeField] private float shakeEaseSpeed = 1f;
+
+
 
     private Vignette vignetteEffect;
     private Coroutine vignetteEaseCoroutine;
@@ -53,7 +56,7 @@ public class MonsterController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
 
-        currentState = MonsterState.Roaming;
+        currentState = MonsterState.Idle;
 
         if (postProcessingVolume != null && postProcessingVolume.profile.TryGet<Vignette>(out vignetteEffect))
         {
@@ -87,11 +90,30 @@ public class MonsterController : MonoBehaviour
         switch (currentState)
         {
             case MonsterState.Investigate:
+                MonsterIdleSound.Stop();
                 Investigate(lastKnownPos, stoppingDistance);
+                
                 break;
             case MonsterState.Idle:
+                if (!MonsterIdleSound.isPlaying)
+                {
+                    MonsterIdleSound.Play();
+                }
+                if (patrolPoints != null && patrolPoints.Length > 1) // bare for lvl 3 så man kan give den en patrol point men bare står stille uden at gøre noget (Den resetter ikke efter investigate)
+                {
+                    currentState = MonsterState.Roaming;
+                }
+                else
+                {
+                    animator.SetBool("IsMoving", false);
+                }
                 break;
             case MonsterState.Roaming:
+                if (!MonsterIdleSound.isPlaying)
+                {
+                    MonsterIdleSound.Play();
+                }
+
                 Roam();
                 break;
         }

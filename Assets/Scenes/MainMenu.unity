@@ -2000,6 +2000,12 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     sceneIndex: -1
+  - name: MonsterIdleSound
+    clip: {fileID: 8300000, guid: f9da9dd2159dd0d4b80fee187cc5954f, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    sceneIndex: -1
   musicSource: {fileID: 1081431811}
   sfxSource: {fileID: 1184799345}
 --- !u!4 &1583669328

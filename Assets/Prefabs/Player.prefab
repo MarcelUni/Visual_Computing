@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6052514933731854322}
   - component: {fileID: 5490893551203294618}
   - component: {fileID: 7493263303222069855}
+  - component: {fileID: 8468940817791711382}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -40,6 +41,7 @@ Transform:
   - {fileID: 7225838844215004994}
   - {fileID: 6318574066298128659}
   - {fileID: 4647329009659808618}
+  - {fileID: 3128177583460014659}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -5.32, z: 0}
 --- !u!33 &8462547671931903832
@@ -114,10 +116,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5554173
+  m_Radius: 0.5900614
   m_Height: 3.415277
   m_Direction: 1
-  m_Center: {x: 0.035579205, y: 0.71471953, z: -0.021005332}
+  m_Center: {x: 0.00093507767, y: 0.71471953, z: -0.021005332}
 --- !u!54 &6657971894315351892
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -159,8 +161,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathCreators:
   - {fileID: 0}
+  - {fileID: 0}
   currentPathIndex: 0
-  normalMoveSpeed: 3
+  normalMoveSpeed: 4
   sneakMoveSpeed: 1
   speedUpAndSlowDownTime: 0.1
   rotateSpeed: 3
@@ -196,7 +199,7 @@ MonoBehaviour:
   DoorInRange: 0
   puzzleInRange: 0
   trapInRange: 0
-  pickUpRadius: 2
+  pickUpRadius: 5
   keyTag: Key
   LightorbTag: Lightorb
   hasKey: 0
@@ -224,6 +227,22 @@ MonoBehaviour:
   switchPathIndex1Key: 118
   switchPathIndex0Key: 98
   inputPerformedString: 
+--- !u!114 &8468940817791711382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481120135973533779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e76e4121c5801d2459331f42c4e29803, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpHeight: 3
+  jumpDuration: 1.5
+  jumpTimer: 0.5
+  rotationSpeed: 5
 --- !u!1 &2826264415460628952
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,16 +462,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6814805301904475588}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4647329009659808618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1001, y: 541}
-  m_SizeDelta: {x: 392.3964, y: 153.8972}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 237, y: -117}
+  m_SizeDelta: {x: 392.39636, y: 153.89722}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5556951771197089651
 CanvasRenderer:
@@ -482,10 +501,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Sneak forward for right
+  m_text: 'Sneak forward for Left
 
 
-    Interact for left'
+    Interact for Right'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -556,6 +575,52 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &8037389503471557009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3128177583460014659}
+  - component: {fileID: 257089683037544646}
+  m_Layer: 3
+  m_Name: WindZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3128177583460014659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8037389503471557009}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.88908464, z: -0, w: 0.45774284}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8604917074561652703}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!182 &257089683037544646
+WindZone:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8037389503471557009}
+  m_Enabled: 1
+  m_Mode: 1
+  m_Radius: 3
+  m_WindMain: 1
+  m_WindTurbulence: 100
+  m_WindPulseMagnitude: 100
+  m_WindPulseFrequency: 0.01
 --- !u!1001 &2208589357065446019
 PrefabInstance:
   m_ObjectHideFlags: 0

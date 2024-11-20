@@ -16,7 +16,12 @@ public class FinalDoor : MonoBehaviour, IInteractable
     public void Interact()
     {
         anim.SetTrigger("OpenDoors");
-        AudioManager.instance.PlaySFX("OpenDoor");
+
+        if (AudioManager.instance.sfxSource.isPlaying == false)
+        {
+            AudioManager.instance.PlaySFX("OpenDoor");
+        }
+
         this.enabled = false;
         GetComponent<Collider>().enabled = false;
         
