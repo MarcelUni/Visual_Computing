@@ -20,6 +20,8 @@ public class CamFollowPath : MonoBehaviour
 
     private float distanceTravelled = 0f; // Current distance travelled along the path
 
+    public bool dynamicCamera = false;    // Toggle dynamic camera
+
     void Start()
     {
         // Initialize the camera's distance based on the player's starting position
@@ -34,6 +36,18 @@ public class CamFollowPath : MonoBehaviour
 
     private void UpdateDistanceTravelled()
     {
+        if (dynamicCamera)
+        {
+            if (player.moveForward)
+            {
+                offset = -14f;
+            }
+            else if (player.moveBackward)
+            {
+                offset = 14f;
+            }
+        }
+
         // Align the camera's distance to the player's current position on the path
         float playerDistance = pathCreators[currentPathIndex].path.GetClosestDistanceAlongPath(player.transform.position);
 

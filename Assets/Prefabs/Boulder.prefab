@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1915593686751651168}
   - component: {fileID: 2103629397856055822}
   - component: {fileID: 6321640249797432}
+  - component: {fileID: 2301433213277997984}
+  - component: {fileID: 7100018571963058506}
   m_Layer: 0
   m_Name: Boulder
   m_TagString: Untagged
@@ -135,4 +137,41 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.22
+  m_Center: {x: 0.0053029954, y: 0.045596823, z: 0.013039008}
+--- !u!114 &2301433213277997984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3859116690525102461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0e09b217560741d090f9eff36dae459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playSequence: 0
+  boulderSequence: {fileID: 0}
+  spawnPoint: {fileID: 0}
+  endPoint: {fileID: 0}
+--- !u!135 &7100018571963058506
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3859116690525102461}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.3183308
   m_Center: {x: 0.0053029954, y: 0.045596823, z: 0.013039008}
