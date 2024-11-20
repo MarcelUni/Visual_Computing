@@ -9435,6 +9435,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6623789724360770420, guid: d3b709792bab46641bb81c0f927a659e,
         type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 148831984}
+    - target: {fileID: 6623789724360770420, guid: d3b709792bab46641bb81c0f927a659e,
+        type: 3}
+      propertyPath: postProcessingVolume
+      value: 
+      objectReference: {fileID: 832575518}
+    - target: {fileID: 6623789724360770420, guid: d3b709792bab46641bb81c0f927a659e,
+        type: 3}
       propertyPath: patrolPoints.Array.size
       value: 0
       objectReference: {fileID: 0}

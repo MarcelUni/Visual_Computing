@@ -15,8 +15,9 @@ public class AudioManager : MonoBehaviour
 
     [Header("Audio Sources")]
     public AudioSource musicSource;
-    public AudioSource ambienceSource;
     public AudioSource sfxSource;
+
+    private List<AudioSource> activeAmbienceSources = new List<AudioSource>();
 
     public static AudioManager instance;
 
@@ -54,13 +55,6 @@ public class AudioManager : MonoBehaviour
             musicSource.loop = true;
         }
 
-        if (ambienceSource == null)
-        {
-            ambienceSource = gameObject.AddComponent<AudioSource>();
-            ambienceSource.playOnAwake = false;
-            ambienceSource.loop = true;
-        }
-
         if (sfxSource == null)
         {
             sfxSource = gameObject.AddComponent<AudioSource>();
@@ -80,19 +74,18 @@ public class AudioManager : MonoBehaviour
         // Play the appropriate ambience for this scene
         PlaySceneAmbience(currentSceneIndex);
 
+        // Play music for this scene
         PlayMusic(currentSceneIndex);
     }
 
     /// <summary>
-    /// Plays the music track with the given name.
+    /// Plays the music track for the given scene index.
     /// </summary>
-    /// <param name="name">The name of the music track to play.</param>
+    /// <param name="sceneIndex">Index of the current scene.</param>
     public void PlayMusic(int sceneIndex)
     {
-        // Stop currently playing ambience
         musicSource.Stop();
 
-        // Find ambience for the scene
         Sound sceneMusic = Array.Find(musicSounds, x => x.sceneIndex == sceneIndex);
 
         if (sceneMusic != null)
@@ -105,8 +98,59 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No ambience track found for scene index: " + sceneIndex);
+            Debug.Log("No music track found for scene index: " + sceneIndex);
         }
+    }
+
+    /// <summary>
+    /// Plays the ambience tracks for the given scene index.
+    /// Spawns an AudioSource for each ambience sound assigned to the scene.
+    /// </summary>
+    /// <param name="sceneIndex">Index of the current scene</param>
+    public void PlaySceneAmbience(int sceneIndex)
+    {
+        // Stop and clear any existing ambience sources
+        ClearAmbienceSources();
+
+        // Find all ambience sounds for the scene
+        Sound[] sceneAmbiences = Array.FindAll(ambienceSounds, x => x.sceneIndex == sceneIndex);
+
+        if (sceneAmbiences.Length > 0)
+        {
+            foreach (Sound ambience in sceneAmbiences)
+            {
+                // Create a new AudioSource for each ambience sound
+                AudioSource newSource = gameObject.AddComponent<AudioSource>();
+                newSource.clip = ambience.clip;
+                newSource.loop = ambience.loop;
+                newSource.volume = ambience.volume;
+                newSource.pitch = ambience.pitch;
+                newSource.playOnAwake = false;
+
+                // Play the ambience sound
+                newSource.Play();
+
+                // Add the new AudioSource to the list of active sources
+                activeAmbienceSources.Add(newSource);
+            }
+        }
+        else
+        {
+            Debug.Log("No ambience tracks found for scene index: " + sceneIndex);
+        }
+    }
+
+    /// <summary>
+    /// Stops and destroys all active ambience AudioSources.
+    /// </summary>
+    private void ClearAmbienceSources()
+    {
+        foreach (AudioSource source in activeAmbienceSources)
+        {
+            source.Stop();
+            Destroy(source);
+        }
+        activeAmbienceSources.Clear();
     }
 
     /// <summary>
@@ -123,33 +167,6 @@ public class AudioManager : MonoBehaviour
         else
         {
             sfxSource.PlayOneShot(s.clip, s.volume);
-        }
-    }
-
-    /// <summary>
-    /// Plays the ambience track for the given scene.
-    /// Each scene can have a unique ambience track defined in the ambienceSounds array.
-    /// </summary>
-    /// <param name="sceneIndex">Index of the current scene</param>
-    public void PlaySceneAmbience(int sceneIndex)
-    {
-        // Stop currently playing ambience
-        ambienceSource.Stop();
-
-        // Find ambience for the scene
-        Sound sceneAmbience = Array.Find(ambienceSounds, x => x.sceneIndex == sceneIndex);
-
-        if (sceneAmbience != null)
-        {
-            ambienceSource.clip = sceneAmbience.clip;
-            ambienceSource.loop = sceneAmbience.loop;
-            ambienceSource.volume = sceneAmbience.volume;
-            ambienceSource.pitch = sceneAmbience.pitch;
-            ambienceSource.Play();
-        }
-        else
-        {
-            Debug.Log("No ambience track found for scene index: " + sceneIndex);
         }
     }
 
