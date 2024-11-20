@@ -61,6 +61,5 @@ public class PlayerUI : MonoBehaviour
     {
         pi = FindAnyObjectByType<PlayerInteract>();
         im = FindAnyObjectByType<InputManager>();
-        Debug.Log("haha");
     }
 }
