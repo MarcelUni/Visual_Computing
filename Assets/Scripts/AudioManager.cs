@@ -25,6 +25,8 @@ public class AudioManager : MonoBehaviour
 
     [Header("Footstep Sounds")]
     public Sound[] footstepSounds;
+    public float pitchVariation = 0.1f;
+    public float volumeVariation = 0.05f;
 
     [Header("Audio Sources")]
     public AudioSource musicSource;
@@ -219,8 +221,9 @@ public class AudioManager : MonoBehaviour
 
         // Assign the clip to the AudioSource and play it
         footstepSource.clip = s.clip;
-        footstepSource.volume = s.volume;
-        footstepSource.pitch = s.pitch;
+        // Apply random pitch and volume variations
+        footstepSource.pitch = s.pitch + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+        footstepSource.volume = s.volume + UnityEngine.Random.Range(-volumeVariation, volumeVariation);
         footstepSource.Play();
     }
 

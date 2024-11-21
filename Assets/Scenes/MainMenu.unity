@@ -1672,6 +1672,20 @@ MonoBehaviour:
     loop: 1
     sceneIndices: 
     surfaceType: 0
+  - name: PressurePlate
+    clip: {fileID: 8300000, guid: 749ba4545e0ef1c4a8282fa46fac4a22, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 0
+  - name: RocksMoving
+    clip: {fileID: 8300000, guid: d46e9d0231ee9bb4c88b5efcb19d2cb2, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    sceneIndices: 
+    surfaceType: 0
   footstepSounds:
   - name: Stone
     clip: {fileID: 8300000, guid: 883250ce54844444c88afe756c756afb, type: 3}
@@ -1722,6 +1736,8 @@ MonoBehaviour:
     loop: 0
     sceneIndices: 
     surfaceType: 1
+  pitchVariation: 0.1
+  volumeVariation: 0.05
   musicSource: {fileID: 1081431811}
   sfxSource: {fileID: 1184799345}
   footstepSource: {fileID: 691846679}

@@ -39,12 +39,14 @@ public class PressurePlate : MonoBehaviour
 
     private void MovePlateDown()
     {
+        AudioManager.instance.PlaySFX("PressurePlate");
         Vector3 loweredPosition = transform.position + new Vector3(0, -0.2f, 0);
         transform.position = loweredPosition;
     }
 
     private void MovePlateUp()
     {
+        AudioManager.instance.PlaySFX("PressurePlate");
         Vector3 originalPosition = transform.position + new Vector3(0, 0.2f, 0);
         transform.position = originalPosition;
     }
@@ -64,6 +66,7 @@ public class PressurePlate : MonoBehaviour
                     Animation anim = targetObject.GetComponent<Animation>();
                     if (anim != null && !string.IsNullOrEmpty(closeAnimationName))
                     {
+                        AudioManager.instance.PlaySFX("RocksMoving");
                         anim.Play(closeAnimationName);
                     }
                 }
@@ -84,6 +87,7 @@ public class PressurePlate : MonoBehaviour
                     Animation anim = targetObject.GetComponent<Animation>();
                     if (anim != null && !string.IsNullOrEmpty(closeAnimationName))
                     {
+                        AudioManager.instance.PlaySFX("RocksMoving");
                         anim.Play(closeAnimationName);
                     }
                 }
@@ -116,6 +120,7 @@ public class PressurePlate : MonoBehaviour
             Animation anim = targetObject.GetComponent<Animation>();
             if (anim != null && !string.IsNullOrEmpty(openAnimationName))
             {
+                AudioManager.instance.PlaySFX("RocksMoving");
                 anim.Play(openAnimationName);
             }
         }
