@@ -563,6 +563,135 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548158580}
   m_CullTransparentMesh: 1
+--- !u!1 &691846678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 691846680}
+  - component: {fileID: 691846679}
+  m_Layer: 0
+  m_Name: FootStep
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &691846679
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691846678}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &691846680
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691846678}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1583669328}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &711928494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1469,71 +1598,133 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 1
-    sceneIndex: 0
+    sceneIndices: 00000000
+    surfaceType: 0
   - name: NightAmbience(scene1)
     clip: {fileID: 8300000, guid: f5014cb6bee765148896a2729ae8f91f, type: 3}
     volume: 1
     pitch: 1
     loop: 1
-    sceneIndex: 1
+    sceneIndices: 01000000
+    surfaceType: 0
   - name: ForestToCaveMusic(Scene2)
     clip: {fileID: 8300000, guid: c6c5cd0ee2d7db447be3ac0e13978c23, type: 3}
     volume: 1
     pitch: 1
     loop: 1
-    sceneIndex: 2
+    sceneIndices: 02000000
+    surfaceType: 0
   - name: CaveMusic(scene3)
     clip: {fileID: 8300000, guid: c6c5cd0ee2d7db447be3ac0e13978c23, type: 3}
     volume: 1
     pitch: 1
     loop: 1
-    sceneIndex: 3
+    sceneIndices: 03000000
+    surfaceType: 0
   ambienceSounds:
   - name: MenuMusic
     clip: {fileID: 8300000, guid: df801ca341ce9f143b02c2efe98f8506, type: 3}
     volume: 0.05
     pitch: 1
     loop: 0
-    sceneIndex: 0
+    sceneIndices: 00000000
+    surfaceType: 0
   - name: WindAmbience
     clip: {fileID: 8300000, guid: df801ca341ce9f143b02c2efe98f8506, type: 3}
-    volume: 0.8
+    volume: 0.1
     pitch: 1
     loop: 0
-    sceneIndex: 4
+    sceneIndices: 01000000
+    surfaceType: 0
   - name: CaveWind
     clip: {fileID: 8300000, guid: 5d6a9b7b7c3f0994d838fe3433da0ba1, type: 3}
     volume: 0.8
     pitch: 1
     loop: 1
-    sceneIndex: 3
+    sceneIndices: 03000000
+    surfaceType: 0
   - name: CaveDripping
     clip: {fileID: 8300000, guid: e7d7ab7d17287b745945b7a9a13d8ee4, type: 3}
     volume: 0.8
     pitch: 1
     loop: 1
-    sceneIndex: 3
+    sceneIndices: 03000000
+    surfaceType: 0
   sfxSounds:
   - name: PickupSound
     clip: {fileID: 8300000, guid: 0d715405a194c234da8952ceb114a5b3, type: 3}
     volume: 1
     pitch: 1
     loop: 0
-    sceneIndex: -1
+    sceneIndices: 
+    surfaceType: 0
   - name: OpenDoor
     clip: {fileID: 8300000, guid: 28e4c5cf7817de44bb97885014e936be, type: 3}
     volume: 1
     pitch: 1
     loop: 0
-    sceneIndex: -1
+    sceneIndices: 
+    surfaceType: 0
   - name: MonsterIdleSound
     clip: {fileID: 8300000, guid: f9da9dd2159dd0d4b80fee187cc5954f, type: 3}
     volume: 1
     pitch: 1
     loop: 1
-    sceneIndex: -1
+    sceneIndices: 
+    surfaceType: 0
+  footstepSounds:
+  - name: Stone
+    clip: {fileID: 8300000, guid: 883250ce54844444c88afe756c756afb, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 2
+  - name: Grass
+    clip: {fileID: 8300000, guid: adde01de7601b8048a49e723d2483c4a, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 1
+  - name: Grass2
+    clip: {fileID: 8300000, guid: 947feec113c0de645a2571c0a2fcc894, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 1
+  - name: Wood
+    clip: {fileID: 8300000, guid: 490d502fac3cf194d916c772b9fd3bde, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 3
+  - name: Wood1
+    clip: {fileID: 8300000, guid: 25f81f49404f5994eb53ea05eadee17d, type: 3}
+    volume: 0.4
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 3
+  - name: Grass4
+    clip: {fileID: 8300000, guid: be7e1f1d52bb52d479e90670eb4772cc, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 1
+  - name: Grass5
+    clip: {fileID: 8300000, guid: 32b8aeddc57a2cd49bbf738f322e62dc, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 1
   musicSource: {fileID: 1081431811}
   sfxSource: {fileID: 1184799345}
+  footstepSource: {fileID: 691846679}
 --- !u!4 &1583669328
 Transform:
   m_ObjectHideFlags: 0
@@ -1549,6 +1740,7 @@ Transform:
   m_Children:
   - {fileID: 1081431812}
   - {fileID: 1184799346}
+  - {fileID: 691846680}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1620523390
@@ -1631,11 +1823,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1326052256773382098, guid: 90f811dd02806434ba7c03e2d758d392,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1481120135973533779, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_Name

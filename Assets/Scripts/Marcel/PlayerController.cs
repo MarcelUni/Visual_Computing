@@ -1,4 +1,4 @@
-    using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathCreation;
@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speedUpAndSlowDownTime;
     [SerializeField] private float rotateSpeed;
     [SerializeField] public GameObject playerModelObject;
+
+    private Vector3 resetPosition = new Vector3(0.122f, -0.89f, -0.155f); // Desired reset position
+
     public bool moveForward;
     public bool moveBackward;
     public bool canMove;
@@ -39,21 +42,56 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
     [SerializeField] private CamFollowPath camFollowPath;
 
+    // Reference to the AudioManager
+    private AudioManager audioManager;
+
+    [Header("Footstep Timing")]
+    [SerializeField] private float footstepInterval = 0.5f; // Time between footstep sounds when walking
+    [SerializeField] private float sneakFootstepInterval = 0.8f; // Time between footstep sounds when sneaking
+    private float footstepTimer = 0f;
+
     [Header("Events")]
     public UnityEvent deathEvent;
 
     void Start()
     {
+        audioManager = AudioManager.instance;
+
         canSwitchPath = false;
         canMove = true;
         isAtPathChoice = false;
         rb = GetComponent<Rigidbody>();
 
         anim.SetBool("IsMoving", false);
+
+        footstepTimer = 0f;
     }
 
     private void Update()
-    {   
+    {
+
+        // Update the footstep timer
+        if (isMoving && canMove && !isDead)
+        {
+            footstepTimer -= Time.deltaTime;
+            if (footstepTimer <= 0f)
+            {
+                PlayFootstep();
+                if (isSneaking)
+                {
+                    footstepTimer = sneakFootstepInterval;
+                }
+                else
+                {
+                    footstepTimer = footstepInterval;
+                }
+            }
+        }
+        else
+        {
+            footstepTimer = 0f;
+        }
+
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Interact") || anim.GetCurrentAnimatorStateInfo(0).IsName("InteractOut"))
             canMove = false;
         else
@@ -72,6 +110,38 @@ public class PlayerController : MonoBehaviour
             pathChoiceCooldownTimer -= Time.deltaTime;
         }
     }
+
+    SurfaceType DetectSurface()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f))
+        {
+            // Assume the surface type is Default unless determined otherwise
+            SurfaceType surfaceType = SurfaceType.Default;
+
+            // Determine the surface type based on the hit collider's tag, layer, or material
+            if (hit.collider.CompareTag("Grass"))
+                surfaceType = SurfaceType.Grass;
+            else if (hit.collider.CompareTag("Stone"))
+                surfaceType = SurfaceType.Stone;
+            else if (hit.collider.CompareTag("Wood"))
+                surfaceType = SurfaceType.Wood;
+            // Add other conditions as needed
+
+            return surfaceType;
+        }
+
+        return SurfaceType.Default;
+    }
+
+    public void PlayFootstep()
+    // noget man kan gøre at at lave en animation event på animationerne
+    // som kalder den her method, fordi så kan vi kalde den præcis når foden rammer jorden
+    {
+        SurfaceType currentSurface = DetectSurface();
+        audioManager.PlayFootstepSound(currentSurface);
+    }
+
 
     /// <summary>
     /// Ik fuck med den her method eow
@@ -118,6 +188,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isMoving)
+        {
+            // Reset the player model's position
+          //  playerModelObject.transform.localPosition = resetPosition;
+        }
         if (canMove == false || pathCreators.Count == 0)
             return;
 

@@ -1344,6 +1344,7 @@ MonoBehaviour:
   offset: -14
   cameraSpeed: 5
   lerpSpeed: 3
+  dynamicCamera: 0
 --- !u!1001 &150261755
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5032,7 +5033,7 @@ GameObject:
   - component: {fileID: 478044545}
   m_Layer: 0
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Grass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -12345,6 +12346,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4418585035110450974, guid: 216d48b805269d24b82ee98782f87009,
         type: 3}
+      propertyPath: m_TagString
+      value: Stone
+      objectReference: {fileID: 0}
+    - target: {fileID: 4418585035110450974, guid: 216d48b805269d24b82ee98782f87009,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -18445,6 +18451,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4418585035110450974, guid: 216d48b805269d24b82ee98782f87009,
         type: 3}
+      propertyPath: m_TagString
+      value: Stone
+      objectReference: {fileID: 0}
+    - target: {fileID: 4418585035110450974, guid: 216d48b805269d24b82ee98782f87009,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -22598,6 +22609,7 @@ MonoBehaviour:
   jumpDuration: 1.5
   jumpTimer: 0.5
   rotationSpeed: 5
+  animator: {fileID: 0}
 --- !u!1001 &2094870661
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -15,6 +15,9 @@ TagManager:
   - Portal
   - Trap
   - Box
+  - Grass
+  - Stone
+  - Wood
   layers:
   - Default
   - TransparentFX

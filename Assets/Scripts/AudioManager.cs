@@ -1,8 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
+
+public enum SurfaceType
+{
+    Default,
+    Grass,
+    Stone,
+    Wood,
+    Metal,
+    Water,
+    // Add other surface types as needed
+}
 
 public class AudioManager : MonoBehaviour
 {
@@ -13,9 +23,13 @@ public class AudioManager : MonoBehaviour
     [Header("SFX Settings")]
     public Sound[] sfxSounds;
 
+    [Header("Footstep Sounds")]
+    public Sound[] footstepSounds;
+
     [Header("Audio Sources")]
     public AudioSource musicSource;
     public AudioSource sfxSource;
+    public AudioSource footstepSource;
 
     private List<AudioSource> activeAmbienceSources = new List<AudioSource>();
 
@@ -61,6 +75,13 @@ public class AudioManager : MonoBehaviour
             sfxSource.playOnAwake = false;
             sfxSource.loop = false; // SFX are usually one-shots
         }
+
+        if (footstepSource == null)
+        {
+            footstepSource = gameObject.AddComponent<AudioSource>();
+            footstepSource.playOnAwake = false;
+            footstepSource.loop = false; // Footstep sounds are one-shots
+        }
     }
 
     /// <summary>
@@ -86,7 +107,7 @@ public class AudioManager : MonoBehaviour
     {
         musicSource.Stop();
 
-        Sound sceneMusic = Array.Find(musicSounds, x => x.sceneIndex == sceneIndex);
+        Sound sceneMusic = Array.Find(musicSounds, x => x.sceneIndices.Contains(sceneIndex));
 
         if (sceneMusic != null)
         {
@@ -113,7 +134,7 @@ public class AudioManager : MonoBehaviour
         ClearAmbienceSources();
 
         // Find all ambience sounds for the scene
-        Sound[] sceneAmbiences = Array.FindAll(ambienceSounds, x => x.sceneIndex == sceneIndex);
+        Sound[] sceneAmbiences = Array.FindAll(ambienceSounds, x => x.sceneIndices.Contains(sceneIndex));
 
         if (sceneAmbiences.Length > 0)
         {
@@ -169,6 +190,40 @@ public class AudioManager : MonoBehaviour
             sfxSource.PlayOneShot(s.clip, s.volume);
         }
     }
+
+    /// <summary>
+    /// Plays a footstep sound based on the surface type.
+    /// Randomly selects among all available sounds for the surface type.
+    /// </summary>
+    /// <param name="surfaceType">The type of surface the player is walking on.</param>
+    public void PlayFootstepSound(SurfaceType surfaceType)
+    {
+        // Find all footstep sounds matching the surface type
+        Sound[] matchingSounds = Array.FindAll(footstepSounds, x => x.surfaceType == surfaceType);
+
+        if (matchingSounds.Length == 0)
+        {
+            // No matching sounds found for the surface type, try default surface type
+            matchingSounds = Array.FindAll(footstepSounds, x => x.surfaceType == SurfaceType.Default);
+        }
+
+        if (matchingSounds.Length == 0)
+        {
+            // No matching sounds found at all
+            Debug.LogWarning($"No footstep sounds found for surface type {surfaceType}");
+            return;
+        }
+
+        // Play a random sound from the matching sounds
+        Sound s = matchingSounds[UnityEngine.Random.Range(0, matchingSounds.Length)];
+
+        // Assign the clip to the AudioSource and play it
+        footstepSource.clip = s.clip;
+        footstepSource.volume = s.volume;
+        footstepSource.pitch = s.pitch;
+        footstepSource.Play();
+    }
+
 
     /// <summary>
     /// Stops the currently playing music.
