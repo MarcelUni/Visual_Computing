@@ -16592,7 +16592,7 @@ PrefabInstance:
     - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: useKeys
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
@@ -16687,10 +16687,10 @@ PrefabInstance:
     - target: {fileID: 9083737012859572113, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_text
-      value: 'Sneak forward for Left
+      value: 'Sneak forward for Right
 
 
-        Move backward for Right'
+        Move backward for Left'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
