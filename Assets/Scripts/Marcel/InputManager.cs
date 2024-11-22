@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InputManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class InputManager : MonoBehaviour
 
     public string inputPerformedString;
 
+    public UnityEvent<int> PathChosenEvent;
+
     void Start()
     {
         pc = GetComponent<PlayerController>();
@@ -30,6 +33,7 @@ public class InputManager : MonoBehaviour
     {
         pc.isAtPathChoice = false; // Player has made a decision
         StartCoroutine(pc.SmoothSwitchPath(index)); // Switch to the next path smoothly
+        PathChosenEvent?.Invoke(index);
     }
 
     // Update is called once per frame
@@ -127,17 +131,13 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveBackward()
     {
-        if(pc.isAtPathChoice)
-        {
-            ChoosePath(1);
-        }
-        else
-        {
+        
+        
             pc.moveForward = false;
             pc.moveBackward = true;
             pc.isMoving = true;
             pc.isSneaking = false;
-        }
+        
     }
 
     /// <summary>
@@ -184,8 +184,15 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void Interact()
     {
-        pc.moveForward = false;
-        playerInteract.Interact();
-        // pickupObjects.PickupAndDrop();
+        if(pc.isAtPathChoice)
+        {
+            ChoosePath(1);
+        }
+        else
+        {
+            pc.moveForward = false;
+            playerInteract.Interact();
+            // pickupObjects.PickupAndDrop();
+        }
     }
 }
