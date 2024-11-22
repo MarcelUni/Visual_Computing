@@ -1681,7 +1681,7 @@ MonoBehaviour:
     surfaceType: 0
   - name: RocksMoving
     clip: {fileID: 8300000, guid: d46e9d0231ee9bb4c88b5efcb19d2cb2, type: 3}
-    volume: 1
+    volume: 0.6
     pitch: 1
     loop: 1
     sceneIndices: 
