@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InputManager : MonoBehaviour
 {
@@ -21,17 +22,20 @@ public class InputManager : MonoBehaviour
 
     public string inputPerformedString;
 
+    public UnityEvent<int> PathChosenEvent;
+
     void Start()
     {
         pc = GetComponent<PlayerController>();
-        playerInteract = GetComponent<PlayerInteract>();
-        inputUIManager = FindObjectOfType<InputUIManager>(); // Ensure the InputUIManager exists in the scene
+        playerInteract = GetComponent<PlayerInteract>();  
+        inputUIManager = FindObjectOfType<InputUIManager>();
     }
 
     private void ChoosePath(int index)
     {
         pc.isAtPathChoice = false; // Player has made a decision
         StartCoroutine(pc.SmoothSwitchPath(index)); // Switch to the next path smoothly
+        PathChosenEvent.Invoke(index);
     }
 
     // Update is called once per frame
@@ -118,12 +122,10 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveForward()
     {
-        if (inputUIManager != null)
+        if(inputUIManager != null)
         {
             inputUIManager.NotifyInput("Forward");
         }
-       
-
         pc.moveForward = true;
         pc.moveBackward = false;
         pc.isMoving = true;
@@ -135,7 +137,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveBackward()
     {
-        if (inputUIManager != null)
+        if(inputUIManager != null)
         {
             inputUIManager.NotifyInput("Backward");
         }
@@ -157,7 +159,6 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void NoInput()
     {
-       
         pc.isMoving = false;
         pc.moveBackward = false;
         pc.moveForward = false;
@@ -168,7 +169,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void ForwardSneak()
     {
-        if (inputUIManager != null)
+        if(inputUIManager != null)
         {
             inputUIManager.NotifyInput("ForwardSneak");
         }

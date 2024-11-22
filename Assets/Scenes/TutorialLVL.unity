@@ -375,19 +375,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputUIElements:
   - inputName: Forward
-    uiImage: {fileID: 0}
+    uiImage: {fileID: 2125828323}
     instructionText: {fileID: 894227676}
   - inputName: ForwardSneak
-    uiImage: {fileID: 0}
+    uiImage: {fileID: 80171033}
     instructionText: {fileID: 894227676}
   - inputName: Backward
-    uiImage: {fileID: 0}
+    uiImage: {fileID: 447045317}
     instructionText: {fileID: 894227676}
   - inputName: BackwardSneak
-    uiImage: {fileID: 0}
+    uiImage: {fileID: 1173889355}
     instructionText: {fileID: 894227676}
   - inputName: Interact
-    uiImage: {fileID: 0}
+    uiImage: {fileID: 1690518937}
     instructionText: {fileID: 894227676}
   activationDuration: 2
   initialAlpha: 0.1
