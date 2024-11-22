@@ -197,15 +197,15 @@ public class AudioManager : MonoBehaviour
     /// Randomly selects among all available sounds for the surface type.
     /// </summary>
     /// <param name="surfaceType">The type of surface the player is walking on.</param>
-    public void PlayFootstepSound(SurfaceType surfaceType)
+    public void PlayFootstepSound(SurfaceType surfaceType) // bliver kaldt fra PlayerController scriptet, som giver den en surfaceType.
     {
         // Find all footstep sounds matching the surface type
-        Sound[] matchingSounds = Array.FindAll(footstepSounds, x => x.surfaceType == surfaceType);
+        Sound[] matchingSounds = Array.FindAll(footstepSounds, x => x.surfaceType == surfaceType); // Finder alle sounds med den samme surface type.
 
         if (matchingSounds.Length == 0)
         {
             // No matching sounds found for the surface type, try default surface type
-            matchingSounds = Array.FindAll(footstepSounds, x => x.surfaceType == SurfaceType.Default);
+            matchingSounds = Array.FindAll(footstepSounds, x => x.surfaceType == SurfaceType.Default); // Fallback til default sound.
         }
 
         if (matchingSounds.Length == 0)
@@ -216,15 +216,20 @@ public class AudioManager : MonoBehaviour
         }
 
         // Play a random sound from the matching sounds
-        Sound s = matchingSounds[UnityEngine.Random.Range(0, matchingSounds.Length)];
+        Sound s = matchingSounds[UnityEngine.Random.Range(0, matchingSounds.Length)]; // Vælg en random sound fra listen.
 
-        // Assign the clip to the AudioSource and play it
-        footstepSource.clip = s.clip;
         // Apply random pitch and volume variations
-        footstepSource.pitch = s.pitch + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-        footstepSource.volume = s.volume + UnityEngine.Random.Range(-volumeVariation, volumeVariation);
-        footstepSource.Play();
+        float randomizedPitch = s.pitch + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+        float randomizedVolume = s.volume + UnityEngine.Random.Range(-volumeVariation, volumeVariation);
+
+        // Play the selected sound with PlayOneShot
+        footstepSource.pitch = randomizedPitch; // Set the pitch to ensure variations.
+        footstepSource.PlayOneShot(s.clip, randomizedVolume); // Play the clip with the adjusted volume.
     }
+
+    //side note. Vi bruger PlayOneShot metoden, som er en metode der spiller en lyd en enkelt gang. Den tager to argumenter, en lyd og en volumen.
+    //Den gør bare sådan at når man spiller en lyd på en audiosource og spiller en til lyd, vil den første lyd ikke blive overlappet.
+    // hvor Play() metoden vil overlappe lyden. så hvis man spiller en lyd på en audiosource og spiller en anden lyd, vil den første lyd blive stoppet og overlappet af den anden lyd.
 
 
     /// <summary>
