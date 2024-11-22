@@ -3,6 +3,9 @@ import numpy as np
 import os
 import socket
 
+# HAND SIGN RECOGNITION CONTROLLER - HSRC
+
+
 #TODO Brug time til at styre hvor meget der skal sendes til unity
 
 #TODO: Vi skal teste gesture matching og se om alt det her er spildt arbejde

@@ -84,6 +84,10 @@ while True:
 
         binary_filename = getBinaryImage(frame, 'test', white_threshold)
         binary = cv2.imread(binary_filename)
+
+        cnt = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE) # Finding contours
+        binary = cv2.drawContours(binary, cnt, -1, (0,255,0), 3) # Drawing contours
+        
         cv2.imshow('Binary Image', binary)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):

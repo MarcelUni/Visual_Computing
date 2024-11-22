@@ -3,25 +3,16 @@ import numpy as np
 import os
 import socket
 
+
 print('Starting application...')
 
-#TODO - Dokumenter v1, og test, før vi går videre til v2 - evt test alles hænder 
 
-#TODO-  Slet det der brect shit
-
-#TODO https://stackoverflow.com/questions/75267154/how-do-i-add-an-image-overlay-to-my-live-video-using-cv2 - Kan evt bruges til hvis der skal være instrukser til brugeren for hvordan de skal placere deres hånd for billederne
-
-#TODO - TIL KODEGRAFIK - ÆNDR ORIENTATION, både til v1 og v2
+# HAND SIGN RECOGNITION CONTROLLER - HSRC
 
 #TODO - En måde at gemme på i guess, så man ikke altid behøver tage nye billeder - NOK FUTURE WORK
 
-#TODO Testing
-# - Hvor langt kan man gå ud af billedet før den fucker. Alle sider
-# - Hvor markant skal gesturen være, for at den genkender den korrekt - ved ikke om det skal måles i procenter
-# - v1 - Kan den stabilt vise gestures v2 - Kan den stabilt vise flere gestures - Kan den stabilt vise 6 gestures - Hvad er stabilt?
-# - Kan man lave custom gestures uden problemer? Hvor crazy kan man gå?
-
-#BLA
+# Iterable variable for defects test images.
+# DELETE FOR FINAL VERSION
 i = 0
 
 #Communication with Unity ####################################################################
@@ -41,7 +32,7 @@ defects_gestures = []
 
 # All gestures to be captured
 gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
-# gestures = ['Forward', 'Backward'] # Test bunch
+#gestures = ['Forward', 'Backward'] # Test bunch
 
 key = ''
 
@@ -50,20 +41,20 @@ key = ''
 bufferDict = {}
 
 # Adding all gestures to dict as keys with value 0
-# bufferDict = {gesture: 0 for gesture in gestures}
-bufferDict = {}
-for gesture in gestures:
-    bufferDict[gesture] = 0
+bufferDict = {gesture: 0 for gesture in gestures} # List comprehension - https://www.w3schools.com/python/python_lists_comprehension.asp
 
 # Adding no gesture to bufferDict
 bufferDict['No gesture'] = 0
 
-#TODO Find ud af hvordan vi finder 
-# Value that a gesture needs to meet, in order to send
-bufferThreshhold = 6
-
 # Buffer size before it sends gesture to Unity
 bufferTotalThreshold = 8
+
+# Value that a handsign needs to meet, in order to send 
+bufferThreshhold = round(bufferTotalThreshold*0.75, 0) # 75% of bufferTotalThreshold
+print(f'Buffer threshold: {bufferThreshhold}')
+
+
+
 ################################################################
 
 # Initilizing gesture variables
@@ -128,7 +119,7 @@ def process_gesture(img):
 
         # Getting contours ##################
         contoursGesture, hierachy = cv2.findContours(gesture, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        print(f'Number of contours: {len(hierachy)}')
+        #print(f'Number of contours: {len(hierachy)}') # Debug print
 
         # Checking if contours are present. If they are, store in contours array
         if len(contoursGesture) == 0:
@@ -139,7 +130,7 @@ def process_gesture(img):
         defectsTotal, defects = getDefects(contoursGesture[0])
         # Save defects total for the gestures
         defects_gestures.append(defectsTotal)
-        print(f'Number of convexity defects: {defectsTotal}')
+        #print(f'Number of convexity defects: {defectsTotal}') # Debug print
 
         ### MAKING COPY WITH DRAWN DEFECTS AND HULL ###
         newImage = drawDefects(img, contoursGesture[0], defects)
@@ -179,8 +170,8 @@ def findBestMatch(contours_refs, contours_live, defects_live):
 
 def removeNoise(frame):
     # Processen er teknisk set opening 
-    erosion_iterations = 4
-    dilate_iterations = 4
+    erosion_iterations = 8
+    dilate_iterations = 8
 
     kernel = np.array([[0,0,1,0,0],
                        [0,1,1,1,0],
@@ -261,12 +252,12 @@ def drawDefects(frame, contours, defects):
 
 def displayText(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.putText(image, text, (10, 30), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(image, text, (10, 30), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
     return image
 
 def displayTextBelow(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.putText(image, text, (10, 65), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(image, text, (10, 65), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
     return image
 
 def displayMatchAccuracy(image, match):
@@ -296,24 +287,6 @@ def get_buffer_total():
         total += value
 
     return total
-
-# BOUNDING RECTANGLE RELATED ############################################################
-
-def cropToBrect(frame, contours): 
-    x, y, width, height = cv2.boundingRect(contours)
-    
-    # Crop the frame to the dimensions of the brect
-    cropped_frame = frame[y:y+height, x:x+width]
-
-    return cropped_frame
-
-def drawBrect(frame, contours):
-    x, y, width, height = cv2.boundingRect(contours[0])
-
-    # Draw the rectangle on the frame
-    drawn_frame = cv2.rectangle(frame.copy(), (x, y), (x + width, y + height), (0, 255, 0), 2)
-
-    return drawn_frame
 
 # CLOSING THE APPLICATION
 
@@ -370,6 +343,12 @@ def state_capture_gestures(raw_frame, binary_frame):
         # If user press 's' it saves the image and processes it for contours and convexity defects.
         if key == ord('s'):
             binaryImg = getBinaryImage(binary_frame, gesture) 
+
+            #TODO TESTING
+            area = cv2.countNonZero(binaryImg)
+            print(f'Area for {gesture}: {area}')
+            #TODO TESTING
+
             process_gesture(binaryImg)
             gestureIndex += 1  # Move to the next gesture
 
@@ -380,7 +359,7 @@ def state_capture_gestures(raw_frame, binary_frame):
 
 # State of matching the captured gesture with the live feed
 def state_match_gestures(raw_frame, binary_frame):
-    global contours_refs, match_threshold, bufferDict, currentGesture, bufferTotalThreshold, gesture_name
+    global contours_refs, match_threshold, bufferDict, currentGesture, bufferTotalThreshold, gesture_name, bufferThreshhold
     
     # Display the frame with no text
     frame = displayText(raw_frame.copy(), '')
@@ -417,15 +396,16 @@ def state_match_gestures(raw_frame, binary_frame):
     else:
         bufferDict['No gesture'] += 1   
     
-    # print(bufferDict)
+    print(bufferDict)
 
     maxBufferValue = max(bufferDict.values())
 
     bufferTotal = get_buffer_total()
 
+
     # Send gesture best matched gesture name to Unity
     if bufferTotal == bufferTotalThreshold:
-        print('We made it thru!')
+        #print('We made it thru!')
 
         if best_match_index != -1 and maxBufferValue >= bufferThreshhold:
             gesture_name = get_key_from_buffer(maxBufferValue)
@@ -434,36 +414,45 @@ def state_match_gestures(raw_frame, binary_frame):
             # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
-            # Send gesture_name to Unity via UDP
             sock.sendto(str.encode(gesture_name), serverAddressPort)
-            print(f'Sending {gesture_name} to Unity')
 
             currentGesture = gesture_name
-            print(f"currentGesture updated to: {currentGesture}")
 
         else:
             print('No certain gesture')
 
             currentGesture = 'No gesture'
-            print(f"currentGesture updated to: {currentGesture}")
+            #print(f"currentGesture updated to: {currentGesture}")
 
             # Send gesture_name to Unity via UDP
             sock.sendto(str.encode(gesture_name), serverAddressPort)
-            print(f'Sending {gesture_name} to Unity')
+            #print(f'Sending {gesture_name} to Unity')
 
             # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
-    #TODO Det her ser ikke rigtigt ud, skal lige ryddes op
+    #TODO Det her ser ikke rigtigt ud, skal lige ryddes op - teknisk set sender den mens buffer tæller til næste
     # If there is no new gesture, keep the same gesture and send it
     elif currentGesture == currentGesture:
-            # Send gesture_name to Unity via UDP
-            sock.sendto(str.encode(gesture_name), serverAddressPort)
-            print(f'Sending {gesture_name} to Unity')
+        # Send gesture_name to Unity via UDP
+        sock.sendto(str.encode(gesture_name), serverAddressPort)
+
     else:
         print('No currentGesture')
-                
-    frame = displayText(frame, f'Matched Gesture: {gesture_name}')
+
+    #TODO TSETTNG
+
+    if best_match_value < match_threshold:
+        frame = displayText(frame, f'Matched Gesture: {gesture_name}')
+    else:
+        frame = displayText(frame, f'Matched Gesture: No good match')
+
+    # TODO TESTINGG
+
+    area = cv2.countNonZero(binary_frame)
+    frame = displayTextBelow(frame, f'Area: {area}')
+
+    #TODO TESTTIINGG
 
     # Tester defects og tegner dem på live billede
     binary_frame = drawDefects(binary_frame, contoursLive[0], defectsLive)
@@ -483,7 +472,7 @@ states = {
 # MAIN #####################################################################################
 
 # Open the camera
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 running = True
 
@@ -502,10 +491,10 @@ while current_state and running:
     raw_frame = cv2.flip(frame, 1)  # Flip the frame horizontally (mirror effect)
     
     # Cropping frame - only relevant due to physical setup.
-    #y, x, h, w = 0, 50, 550, 650
-    #frame = raw_frame[y:y+h, x:x+w]
+    y, x, h, w = 0, 50, 550, 650
+    frame = raw_frame[y:y+h, x:x+w]
 
-    binary_frame = getBinaryVideo(raw_frame.copy()) # Getting binary frame
+    binary_frame = getBinaryVideo(frame.copy()) # Getting binary frame
     binary_frame = removeNoise(binary_frame) # Removes noise by 'opening'
     binary_frame = closingImage(binary_frame) # Closing image (should close potential holes in binary images of hands, like tattoos, and small shadows)
 
