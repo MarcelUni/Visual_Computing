@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InputManager : MonoBehaviour
 {
@@ -17,21 +18,22 @@ public class InputManager : MonoBehaviour
 
     private PlayerInteract playerInteract;
     private PlayerController pc;
-    private InputUIManager inputUIManager;
 
     public string inputPerformedString;
+
+    public UnityEvent<int> PathChosenEvent;
 
     void Start()
     {
         pc = GetComponent<PlayerController>();
-        playerInteract = GetComponent<PlayerInteract>();
-        inputUIManager = FindObjectOfType<InputUIManager>(); // Ensure the InputUIManager exists in the scene
+        playerInteract = GetComponent<PlayerInteract>();   
     }
 
     private void ChoosePath(int index)
     {
         pc.isAtPathChoice = false; // Player has made a decision
         StartCoroutine(pc.SmoothSwitchPath(index)); // Switch to the next path smoothly
+        PathChosenEvent?.Invoke(index);
     }
 
     // Update is called once per frame
@@ -112,8 +114,6 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveForward()
     {
-        inputUIManager.NotifyInput("Forward");
-
         pc.moveForward = true;
         pc.moveBackward = false;
         pc.isMoving = true;
@@ -125,18 +125,13 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveBackward()
     {
-        inputUIManager.NotifyInput("Backward");
-        if (pc.isAtPathChoice)
-        {
-            ChoosePath(1);
-        }
-        else
-        {
+        
+        
             pc.moveForward = false;
             pc.moveBackward = true;
             pc.isMoving = true;
             pc.isSneaking = false;
-        }
+        
     }
 
     /// <summary>
@@ -144,7 +139,6 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void NoInput()
     {
-        inputUIManager.NotifyInput("StandSill");
         pc.isMoving = false;
         pc.moveBackward = false;
         pc.moveForward = false;
@@ -155,8 +149,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void ForwardSneak()
     {
-        inputUIManager.NotifyInput("ForwardSneak");
-        if (pc.isAtPathChoice)
+        if(pc.isAtPathChoice)
         {
             ChoosePath(0);
         }
@@ -174,7 +167,6 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void BackwardSneak()
     {
-        inputUIManager.NotifyInput("BackwardSneak");
         pc.moveForward = false;
         pc.moveBackward = true;
         pc.isMoving = true;
@@ -186,9 +178,15 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void Interact()
     {
-        inputUIManager.NotifyInput("Interact");
-        pc.moveForward = false;
-        playerInteract.Interact();
-        // pickupObjects.PickupAndDrop();
+        if(pc.isAtPathChoice)
+        {
+            ChoosePath(1);
+        }
+        else
+        {
+            pc.moveForward = false;
+            playerInteract.Interact();
+            // pickupObjects.PickupAndDrop();
+        }
     }
 }

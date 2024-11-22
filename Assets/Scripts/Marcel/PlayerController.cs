@@ -134,8 +134,8 @@ public class PlayerController : MonoBehaviour
     }
 
     public void PlayFootstep()
-    // noget man kan gøre at at lave en animation event på animationerne
-    // som kalder den her method, fordi så kan vi kalde den præcis når foden rammer jorden
+    // noget man kan gï¿½re at at lave en animation event pï¿½ animationerne
+    // som kalder den her method, fordi sï¿½ kan vi kalde den prï¿½cis nï¿½r foden rammer jorden
     {
         SurfaceType currentSurface = DetectSurface();
         audioManager.PlayFootstepSound(currentSurface);
