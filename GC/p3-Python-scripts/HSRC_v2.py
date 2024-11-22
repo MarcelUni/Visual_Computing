@@ -37,8 +37,8 @@ contours_refs = []
 defects_gestures = []
 
 # All gestures to be captured
-gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
-#gestures = ['Forward', 'Backward'] # Test bunch
+#gestures = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
+gestures = ['Forward', 'Backward'] # Test bunch
 
 key = ''
 
@@ -74,7 +74,7 @@ gestureIndex = 0
 white_threshold = 167
 
 # Threshold determining how accurate a match should be to return the gesture
-match_threshold = 0.35
+match_threshold = 0.42
 
 # Create a folder to store the images
 folder = "images"
@@ -165,7 +165,7 @@ def findBestMatch(contours_refs, contours_live, defects_live):
             print(f"Warning: Empty contour encountered at index {i}. Skipping.")
             continue
 
-        match_value = cv2.matchShapes(contours_live[0], gesture_contours[0], 1, 0.0)
+        match_value = cv2.matchShapes(contours_live[0], gesture_contours[0], cv2.CONTOURS_MATCH_I3, 0.0)
 
         # Only sets a new best match if it both has a better accuracy value, and the amount of defects match
         if match_value < best_match_value and defects_gestures[i] == defects_live:
@@ -226,7 +226,7 @@ def getDefects(contours):
         print('No defects')
         return 0, None
 
-    distanceFilter = 10000
+    distanceFilter = 8000
 
     # Distance filtering irrelevant points
     filter_arr = defects[:, 0, 3] > distanceFilter  # Create a boolean mask #NOTE : betyder for alle, 0 betyder for x-akse, og så det 4. element. So for hvert element i x-aksen, find fjerde element, tjek condition, og ændr værdi til true eller false. Derfor lægges vores filter array på vores defects. God forklaring: https://johnfoster.pge.utexas.edu/numerical-methods-book/ScientificPython_Numpy.html
@@ -253,6 +253,16 @@ def drawDefects(frame, contours, defects):
         print('Error with Draw defects')
 
     return frame
+
+def getElongation(contour):
+    ellipse = cv2.fitEllipse(contour)
+    (center, axes, orientation) = ellipse
+    major_axis_length = max(axes)
+    minor_axis_length = min(axes)
+    aspect_ratio = major_axis_length / minor_axis_length
+
+    return aspect_ratio
+# source: https://stackoverflow.com/questions/58632469/how-to-find-the-orientation-of-an-object-shape-python-opencv
 
 # QUALITY OF LIFE, SMALL FUNCTIONS ####################################################
 
@@ -446,8 +456,6 @@ def state_match_gestures(raw_frame, binary_frame):
     else:
         print('No currentGesture')
 
-    #TODO TSETTNG
-
     if best_match_value < match_threshold:
         frame = displayText(frame, f'Matched Gesture: {gesture_name}')
     else:
@@ -455,11 +463,10 @@ def state_match_gestures(raw_frame, binary_frame):
 
     # TODO TESTINGG
 
-    area = cv2.countNonZero(binary_frame)
-    frame = displayTextBelow(frame, f'Area: {area}')
-
-    #TODO TESTTIINGG
-
+    #area = cv2.countNonZero(binary_frame)
+    #frame = displayTextBelow(frame, f'Area: {area}')
+        
+    ###################################################################################
     # Tester defects og tegner dem på live billede
     binary_frame = drawDefects(binary_frame, contoursLive[0], defectsLive)
 
