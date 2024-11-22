@@ -18,6 +18,7 @@ public class InputManager : MonoBehaviour
 
     private PlayerInteract playerInteract;
     private PlayerController pc;
+    private InputUIManager inputUIManager;
 
     public string inputPerformedString;
 
@@ -26,7 +27,8 @@ public class InputManager : MonoBehaviour
     void Start()
     {
         pc = GetComponent<PlayerController>();
-        playerInteract = GetComponent<PlayerInteract>();   
+        playerInteract = GetComponent<PlayerInteract>();  
+        inputUIManager = GetComponent<InputUIManager>();
     }
 
     private void ChoosePath(int index)
@@ -114,6 +116,11 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveForward()
     {
+        if(inputUIManager != null)
+        {
+            inputUIManager.NotifyInput("Forward");
+        }
+
         pc.moveForward = true;
         pc.moveBackward = false;
         pc.isMoving = true;
@@ -125,9 +132,12 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveBackward()
     {
-        
-        
-            pc.moveForward = false;
+        if (inputUIManager != null)
+        {
+            inputUIManager.NotifyInput("Backward");
+        }
+
+        pc.moveForward = false;
             pc.moveBackward = true;
             pc.isMoving = true;
             pc.isSneaking = false;
@@ -139,6 +149,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void NoInput()
     {
+
         pc.isMoving = false;
         pc.moveBackward = false;
         pc.moveForward = false;
@@ -149,7 +160,11 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void ForwardSneak()
     {
-        if(pc.isAtPathChoice)
+        if (inputUIManager != null)
+        {
+            inputUIManager.NotifyInput("ForwardSneak");
+        }
+        if (pc.isAtPathChoice)
         {
             ChoosePath(0);
         }
@@ -167,6 +182,10 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void BackwardSneak()
     {
+        if (inputUIManager != null)
+        {
+            inputUIManager.NotifyInput("BackwardSneak");
+        }
         pc.moveForward = false;
         pc.moveBackward = true;
         pc.isMoving = true;
@@ -178,6 +197,10 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void Interact()
     {
+         if(inputUIManager != null)
+        {
+            inputUIManager.NotifyInput("Interact");
+        }
         if(pc.isAtPathChoice)
         {
             ChoosePath(1);
