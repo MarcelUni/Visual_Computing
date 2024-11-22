@@ -11,7 +11,6 @@ public enum SurfaceType
     Wood,
     Metal,
     Water,
-    // Add other surface types as needed
 }
 
 public class AudioManager : MonoBehaviour

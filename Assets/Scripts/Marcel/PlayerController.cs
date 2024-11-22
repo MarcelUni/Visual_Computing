@@ -126,7 +126,6 @@ public class PlayerController : MonoBehaviour
                 surfaceType = SurfaceType.Stone;
             else if (hit.collider.CompareTag("Wood"))
                 surfaceType = SurfaceType.Wood;
-            // Add other conditions as needed
 
             return surfaceType;
         }
