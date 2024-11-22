@@ -184,6 +184,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void Interact()
     {
+        pc.moveForward = false;
         playerInteract.Interact();
         // pickupObjects.PickupAndDrop();
     }
