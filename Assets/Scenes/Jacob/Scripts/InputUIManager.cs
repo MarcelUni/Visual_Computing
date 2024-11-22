@@ -9,7 +9,7 @@ public class InputUIManager : MonoBehaviour
     public class InputUIElement
     {
         public string inputName; // The method name that needs to be called (e.g., "MoveForward", "MoveBackward")
-        public Image uiImage;    // The corresponding UI Image
+        public RawImage uiImage;    // The corresponding UI Image
         public TMP_Text instructionText; // The instruction to display
     }
 
@@ -82,7 +82,7 @@ public class InputUIManager : MonoBehaviour
         SetImageAlpha(element.uiImage, initialAlpha); // Reset alpha
     }
 
-    private void SetImageAlpha(Image image, float alpha)
+    private void SetImageAlpha(RawImage image, float alpha)
     {
         if (image == null) return;
         Color color = image.color;
