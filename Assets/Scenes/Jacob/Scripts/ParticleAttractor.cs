@@ -78,7 +78,7 @@ public class ParticleAttractor : MonoBehaviour
                 particles[i].velocity = directionToPlayer * easedSpeed;
 
                  // If the distance is less than a small threshold, consider the particle to have reached the player
-                if (distanceToPlayer < 0.1f) // You can adjust the threshold value as needed
+                if (distanceToPlayer < 0.4f) // You can adjust the threshold value as needed
                 {
                     particles[i].remainingLifetime = 0f;
                 }
