@@ -2142,7 +2142,7 @@ MonoBehaviour:
     volume: 0.1
     pitch: 2
     loop: 0
-    sceneIndices: 01000000
+    sceneIndices: 02000000
     surfaceType: 0
   - name: CaveWind
     clip: {fileID: 8300000, guid: 5d6a9b7b7c3f0994d838fe3433da0ba1, type: 3}
