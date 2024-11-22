@@ -37,8 +37,10 @@ contours_refs = []
 defects_hand_signs = []
 
 # All hand_signs to be captured
-#hand_signs = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
-hand_signs = ['Forward', 'Backward'] # Test bunch
+hand_signs = ['Forward', 'Backward', 'ForwardSneak', 'BackwardSneak', 'Interact', 'Stop']
+#hand_signs = ['Forward', 'Backward'] # Test bunch
+
+previous_hand_sign = "No hand_sign"
 
 key = ''
 
@@ -53,7 +55,7 @@ bufferDict = {hand_sign: 0 for hand_sign in hand_signs} # List comprehension - h
 bufferDict['No hand_sign'] = 0
 
 # Buffer size before it sends hand_sign to Unity
-bufferTotalThreshold = 1000
+bufferTotalThreshold = 4
 
 # Value that a handsign needs to meet, in order to send 
 bufferThreshhold = round(bufferTotalThreshold*0.75, 0) # 75% of bufferTotalThreshold
@@ -375,7 +377,7 @@ def state_capture_hand_signs(raw_frame, binary_frame):
 
 # State of matching the captured hand_sign with the live feed
 def state_match_hand_signs(raw_frame, binary_frame):
-    global contours_refs, match_threshold, bufferDict, currenthand_sign, bufferTotalThreshold, hand_sign_name, bufferThreshhold
+    global contours_refs, match_threshold, bufferDict, currenthand_sign, bufferTotalThreshold, hand_sign_name, bufferThreshhold, previous_hand_sign
     
     # Display the frame with no text
     frame = displayText(raw_frame.copy(), '')
@@ -412,7 +414,7 @@ def state_match_hand_signs(raw_frame, binary_frame):
     else:
         bufferDict['No hand_sign'] += 1   
     
-    print(bufferDict)
+    #print(bufferDict)
 
     maxBufferValue = max(bufferDict.values())
 
@@ -425,7 +427,10 @@ def state_match_hand_signs(raw_frame, binary_frame):
 
         if best_match_index != -1 and maxBufferValue >= bufferThreshhold:
             hand_sign_name = get_key_from_buffer(maxBufferValue)
-            print(hand_sign_name)
+
+            previous_hand_sign = hand_sign_name
+
+            #print(hand_sign_name)
 
             # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
@@ -442,19 +447,23 @@ def state_match_hand_signs(raw_frame, binary_frame):
 
             # Send hand_sign_name to Unity via UDP
             sock.sendto(str.encode(hand_sign_name), serverAddressPort)
-            #print(f'Sending {hand_sign_name} to Unity')
+            print(f'Sending {hand_sign_name} to Unity')
 
             # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
     #TODO Det her ser ikke rigtigt ud, skal lige ryddes op - teknisk set sender den mens buffer tæller til næste
     # If there is no new hand_sign, keep the same hand_sign and send it
-    elif currenthand_sign == currenthand_sign:
+    elif maxBufferValue < bufferThreshhold :
         # Send hand_sign_name to Unity via UDP
-        sock.sendto(str.encode(hand_sign_name), serverAddressPort)
+        sock.sendto(str.encode(previous_hand_sign), serverAddressPort)
+        print(f"Sending {previous_hand_sign} to Unity")
 
-    else:
-        print('No currenthand_sign')
+    #else:
+     #   print('No currenthand_sign')
+      #  sock.sendto(str.encode("No hand_sign"), serverAddressPort)
+       # print(f"Sending No hand_sign to Unity")
+
 
     if best_match_value < match_threshold:
         frame = displayText(frame, f'Matched hand_sign: {hand_sign_name}')
