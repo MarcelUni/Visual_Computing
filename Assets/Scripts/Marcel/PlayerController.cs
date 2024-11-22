@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
     {
 
         // Update the footstep timer
-        if (isMoving && canMove && !isDead)
+       /* if (isMoving && canMove && !isDead)
         {
             footstepTimer -= Time.deltaTime;
             if (footstepTimer <= 0f)
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             footstepTimer = 0f;
-        }
+        }*/
 
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Interact") || anim.GetCurrentAnimatorStateInfo(0).IsName("InteractOut"))
             canMove = false;
