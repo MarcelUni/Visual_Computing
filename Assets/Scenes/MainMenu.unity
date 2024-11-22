@@ -1694,13 +1694,6 @@ MonoBehaviour:
     loop: 0
     sceneIndices: 
     surfaceType: 2
-  - name: Grass
-    clip: {fileID: 8300000, guid: adde01de7601b8048a49e723d2483c4a, type: 3}
-    volume: 0.1
-    pitch: 1
-    loop: 0
-    sceneIndices: 
-    surfaceType: 1
   - name: Grass2
     clip: {fileID: 8300000, guid: 947feec113c0de645a2571c0a2fcc894, type: 3}
     volume: 0.1
