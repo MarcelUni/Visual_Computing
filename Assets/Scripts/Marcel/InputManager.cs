@@ -51,32 +51,26 @@ public class InputManager : MonoBehaviour
         if (Input.GetKey(moveForwardKey))
         {
             MoveForward();
-            inputPerformedString = "Forward";
         }
         else if (Input.GetKey(moveBackwardKey))
         {
            MoveBackward();
-           inputPerformedString = "Backward";
         }
         else if (Input.GetKey(sneakForwardKey))
         {
             ForwardSneak();
-            inputPerformedString = "ForwardSneak";
         }
         else if (Input.GetKey(sneakBackwardKey))
         {
-            inputPerformedString = "BackwardSneak";
             BackwardSneak();
         }
         else
         {
-            inputPerformedString = "Stop";
             NoInput();
         }
 
         if(Input.GetKey(interactKey))
         {
-            inputPerformedString = "Interact";
            Interact();
         }
     }
