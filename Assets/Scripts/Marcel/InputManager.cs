@@ -127,10 +127,17 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void MoveBackward()
     {
-        pc.moveForward = false;
-        pc.moveBackward = true;
-        pc.isMoving = true;
-        pc.isSneaking = false;
+        if(pc.isAtPathChoice)
+        {
+            ChoosePath(1);
+        }
+        else
+        {
+            pc.moveForward = false;
+            pc.moveBackward = true;
+            pc.isMoving = true;
+            pc.isSneaking = false;
+        }
     }
 
     /// <summary>
@@ -177,14 +184,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     public void Interact()
     {
-        if(pc.isAtPathChoice)
-        {
-            ChoosePath(1);
-        }
-        else
-        {
-            playerInteract.Interact();
-        }
+        playerInteract.Interact();
         // pickupObjects.PickupAndDrop();
     }
 }
