@@ -14713,6 +14713,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
+      propertyPath: lightPrefab
+      value: 
+      objectReference: {fileID: 8848667281065701355, guid: 0dba6809c2b7e2c44bda355cd48e2d73,
+        type: 3}
+    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
+      propertyPath: normalMoveSpeed
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
       propertyPath: 'pathCreators.Array.data[0]'
       value: 
       objectReference: {fileID: 114462759100685856}

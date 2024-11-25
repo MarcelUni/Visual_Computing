@@ -164,11 +164,15 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   currentPathIndex: 0
-  normalMoveSpeed: 3.5
+  normalMoveSpeed: 10
   sneakMoveSpeed: 1.5
   speedUpAndSlowDownTime: 0.1
   rotateSpeed: 3
   playerModelObject: {fileID: 1102159354368112420}
+  lightPrefab: {fileID: 8848667281065701355, guid: 0dba6809c2b7e2c44bda355cd48e2d73,
+    type: 3}
+  lightSpeed: 5
+  lightLoopCount: 2
   moveForward: 0
   moveBackward: 0
   canMove: 0
@@ -230,6 +234,9 @@ MonoBehaviour:
   switchPathIndex1Key: 118
   switchPathIndex0Key: 98
   inputPerformedString: 
+  PathChosenEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &8468940817791711382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,7 +369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3ddea50e24d74543bc95588f32e4867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textTurnOffDelay: 0
   pathChoiceText: {fileID: 9083737012859572113}
+  chosenPathText: {fileID: 0}
 --- !u!1 &3202879703508449158
 GameObject:
   m_ObjectHideFlags: 0

@@ -10225,6 +10225,11 @@ PrefabInstance:
       objectReference: {fileID: 148831985}
     - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
+      propertyPath: normalMoveSpeed
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
       propertyPath: 'pathCreators.Array.data[0]'
       value: 
       objectReference: {fileID: 1870817560446051231}
@@ -10236,7 +10241,7 @@ PrefabInstance:
     - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: useKeys
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8468940817791711382, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}

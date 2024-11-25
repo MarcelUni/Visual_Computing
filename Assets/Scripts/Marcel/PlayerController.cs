@@ -17,6 +17,11 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 resetPosition = new Vector3(0.122f, -0.89f, -0.155f); // Desired reset position
 
+    [Header("Light Path Animation")]
+    public GameObject lightPrefab; // Prefab for the light that will animate
+    public float lightSpeed = 10f; // Speed of the light moving along the path
+    public int lightLoopCount = 3; // Number of times the light loops the path
+
     public bool moveForward;
     public bool moveBackward;
     public bool canMove;
@@ -152,10 +157,15 @@ public class PlayerController : MonoBehaviour
         isTransitioning = true;
         isAtPathChoice = false;  // Disable path choice prompt during transition
         canSwitchPath = false;   // Temporarily disable path switching
-
+                                 // Trigger the light animation along the chosen path
+        if (lightPrefab != null)
+        {
+            StartCoroutine(AnimateLightOnPath(pathCreators[pathIndex]));
+        }
         if (pathIndex == currentPathIndex)
         {
             isTransitioning = false;
+
             yield break;
         }
 
@@ -175,6 +185,7 @@ public class PlayerController : MonoBehaviour
         // Move the player slightly along the new path to avoid retriggering the collider
         distanceTravelled += 0.1f; // Adjust the value as needed
 
+
         isTransitioning = false;
         canMove = true;
 
@@ -183,6 +194,96 @@ public class PlayerController : MonoBehaviour
 
         yield break;
     }
+
+    // Add a persistent variable to track the last animated path
+    private PathCreator lastAnimatedPath = null;
+
+    /// <summary>
+    /// Animate a light along the specified path with an upward offset, starting at the correct position.
+    /// </summary>
+    private IEnumerator AnimateLightOnPath(PathCreator pathCreator)
+    {
+        // Check if the path is the same as the last animated path
+        if (pathCreator == lastAnimatedPath)
+        {
+            yield break; // Do not play if the same path was used
+        }
+
+        // Update the last animated path to the current one
+        lastAnimatedPath = pathCreator; // bare så man ikke kan spille den samme hele tiden
+
+        if (pathCreator == null)
+        {
+            Debug.LogError("PathCreator is null. Cannot animate light.");
+            yield break;
+        }
+
+        // Use the player's exact travelled distance on the current path as the light's starting position
+        float lightDistance = distanceTravelled; // Directly use distanceTravelled to align with the player
+
+        // Get the start position from the path and apply upward offset
+        Vector3 startPosition = pathCreator.path.GetPointAtDistance(lightDistance, EndOfPathInstruction.Stop);
+        float upwardOffset = 7.0f; // Adjust for the desired height
+        float traverseDistance = 50f; // Adjust for the desired distance
+        float fadeOutDuration = 1.0f; // Time it takes for the light to fade out
+
+        startPosition.y += upwardOffset;
+
+        // Instantiate the light prefab at the aligned position
+        GameObject lightObject = Instantiate(lightPrefab, startPosition, Quaternion.identity);
+        Light lightComponent = lightObject.GetComponent<Light>();
+        if (lightComponent == null)
+        {
+            Debug.LogError("LightPrefab must have a Light component.");
+            Destroy(lightObject);
+            yield break;
+        }
+
+        float totalDistance = pathCreator.path.length;
+
+        // Loop through the path multiple times
+        for (int loop = 0; loop < lightLoopCount; loop++)
+        {
+            float startDistance = lightDistance;
+            float endDistance = Mathf.Min(startDistance + traverseDistance, pathCreator.path.length); // End after 50 units or path length
+
+            // Move the light along the path
+            while (lightDistance < endDistance)
+            {
+                lightDistance += lightSpeed * Time.deltaTime;
+
+                // Get the new position along the path
+                Vector3 newPosition = pathCreator.path.GetPointAtDistance(lightDistance, EndOfPathInstruction.Loop);
+
+                // Apply upward offset
+                newPosition.y += upwardOffset;
+
+                // Update the light's position
+                lightObject.transform.position = newPosition;
+
+                yield return null;
+            }
+            // Start fading out the light
+            float fadeTimer = fadeOutDuration;
+            float initialIntensity = lightComponent.intensity;
+
+            while (fadeTimer > 0f)
+            {
+                fadeTimer -= Time.deltaTime;
+                lightComponent.intensity = Mathf.Lerp(0f, initialIntensity, fadeTimer / fadeOutDuration);
+                yield return null;
+            }
+
+            // reset lightDistance to start next loop
+            lightDistance = startDistance;
+            lightComponent.intensity = initialIntensity; // Reset for next loop
+        }
+
+        // Destroy the light object after the animation
+        Destroy(lightObject);
+    }
+
+
 
 
     private void FixedUpdate()
@@ -295,6 +396,7 @@ public class PlayerController : MonoBehaviour
         Quaternion currentRot = playerModelObject.transform.rotation;
         playerModelObject.transform.rotation = Quaternion.Slerp(currentRot, lookRotation, rotateSpeed * Time.deltaTime);
     }
+
 
     private void UpdateAnimations()
     {
