@@ -140,7 +140,7 @@ public class MonsterController : MonoBehaviour
 
         animator.SetBool("IsMoving", true);
 
-        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending)
+        if (agent.remainingDistance <= agent.stoppingDistance && !agent.pathPending) // Hvis de spørger om pathPending er det bare en måde at se om agenten stadig er i gang med at finde en vej
         {
             currentPatrolPointIndex = (currentPatrolPointIndex + 1) % patrolPoints.Length;
         }
