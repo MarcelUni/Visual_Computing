@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
     SurfaceType DetectSurface()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1.5f))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 2.5f))
         {
             // Assume the surface type is Default unless determined otherwise
             SurfaceType surfaceType = SurfaceType.Default;
