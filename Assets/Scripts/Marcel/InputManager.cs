@@ -28,7 +28,7 @@ public class InputManager : MonoBehaviour
     {
         pc = GetComponent<PlayerController>();
         playerInteract = GetComponent<PlayerInteract>();  
-        inputUIManager = FindObjectOfType<InputUIManager>();
+        inputUIManager = FindFirstObjectByType<InputUIManager>();
     }
 
     private void ChoosePath(int index)
@@ -141,10 +141,6 @@ public class InputManager : MonoBehaviour
         {
             inputUIManager.NotifyInput("Backward");
         }
-        if (pc.isAtPathChoice)
-        {
-            ChoosePath(1);
-        }
         else
         {
             pc.moveForward = false;
@@ -210,8 +206,15 @@ public class InputManager : MonoBehaviour
         {
             inputUIManager.NotifyInput("Interact");
         }
-        pc.moveForward = false;
-        playerInteract.Interact();
-        // pickupObjects.PickupAndDrop();
+        if (pc.isAtPathChoice)
+        {
+            ChoosePath(1);
+        }
+        else
+        {
+            pc.moveForward = false;
+            playerInteract.Interact();
+            // pickupObjects.PickupAndDrop();
+        }
     }
 }
