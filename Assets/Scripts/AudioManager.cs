@@ -9,8 +9,6 @@ public enum SurfaceType
     Grass,
     Stone,
     Wood,
-    Metal,
-    Water,
 }
 
 public class AudioManager : MonoBehaviour

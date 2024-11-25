@@ -2306,6 +2306,13 @@ MonoBehaviour:
     loop: 0
     sceneIndices: 
     surfaceType: 1
+  - name: Default
+    clip: {fileID: 8300000, guid: 883250ce54844444c88afe756c756afb, type: 3}
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    sceneIndices: 
+    surfaceType: 0
   pitchVariation: 0.1
   volumeVariation: 0.05
   musicSource: {fileID: 1081431811}
