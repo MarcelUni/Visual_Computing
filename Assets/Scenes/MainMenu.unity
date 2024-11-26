@@ -557,7 +557,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &351689871
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2258,7 +2258,7 @@ MonoBehaviour:
     surfaceType: 0
   - name: RocksMoving
     clip: {fileID: 8300000, guid: d46e9d0231ee9bb4c88b5efcb19d2cb2, type: 3}
-    volume: 0.6
+    volume: 0.3
     pitch: 1
     loop: 1
     sceneIndices: 

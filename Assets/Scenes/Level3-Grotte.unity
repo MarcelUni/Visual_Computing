@@ -16702,6 +16702,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
+      propertyPath: switchPathCooldownTime
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
       propertyPath: pathCreators.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -16833,10 +16838,7 @@ PrefabInstance:
     - target: {fileID: 9083737012859572113, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_text
-      value: 'Sneak forward for Right
-
-
-        Interact for Left'
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
