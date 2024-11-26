@@ -8215,7 +8215,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 69
       flipNormals: 0
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0
     showTransformTool: 1
@@ -10206,6 +10206,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
+      propertyPath: switchPathCooldownTime
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052514933731854322, guid: 90f811dd02806434ba7c03e2d758d392,
+        type: 3}
       propertyPath: 'pathCreators.Array.data[0]'
       value: 
       objectReference: {fileID: 1870817560446051231}
@@ -10217,7 +10222,7 @@ PrefabInstance:
     - target: {fileID: 7493263303222069855, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: useKeys
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8468940817791711382, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
@@ -10282,10 +10287,7 @@ PrefabInstance:
     - target: {fileID: 9083737012859572113, guid: 90f811dd02806434ba7c03e2d758d392,
         type: 3}
       propertyPath: m_text
-      value: 'Sneak forward for Left
-
-
-        Interact for Right'
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -17,6 +17,9 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 resetPosition = new Vector3(0.122f, -0.89f, -0.155f); // Desired reset position
 
+    [SerializeField] private Collider switchPathCollider;
+    [SerializeField] private float switchPathCooldownTime = 2f;
+
     [Header("Light Path Animation")]
     public GameObject lightPrefab; // Prefab for the light that will animate
     public float lightSpeed = 10f; // Speed of the light moving along the path
@@ -34,9 +37,6 @@ public class PlayerController : MonoBehaviour
     public bool isDead;
     public bool canSwitchPath = false;
     public bool isAtPathChoice = false;
-
-    private float pathChoiceCooldownTime = 0.5f; // Duration of the cooldown in seconds
-    private float pathChoiceCooldownTimer = 0f;   // Timer to track the cooldown
 
     private float currentVelocity;
     private float currentSpeed = 0;
@@ -109,11 +109,6 @@ public class PlayerController : MonoBehaviour
         {
             canMove = false;
         }
-
-        if (pathChoiceCooldownTimer > 0)
-        {
-            pathChoiceCooldownTimer -= Time.deltaTime;
-        }
     }
 
     SurfaceType DetectSurface()
@@ -162,6 +157,7 @@ public class PlayerController : MonoBehaviour
         {
             StartCoroutine(AnimateLightOnPath(pathCreators[pathIndex]));
         }
+        StartCoroutine(UpdatePathChoiceCooldown());
         if (pathIndex == currentPathIndex)
         {
             isTransitioning = false;
@@ -185,14 +181,20 @@ public class PlayerController : MonoBehaviour
         // Move the player slightly along the new path to avoid retriggering the collider
         distanceTravelled += 0.1f; // Adjust the value as needed
 
-
         isTransitioning = false;
         canMove = true;
 
-        // Set the cooldown timer
-        pathChoiceCooldownTimer = pathChoiceCooldownTime;
+        
 
         yield break;
+    }
+
+    private IEnumerator UpdatePathChoiceCooldown()
+    {
+        switchPathCollider.enabled = false;
+        yield return new WaitForSeconds(switchPathCooldownTime);
+        switchPathCollider.enabled = true;
+
     }
 
     // Add a persistent variable to track the last animated path
@@ -413,11 +415,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("PathTrigger") && !moveBackward && !isTransitioning && pathChoiceCooldownTimer <= 0f)
+        if (other.CompareTag("PathTrigger") && !moveBackward && !isTransitioning)
         {
             canSwitchPath = true;
             isAtPathChoice = true;
             canMove = false;
+            other.GetComponent<Collider>();
+            switchPathCollider = other;
         }
 
         if (other.CompareTag("Final Door") || other.CompareTag("Puzzle"))
