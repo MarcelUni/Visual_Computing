@@ -689,7 +689,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sneak Forward to go Left
+  m_text: Sneak Forward to choose Left path
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9bb17557885987e45874139d0e164a37, type: 2}
   m_sharedMaterial: {fileID: 1699127049346487797, guid: 9bb17557885987e45874139d0e164a37,
@@ -826,7 +826,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Interact To go Right
+  m_text: Interact To choose Right path
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9bb17557885987e45874139d0e164a37, type: 2}
   m_sharedMaterial: {fileID: 1699127049346487797, guid: 9bb17557885987e45874139d0e164a37,
