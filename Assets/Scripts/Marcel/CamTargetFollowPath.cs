@@ -21,9 +21,11 @@ public class CamTargetFollowPath : MonoBehaviour
 
         // Preserve the original z rotation
         Quaternion currentRotation = transform.rotation;
+
+        // Create a new rotation based in the pathrotation and z currentrotation
         Quaternion newRotation = Quaternion.Euler(pathRotation.eulerAngles.x, pathRotation.eulerAngles.y, currentRotation.eulerAngles.z);
 
-        // Apply the combined rotation to the object's transform
+        // Apply the combined rotation to the camera's transform
         transform.rotation = newRotation;
     }
 }
