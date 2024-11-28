@@ -7,15 +7,14 @@ import socket
 print('Starting application...')
 
 
-# HAND SIGN RECOGNITION CONTROLLER - HSRC
+# HAND SIGN RECOGNITION CONTROLLER - HSRC 
 
-#TODO - Dokumenter v1, og test, før vi går videre til v2 - evt test alles hænder 
-
-#TODO https://stackoverflow.com/questions/75267154/how-do-i-add-an-image-overlay-to-my-live-video-using-cv2 - Kan evt bruges til hvis der skal være instrukser til brugeren for hvordan de skal placere deres hånd for billederne
-
-#TODO - TIL KODEGRAFIK - ÆNDR ORIENTATION, både til v1 og v2
-
-#TODO - En måde at gemme på i guess, så man ikke altid behøver tage nye billeder - NOK FUTURE WORK
+# FUTURE WORK #####
+# https://stackoverflow.com/questions/75267154/how-do-i-add-an-image-overlay-to-my-live-video-using-cv2 - Kan evt bruges til hvis der skal være instrukser til brugeren for hvordan de skal placere deres hånd for billederne
+# 
+# En måde at gemme på i guess, så man ikke altid behøver tage nye billeder 
+# 
+# Trackbars, so relevante variabler kan skiftes ved brug
 
 # Iterable variable for defects test images.
 # DELETE FOR FINAL VERSION
@@ -46,8 +45,6 @@ key = ''
 
 ################# BUFFER RELATED #######################
 # Buffer dict - used to count hand_sign matches
-bufferDict = {}
-
 # Adding all hand_signs to dict as keys with value 0
 bufferDict = {hand_sign: 0 for hand_sign in hand_signs} # List comprehension - https://www.w3schools.com/python/python_lists_comprehension.asp
 
@@ -256,14 +253,6 @@ def drawDefects(frame, contours, defects):
 
     return frame
 
-def getElongation(contour):
-    ellipse = cv2.fitEllipse(contour)
-    (center, axes, orientation) = ellipse
-    major_axis_length = max(axes)
-    minor_axis_length = min(axes)
-    aspect_ratio = major_axis_length / minor_axis_length
-
-    return aspect_ratio
 # source: https://stackoverflow.com/questions/58632469/how-to-find-the-orientation-of-an-object-shape-python-opencv
 
 # QUALITY OF LIFE, SMALL FUNCTIONS ####################################################
@@ -362,11 +351,6 @@ def state_capture_hand_signs(raw_frame, binary_frame):
         if key == ord('s'):
             binaryImg = getBinaryImage(binary_frame, hand_sign) 
 
-            #TODO TESTING
-            area = cv2.countNonZero(binaryImg)
-            print(f'Area for {hand_sign}: {area}')
-            #TODO TESTING
-
             process_hand_sign(binaryImg)
             hand_signIndex += 1  # Move to the next hand_sign
 
@@ -405,7 +389,6 @@ def state_match_hand_signs(raw_frame, binary_frame):
     # Display the match accuracy on the frame
     displayMatchAccuracy(frame, round(best_match_value, 2))
 
-    # TODO Skal buffer laves til en funktion? Hvis det var, så skal den bare returnere bedste match værdi, og så skal display og send til Unity være i den her state. Lowkey banger ide.
 ######################## BUFFER ############################
     # Adding the best matched hand_sign to buffer, if it meets the threshold
     if best_match_value < match_threshold:
@@ -452,28 +435,16 @@ def state_match_hand_signs(raw_frame, binary_frame):
             # Reset buffer
             bufferDict = dict.fromkeys(bufferDict, 0)
 
-    #TODO Det her ser ikke rigtigt ud, skal lige ryddes op - teknisk set sender den mens buffer tæller til næste
     # If there is no new hand_sign, keep the same hand_sign and send it
     elif maxBufferValue < bufferThreshhold :
         # Send hand_sign_name to Unity via UDP
         sock.sendto(str.encode(previous_hand_sign), serverAddressPort)
         print(f"Sending {previous_hand_sign} to Unity")
 
-    #else:
-     #   print('No currenthand_sign')
-      #  sock.sendto(str.encode("No hand_sign"), serverAddressPort)
-       # print(f"Sending No hand_sign to Unity")
-
-
     if best_match_value < match_threshold:
         frame = displayText(frame, f'Matched hand_sign: {hand_sign_name}')
     else:
         frame = displayText(frame, f'Matched hand_sign: No good match')
-
-    # TODO TESTINGG
-
-    #area = cv2.countNonZero(binary_frame)
-    #frame = displayTextBelow(frame, f'Area: {area}')
         
     ###################################################################################
     # Tester defects og tegner dem på live billede
