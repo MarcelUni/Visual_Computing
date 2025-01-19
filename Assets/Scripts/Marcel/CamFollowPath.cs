@@ -5,11 +5,11 @@ using PathCreation;
 
 public class CamFollowPath : MonoBehaviour
 {
-    // opdaterede scriptet til bare at have et constant offset, vi kan gøre sådan,
-    // at når man går backwards eller forwards bliver offsettet ændret så man kan se hvor man går
-    // istedet for at få player distance, så får den bare player position på pathen direkte.
-    // så kan vi bruge math lerp til at lerpe til spillerens position på pathen
-    // og så kan vi bruge en coroutine til at lerp til den position
+    // opdaterede scriptet til bare at have et constant offset, vi kan gï¿½re sï¿½dan,
+    // at nï¿½r man gï¿½r backwards eller forwards bliver offsettet ï¿½ndret sï¿½ man kan se hvor man gï¿½r
+    // istedet for at fï¿½ player distance, sï¿½ fï¿½r den bare player position pï¿½ pathen direkte.
+    // sï¿½ kan vi bruge math lerp til at lerpe til spillerens position pï¿½ pathen
+    // og sï¿½ kan vi bruge en coroutine til at lerp til den position
 
     public List<PathCreator> pathCreators; // List of path creators
     public int currentPathIndex = 0;       // Current path index
@@ -59,7 +59,7 @@ public class CamFollowPath : MonoBehaviour
     {
         while (true)
         {
-            // Get the target position for the camera based on `distanceTravelled`
+            // Get the target position for the camera based on the distance it has travelled along the path
             Vector3 targetPosition = pathCreators[currentPathIndex].path.GetPointAtDistance(distanceTravelled, EndOfPathInstruction.Stop);
 
             // Smoothly move the camera towards the target position

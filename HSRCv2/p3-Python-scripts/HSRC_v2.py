@@ -1,7 +1,7 @@
-import cv2
-import numpy as np
-import os
-import socket
+import cv2          # Henter open cv library
+import numpy as np  # Henter Numpy
+import os           # Henter styresystemet på computeren
+import socket       # Til at sende og modtage pakker over netværk
 
 
 print('Starting application...')
@@ -21,8 +21,8 @@ print('Starting application...')
 i = 0
 
 #Communication with Unity ####################################################################
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
-serverAddressPort = ("127.0.0.1", 5052)
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Creating UDP socket - For sending data without checking if data is recieved
+serverAddressPort = ("127.0.0.1", 5052) # Sætter IP adressen som er lokaladressen, derefter sætter porten
 
 # INITIALIZED VARIABLES #####################################################################
 
