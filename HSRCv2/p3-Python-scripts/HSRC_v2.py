@@ -83,6 +83,8 @@ if not os.path.exists(folder):
 # FUNCTIONS ###########################################################################
 
 # RELEVANT, DIRECT IMAGE MANIPULATION
+
+# Saves current frame as a binary image
 def getBinaryImage(frame, hand_signName):
     global folder
 
@@ -114,6 +116,7 @@ def getBinaryImage(frame, hand_signName):
         print(f"Error deleting the image: {e}")
     return binaryImg
 
+# Saves contours and defects for a hand sign - is performed for every hand sign captured
 def process_hand_sign(img):
     global i, defects_hand_signs
     try:
@@ -145,6 +148,7 @@ def process_hand_sign(img):
     except Exception as e:
         print(f"Error processing the file {img}: {e}")        
 
+# Converts live video footage to binary
 def getBinaryVideo(frame):
     # Convert the frame to grayscale, for easier manipulation
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -152,6 +156,7 @@ def getBinaryVideo(frame):
 
     return binaryImg
 
+# Main function - compares contours between references and live feed
 def findBestMatch(contours_refs, contours_live, defects_live):
     global defects_hand_signs
 
@@ -173,6 +178,7 @@ def findBestMatch(contours_refs, contours_live, defects_live):
             
     return best_match_index, best_match_value
 
+# Erodes to removes small pixels or clusters, then dilates back to original image
 def removeNoise(frame):
     # Processen er teknisk set opening 
     erosion_iterations = 8
@@ -190,6 +196,7 @@ def removeNoise(frame):
 
     return frame
 
+# Dilates image to close potential holes in shape of hand, then erodes back to original image
 def closingImage(img):
     #NOTE Marcel funktion:
 
@@ -210,6 +217,7 @@ def closingImage(img):
 
     return img
 
+# Retrives convexity defects and total of convexity defects for shape
 def getDefects(contours):
 
     # Check for contours
@@ -236,6 +244,7 @@ def getDefects(contours):
 
     return defects_total, newDefects
 
+# Draws defects on image
 def drawDefects(frame, contours, defects):
     frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
 
@@ -253,26 +262,30 @@ def drawDefects(frame, contours, defects):
 
     return frame
 
-# source: https://stackoverflow.com/questions/58632469/how-to-find-the-orientation-of-an-object-shape-python-opencv
+# OBSOLETE source: https://stackoverflow.com/questions/58632469/how-to-find-the-orientation-of-an-object-shape-python-opencv
 
 # QUALITY OF LIFE, SMALL FUNCTIONS ####################################################
 
+# Displays text in top left corner of image
 def displayText(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(image, text, (10, 30), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
     return image
 
+# Displays text just below the very top line
 def displayTextBelow(image, text):
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(image, text, (10, 65), font, 1, (0, 0, 255), 2, cv2.LINE_AA)
     return image
 
+# Displays the accuracy of the current match in the bottom left corner
 def displayMatchAccuracy(image, match):
     # Display the match accuracy on the frame in the bottom left corner
     font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.putText(image, f'Match: {match}', (10, image.shape[0] - 10), font, 1, (255, 255, 255), 2, cv2.LINE_AA)
     return image
 
+# Reverse search our buffer dicitionary to find the key from the value
 # source: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/
 def get_key_from_buffer(val):
   
@@ -282,6 +295,7 @@ def get_key_from_buffer(val):
 
     return "key doesn't exist"
 
+# Totals the amount values in the buffer dictionary
 def get_buffer_total():
     global bufferDict
 
@@ -297,6 +311,7 @@ def get_buffer_total():
 
 # CLOSING THE APPLICATION
 
+# Closes the applications and releases resources
 def close_application():
     global cap, running, sock
 
@@ -324,6 +339,7 @@ def full_close_application():
 
 # STATES ###################################################################################
 
+# 1st state - captures references for all hand signs and stores their data
 def state_capture_hand_signs(raw_frame, binary_frame):
     global hand_signs, hand_signIndex, key
 
@@ -359,7 +375,7 @@ def state_capture_hand_signs(raw_frame, binary_frame):
     else:
         return 'capture_hand_signs'  # Stay in the current state if not all hand_signs are captured       
 
-# State of matching the captured hand_sign with the live feed
+# 2nd state - matching the captured hand_sign with the live feed
 def state_match_hand_signs(raw_frame, binary_frame):
     global contours_refs, match_threshold, bufferDict, currenthand_sign, bufferTotalThreshold, hand_sign_name, bufferThreshhold, previous_hand_sign
     
@@ -474,6 +490,7 @@ print('Running...')
 # Initial state
 current_state = 'capture_hand_signs'
 
+# main loop captures live feed, creates a binary feed, and cleans up the image before getting processed through states.
 while current_state and running:
     ret, frame = cap.read()
     if not ret:
