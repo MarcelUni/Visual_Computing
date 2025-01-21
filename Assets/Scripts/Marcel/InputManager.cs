@@ -19,9 +19,7 @@ public class InputManager : MonoBehaviour
     private PlayerInteract playerInteract;
     private PlayerController pc;
     private InputUIManager inputUIManager;
-
     public string inputPerformedString;
-
     public UnityEvent<int> PathChosenEvent;
 
     void Start()
